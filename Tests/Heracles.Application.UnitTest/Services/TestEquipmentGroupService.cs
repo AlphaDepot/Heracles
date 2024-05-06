@@ -1,0 +1,243 @@
+using Heracles.Application.Features.EquipmentGroups;
+using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.Errors;
+using Heracles.Domain.Abstractions.Logging;
+using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.EquipmentGroups.DTOs;
+using Heracles.Domain.EquipmentGroups.Models;
+using Heracles.TestUtilities.Fixtures;
+using Heracles.TestUtilities.Helpers;
+using Moq;
+
+using Xunit.Abstractions;
+
+namespace Heracles.Application.UnitTest.Services;
+/// <summary>
+/// Provides data for the UpdateAsync test.
+/// </summary>
+public class TestEquipmentGroupService : BaseUnitTest
+{
+    private readonly Mock<IAppLogger<EquipmentGroupService>> _logger;
+    private readonly EquipmentGroupService _service;
+   
+
+    /// <summary>
+    /// Constructor for the TestEquipmentGroupService class.
+    /// </summary>
+    public TestEquipmentGroupService(ITestOutputHelper testConsole) : base(testConsole)
+    {
+        _logger = new Mock<IAppLogger<EquipmentGroupService>>();
+        _service = new EquipmentGroupService(_logger.Object, EquipmentGroupRepository.Object, EquipmentRepository.Object);
+    }
+
+    /// <summary>
+    /// Test for the GetAsync method with filter and sort parameters.
+    /// </summary>
+    /// <param name="query">The query parameters for filtering and sorting.</param>
+    [Theory]
+    [MemberData(nameof(QueryData))]
+    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedEquipmentGroups(QueryRequest query)
+    {
+        // Arrange
+        SearchTerm = "Home Gym";
+        var expected = EquipmentGroupFixture.Query(query);
+
+        // Act
+        var result = await _service.GetAsync(query);
+
+        // Assert
+        ExpectedQueryResult.Success(result, expected);
+    }
+    
+    /// <summary>
+    /// Test for the GetByIdAsync method.
+    /// </summary>
+    /// <param name="id">The id of the equipment group to retrieve.</param>
+    /// <param name="expected">The expected result.</param>
+    [Theory]
+    [MemberData(nameof(GetByIdAsyncData))]
+    public async Task GetByIdAsync_ReturnsResponse(int id, string expected)
+    {
+        // Arrange
+        var expectedEquipmentGroup = EquipmentGroups.FirstOrDefault(q => q.Id == id);
+
+        // Act
+        var result = await _service.GetByIdAsync(id);
+
+        // Assert
+        if (expected == TestDomainResponse.Success)
+            ExpectedGetByIdResult.Success(_logger, result, expectedEquipmentGroup!, id);
+        else if (expected == TestDomainResponse.NotFound)
+            ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<EquipmentGroup>.NotFound(id), id);
+        else if (expected == TestDomainResponse.BadRequest)
+            ExpectedGetByIdResult.BadRequest(_logger, result, EntityErrorMessage<EquipmentGroup>.BadRequest());
+    }
+
+    /// <summary>
+    /// Test for the CreateAsync method.
+    /// </summary>
+    /// <param name="name">The name of the equipment group to create.</param>
+    /// <param name="expected">The expected result.</param>
+    [Theory]
+    [MemberData(nameof(CreateAsyncData))]
+    public async Task CreateAsync_ReturnsResponse(string name, string expected)
+    {
+        // Arrange
+        var equipmentGroup = new EquipmentGroup { Name = name };
+
+        // Act
+        var result = await _service.CreateAsync(equipmentGroup);
+
+        // Assert
+        if (expected == TestDomainResponse.Success)
+            ExpectedCreateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroup.Id,
+                result.Value);
+        else if (expected == TestDomainResponse.BadRequest)
+            ExpectedCreateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
+                result.Error.Errors!);
+    }
+
+    /// <summary>
+    /// Test for the UpdateAsync method.
+    /// </summary>
+    /// <param name="id">The id of the equipment group to update.</param>
+    /// <param name="name">The new name of the equipment group.</param>
+    /// <param name="expected">The expected result.</param>
+    [Theory]
+    [MemberData(nameof(UpdateAsyncData))]
+    public async Task UpdateAsync_ReturnsResponse(int id, string name, string expected)
+    {
+        // Arrange
+        var equipmentGroup = EquipmentGroups.FirstOrDefault(q => q.Id == id)
+                             ?? new EquipmentGroup { Id = id, Name = name };
+
+        equipmentGroup.Name = name;
+
+        // Act
+        var result = await _service.UpdateAsync(equipmentGroup);
+
+        // Assert
+        if (expected == TestDomainResponse.Success)
+            ExpectedUpdateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroup.Id);
+        else if (expected == TestDomainResponse.BadRequest)
+            ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
+                result.Error.Errors!);
+    }
+
+    /// <summary>
+    /// Test for the DeleteAsync method.
+    /// </summary>
+    /// <param name="id">The id of the equipment group to delete.</param>
+    /// <param name="expected">The expected result.</param>
+    [Theory]
+    [MemberData(nameof(DeleteAsyncData))]
+    public async Task DeleteAsync_ReturnsResponse(int id, string expected)
+    {
+        // Arrange
+        var expectedEquipmentGroup = EquipmentGroups.FirstOrDefault(q => q.Id == id);
+
+        // Act
+        var result = await _service.DeleteAsync(id);
+
+        // Assert
+        if (expected == TestDomainResponse.Success)
+            ExpectedDeleteResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, id);
+        else if (expected == TestDomainResponse.NotFound)
+            ExpectedDeleteResult.NotFound<EquipmentGroupService, EquipmentGroup>(_logger, result,
+                EntityErrorMessage<EquipmentGroup>.NotFound(id), id);
+        else if (expected == TestDomainResponse.BadRequest)
+            ExpectedDeleteResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
+                EntityErrorMessage<EquipmentGroup>.BadRequest());
+    }
+
+    /// <summary>
+    /// Test for the AddEquipmentAsync method.
+    /// </summary>
+    /// <param name="equipmentGroupId">The id of the equipment group to add equipment to.</param>
+    /// <param name="equipmentId">The id of the equipment to add.</param>
+    /// <param name="expected">The expected result.</param>
+    [Theory]
+    [MemberData(nameof(AddRemoveAsyncData))]
+    public async Task AddEquipmentAsync_ReturnsResponse(int equipmentGroupId, int equipmentId, string expected)
+    {
+        // Arrange
+        var entityDto = new AddRemoveEquipmentGroupDto
+            { EquipmentGroupId = equipmentGroupId, EquipmentId = equipmentId };
+
+        // Act
+        var result = await _service.AddEquipmentAsync(entityDto);
+
+        // Assert
+        if (expected == TestDomainResponse.Success)
+           ExpectedUpdateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroupId);
+        else if (expected == TestDomainResponse.BadRequest)
+            ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
+                result.Error.Errors!);
+    }
+    
+    /// <summary>
+    /// Test for the RemoveEquipmentAsync method.
+    /// </summary>
+    /// <param name="equipmentGroupId">The id of the equipment group to remove equipment from.</param>
+    /// <param name="equipmentId">The id of the equipment to remove.</param>
+    /// <param name="expected">The expected result.</param>
+    [Theory]
+    [MemberData(nameof(AddRemoveAsyncData))]
+    public async Task RemoveEquipmentAsync_ReturnsResponse(int equipmentGroupId, int equipmentId, string expected)
+    {
+        // Arrange
+        var entityDto = new AddRemoveEquipmentGroupDto
+            { EquipmentGroupId = equipmentGroupId, EquipmentId = equipmentId };
+
+        // Act
+        var result = await _service.RemoveEquipmentAsync(entityDto);
+
+        // Assert
+        if (expected == TestDomainResponse.Success)
+            ExpectedUpdateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroupId);
+        else if (expected == TestDomainResponse.BadRequest)
+            ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
+                result.Error.Errors!);
+    }
+    
+
+    /// <summary>
+    ///  Test for the CreateAsync method.
+    /// </summary>
+    public static IEnumerable<object?[]> CreateAsyncData()
+    {
+        yield return new object[] { "NOT A DUPLICATE", TestDomainResponse.Success }; // valid entity
+        yield return new object[] { "Home Gym", TestDomainResponse.BadRequest }; // duplicate entity
+        yield return new object[] { "", TestDomainResponse.BadRequest }; // invalid entity
+        yield return new object?[] { null, TestDomainResponse.BadRequest }; // invalid entity
+        yield return new object[] { new string('a', 256), TestDomainResponse.BadRequest }; // invalid entity
+    }
+
+    /// <summary>
+    ///  Test for the UpdateAsync method.
+    /// </summary>
+    public static IEnumerable<object?[]> UpdateAsyncData()
+    {
+        yield return new object[] { 1, "NOT A DUPLICATE", TestDomainResponse.Success }; // valid entity
+        yield return new object[] { 1, "Home Gym", TestDomainResponse.BadRequest }; // duplicate entity
+        yield return new object[] { 1, "", TestDomainResponse.BadRequest }; // invalid entity
+        yield return new object?[] { 1, null, TestDomainResponse.BadRequest }; // invalid entity
+        yield return new object[] { 1, new string('a', 256), TestDomainResponse.BadRequest }; // invalid entity
+        yield return new object[] { 0, "Gym", TestDomainResponse.BadRequest }; // invalid id
+        yield return new object?[] { null, "Gym", TestDomainResponse.BadRequest }; // invalid id
+    }
+
+    /// <summary>
+    ///  Test for the AddEquipmentAsync and RemoveEquipmentAsync methods.
+    /// </summary>
+    public static IEnumerable<object?[]> AddRemoveAsyncData()
+    {
+        yield return new object[] { 1, 1, TestDomainResponse.Success }; // valid entity
+        yield return new object[] { 1, 1000000, TestDomainResponse.BadRequest }; // out of bound id
+        yield return new object[] { 1000000, 1, TestDomainResponse.BadRequest }; // out of bound id
+        yield return new object[] { 0, 1, TestDomainResponse.BadRequest }; // invalid id
+        yield return new object?[] { null, 1, TestDomainResponse.BadRequest }; // invalid id
+        yield return new object[] { 1, 0, TestDomainResponse.BadRequest }; // invalid id
+        yield return new object[] { 1, -1, TestDomainResponse.BadRequest }; // invalid id
+    }
+}

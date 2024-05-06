@@ -1,0 +1,31 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=08f75bda_002Da511_002D4270_002Da8e0_002D137290df9634/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="GetExerciseTypes_ReturnsSuccessStatusCode" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;Project Location="N:\Development\Code\CSharp\production\Heracles\Tests\Heracles.Application.UnitTest" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Heracles.Application.UnitTest&amp;gt;" /&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestExerciseTypeController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestEquipmentController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestEquipmentGroupController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestMuscleGroupController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestMuscleFunctionController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestExerciseMuscleGroupController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestUserExercisesController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestUserExerciseHistoriesController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestWorkoutSessionsController&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;xUnit::93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C::net8.0::Heracles.API.IntegrationTest.Controllers.TestUsersController&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+  &lt;/Or&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</wpf:ResourceDictionary>

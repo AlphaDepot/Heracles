@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{AC63959A-A759-47F5-B22F-92E617085E56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.Domain", "Core\Heracles.Domain\Heracles.Domain.csproj", "{6FC5BC26-86CD-463A-B3F3-C6C14DC1186E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.Application", "Core\Heracles.Application\Heracles.Application.csproj", "{021DFEBC-5773-4D9F-AE99-59C49DFD8748}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{7977DD4D-85F0-47A7-9914-8755A83DE11E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.Infrastructure", "Infrastructure\Heracles.Infrastructure\Heracles.Infrastructure.csproj", "{ED97E677-7639-4099-BE40-0E88880438F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.Persistence", "Infrastructure\Heracles.Persistence\Heracles.Persistence.csproj", "{04B27F18-8ED9-4249-829D-7AA1DDD66FCB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{1925C2C4-C492-45D6-8FE6-C83A04BE406F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3CEE6152-2B55-4EB6-8F5A-F1107D8249BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.API", "Presentation\Heracles.API\Heracles.API.csproj", "{7C177ED1-1F33-4143-8BF7-76AF52FBEC8A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.Application.UnitTest", "Tests\Heracles.Application.UnitTest\Heracles.Application.UnitTest.csproj", "{9724570E-B7DA-4710-A1E2-B70E28CA2A97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.TestUtilities", "Tests\Heracles.TestUtilities\Heracles.TestUtilities.csproj", "{B2221D37-1622-40DC-96AA-9B60B9A959EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heracles.API.IntegrationTest", "Tests\Heracles.API.IntegrationTest\Heracles.API.IntegrationTest.csproj", "{93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{ADB6F416-47B3-4FD0-86AF-373881921D33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FC5BC26-86CD-463A-B3F3-C6C14DC1186E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FC5BC26-86CD-463A-B3F3-C6C14DC1186E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FC5BC26-86CD-463A-B3F3-C6C14DC1186E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FC5BC26-86CD-463A-B3F3-C6C14DC1186E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{021DFEBC-5773-4D9F-AE99-59C49DFD8748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{021DFEBC-5773-4D9F-AE99-59C49DFD8748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{021DFEBC-5773-4D9F-AE99-59C49DFD8748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{021DFEBC-5773-4D9F-AE99-59C49DFD8748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED97E677-7639-4099-BE40-0E88880438F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED97E677-7639-4099-BE40-0E88880438F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED97E677-7639-4099-BE40-0E88880438F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED97E677-7639-4099-BE40-0E88880438F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04B27F18-8ED9-4249-829D-7AA1DDD66FCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04B27F18-8ED9-4249-829D-7AA1DDD66FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04B27F18-8ED9-4249-829D-7AA1DDD66FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04B27F18-8ED9-4249-829D-7AA1DDD66FCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C177ED1-1F33-4143-8BF7-76AF52FBEC8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C177ED1-1F33-4143-8BF7-76AF52FBEC8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C177ED1-1F33-4143-8BF7-76AF52FBEC8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C177ED1-1F33-4143-8BF7-76AF52FBEC8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9724570E-B7DA-4710-A1E2-B70E28CA2A97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9724570E-B7DA-4710-A1E2-B70E28CA2A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9724570E-B7DA-4710-A1E2-B70E28CA2A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9724570E-B7DA-4710-A1E2-B70E28CA2A97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2221D37-1622-40DC-96AA-9B60B9A959EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2221D37-1622-40DC-96AA-9B60B9A959EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2221D37-1622-40DC-96AA-9B60B9A959EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2221D37-1622-40DC-96AA-9B60B9A959EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB6F416-47B3-4FD0-86AF-373881921D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB6F416-47B3-4FD0-86AF-373881921D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB6F416-47B3-4FD0-86AF-373881921D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB6F416-47B3-4FD0-86AF-373881921D33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6FC5BC26-86CD-463A-B3F3-C6C14DC1186E} = {AC63959A-A759-47F5-B22F-92E617085E56}
+		{021DFEBC-5773-4D9F-AE99-59C49DFD8748} = {AC63959A-A759-47F5-B22F-92E617085E56}
+		{ED97E677-7639-4099-BE40-0E88880438F4} = {7977DD4D-85F0-47A7-9914-8755A83DE11E}
+		{04B27F18-8ED9-4249-829D-7AA1DDD66FCB} = {7977DD4D-85F0-47A7-9914-8755A83DE11E}
+		{7C177ED1-1F33-4143-8BF7-76AF52FBEC8A} = {1925C2C4-C492-45D6-8FE6-C83A04BE406F}
+		{9724570E-B7DA-4710-A1E2-B70E28CA2A97} = {3CEE6152-2B55-4EB6-8F5A-F1107D8249BB}
+		{B2221D37-1622-40DC-96AA-9B60B9A959EC} = {3CEE6152-2B55-4EB6-8F5A-F1107D8249BB}
+		{93DDDB2B-36BC-4AA4-BE80-F6E717F4B93C} = {3CEE6152-2B55-4EB6-8F5A-F1107D8249BB}
+	EndGlobalSection
+EndGlobal

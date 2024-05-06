@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: heracles
+    ports:
+      - "5432:5432"
+        
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  heracles.api:
+    image: ${DOCKER_REGISTRY-}heraclesapi
+    build:
+      context: .
+      dockerfile: Presentation/Heracles.API/Dockerfile
+      
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      
+      ## Azure AD Configuration
+      - AzureAd__Instance=https://login.microsoftonline.com/
+      - AzureAd__Domain=qualified.domain.name
+      - AzureAd__TenantId=22222222-2222-2222-2222-222222222222
+      - AzureAd__ClientId=11111111-1111-1111-11111111111111111
+      - AzureAd__ClientSecret=something~something-else
+      - AzureAd_Scope="openid profile api://some-api/default"
+      - AzureAd__Read_Role=User
+      - AzureAd__Write_Role=Admin
+      - AzureAd__CallbackPath=/signin-oidc
+      
+      ## SQL Server Configuration
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgres;Database=heracles
+      
+      ## Elasticsearch Configuration
+      - Elastic_Configuration__Uri=http://elasticsearch:9200
+      
+      ## Serilog Configuration
+      - Serilog_MinimumLevel__Default="Warning"
+      #- Serilog__WriteTo__Elasticsearch__NodeUris="http://elasticsearch:9200"
+      
+      ## CORS Configuration
+      - CorsSettings__AllowedOrigins=http://localhost:3000
+    
+    ports:
+      - "80:80"
+    depends_on:
+        - postgres
+        - elasticsearch
+        
+
+      
+      
+
+      

@@ -253,14 +253,17 @@ public abstract class ExerciseDataLoader
             new ExerciseType { Name = "Bench Press", 
                CreatedAt =  date, UpdatedAt = date,
                 Description = "Lay on a bench and press the bar",
+                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/e/ea/Decline-bench-press-2.png"
             },
             new ExerciseType { Name = "Squat",
                CreatedAt =  date, UpdatedAt = date,
                 Description = "Squat down and stand back up",
+                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wide-stance-squat-1.gif"
             },
             new ExerciseType {  Name = "Deadlift",
                CreatedAt =  date, UpdatedAt = date,
                 Description = "Lift the bar from the ground",
+                ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/58/Romanian-deadlift-2.png"
             }
         ];
     }

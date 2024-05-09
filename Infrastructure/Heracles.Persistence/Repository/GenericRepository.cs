@@ -34,6 +34,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         // Apply order by
         if (query.Sorter != null)
             queryable = query.Sorter(queryable);
+        else
+            // default sort by updated at
+            queryable = queryable.OrderBy(e => e.UpdatedAt);
+
         
         // Apply paging
         queryable = queryable.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize);

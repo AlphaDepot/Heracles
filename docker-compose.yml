@@ -52,6 +52,7 @@ services:
       - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgres;Database=heracles
       ## Serilog Configuration
       - Serilog_MinimumLevel__Default="Warning"
+      - Serilog__WriteTo__1__Args__uri=http://loki:3100
       ## CORS Configuration
       - CorsSettings__AllowedOrigins=http://localhost:3000
     

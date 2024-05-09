@@ -7,4 +7,5 @@ public sealed class QueryResponse<T> where T : class
     public int PageSize { get; set; }
 
     public int TotalPages { get; set; }
+    public int TotalItems { get; set; }
 }

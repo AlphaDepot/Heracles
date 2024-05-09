@@ -36,18 +36,16 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
         
         var result = await query.ToListAsync();
         
-        // get total pages
+        // get total items
         var totalItems = await _dbContext.Set<ExerciseMuscleGroup>().CountAsync();
-        
-        // Return the list of entities
-        //return await query.ToListAsync();
         
         return new QueryResponse<ExerciseMuscleGroup>
         {
             Data = result,
             PageNumber = queryableDto.PageNumber,
             PageSize = queryableDto.PageSize,
-            TotalPages = (int)Math.Ceiling(totalItems / (double)queryableDto.PageSize)
+            TotalPages = (int)Math.Ceiling(totalItems / (double)queryableDto.PageSize),
+            TotalItems = totalItems
         };
         
     }

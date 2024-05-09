@@ -40,15 +40,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         
         var result = await queryable.ToListAsync();
         
-        // get total pages
-        var totalItems = await _dbContext.Set<T>().CountAsync();
+        // get total items
+        var total = await _dbContext.Set<T>().CountAsync();
+        
+   
         
         return new QueryResponse<T>
         {
             Data = result,
             PageNumber = query.PageNumber,
             PageSize = query.PageSize,
-            TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize)
+            TotalPages = (int)Math.Ceiling(total / (double)query.PageSize), // convert total items to pages
+            TotalItems = total
         };
     }
 

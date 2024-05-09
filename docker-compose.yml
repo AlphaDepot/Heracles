@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   postgres:
@@ -9,14 +9,26 @@ services:
       POSTGRES_DB: heracles
     ports:
       - "5432:5432"
+
         
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-    environment:
-      - discovery.type=single-node
+
+  loki:
+    image: grafana/loki:latest
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "3100:3100"
+
+
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      - loki
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3001:3000"
+
 
   heracles.api:
     image: ${DOCKER_REGISTRY-}heraclesapi
@@ -41,14 +53,8 @@ services:
       
       ## SQL Server Configuration
       - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgres;Database=heracles
-      
-      ## Elasticsearch Configuration
-      - Elastic_Configuration__Uri=http://elasticsearch:9200
-      
       ## Serilog Configuration
       - Serilog_MinimumLevel__Default="Warning"
-      #- Serilog__WriteTo__Elasticsearch__NodeUris="http://elasticsearch:9200"
-      
       ## CORS Configuration
       - CorsSettings__AllowedOrigins=http://localhost:3000
     
@@ -56,7 +62,9 @@ services:
       - "80:80"
     depends_on:
         - postgres
-        - elasticsearch
+        - grafana
+
+
         
 
       

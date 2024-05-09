@@ -10,13 +10,10 @@ services:
     ports:
       - "5432:5432"
 
-        
-
   loki:
     image: grafana/loki:latest
     ports:
       - "3100:3100"
-
 
   grafana:
     image: grafana/grafana:latest
@@ -63,6 +60,7 @@ services:
     depends_on:
         - postgres
         - grafana
+        - loki
 
 
         

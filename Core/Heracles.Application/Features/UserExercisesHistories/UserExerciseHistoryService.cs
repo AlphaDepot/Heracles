@@ -57,14 +57,7 @@ public class UserExerciseHistoryService : IUserExerciseHistoryService
         var result = await _repository.GetAsync(queryHelper);
         
         
-        return DomainResponse.Success(
-            new QueryResponse<UserExerciseHistory>
-            {
-                Data = result,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize,
-            }
-        );
+        return DomainResponse.Success(result);
     }
 
     /// <summary>

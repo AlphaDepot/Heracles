@@ -17,31 +17,48 @@ public abstract class MockExerciseMuscleGroupRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<ExerciseMuscleGroup>>()))
             .ReturnsAsync((QuariableDto<ExerciseMuscleGroup> queryableDto) =>
             {
-                var result = exerciseMuscleGroups.AsQueryable();
+                var queryable = exerciseMuscleGroups.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<ExerciseMuscleGroup>()
+                {
+                    Data =  result,
+                    TotalPages = result.Count(),
+                    PageSize = queryableDto.PageSize,
+                    PageNumber = queryableDto.PageNumber
+                };
             });
         
         mockRepo.Setup(r => r.GetByExerciseIdAsync(It.IsAny<QuariableDto<ExerciseMuscleGroup>>()))
             .ReturnsAsync((QuariableDto<ExerciseMuscleGroup> queryableDto) =>
             {
-                var result = exerciseMuscleGroups.AsQueryable();
+                var queryable = exerciseMuscleGroups.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<ExerciseMuscleGroup>()
+                {
+                    Data =  result,
+                    TotalPages = result.Count(),
+                    PageSize = queryableDto.PageSize,
+                    PageNumber = queryableDto.PageNumber
+                };
+                
             });
         
         

@@ -19,16 +19,28 @@ public abstract class MockUserExerciseHistoryRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<UserExerciseHistory>>()))
             .ReturnsAsync((QuariableDto<UserExerciseHistory> queryableDto) =>
             {
-                var result = userExerciseHistories.AsQueryable();
+                var queryable = userExerciseHistories.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                
+                var result = queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize)
+                    .Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<UserExerciseHistory>()
+                {
+                    Data =  result,
+                    TotalPages = result.Count(),
+                    PageSize = queryableDto.PageSize,
+                    PageNumber = queryableDto.PageNumber
+                };
+                
+                //return queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
             });
         
         mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!

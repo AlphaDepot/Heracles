@@ -48,10 +48,7 @@ public class WorkoutSessionService : IWorkoutSessionService
        var queryHelper = new QueryHelper().CreateQueriable(query, sortExpression, filter);
        var result = await _repository.GetAsync(queryHelper);
 
-        return DomainResponse.Success(new QueryResponse<WorkoutSession>
-        {
-            Data = result, PageNumber = query.PageNumber, PageSize = query.PageSize
-        });
+        return DomainResponse.Success(result);
     }
     
     public async Task<DomainResponse<WorkoutSession>> GetByIdAsync(int id)

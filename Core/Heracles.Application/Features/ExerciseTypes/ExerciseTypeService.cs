@@ -34,14 +34,7 @@ public class ExerciseTypeService : IExerciseTypeService
         var queryHelper = new QueryHelper().CreateQueriable(query, sortExpressions, filter);
         var result = await _repository.GetAsync(queryHelper);
        
-        return DomainResponse.Success(
-            new QueryResponse<ExerciseType>
-            {
-                Data = result,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize,
-            }
-        );
+        return DomainResponse.Success(result);
     }
 
 

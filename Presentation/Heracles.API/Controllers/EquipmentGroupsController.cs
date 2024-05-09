@@ -11,16 +11,16 @@ namespace Heracles.API.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class EquipmentGroupController : ControllerBase
+    public class EquipmentGroupsController : ControllerBase
     {
         private readonly IEquipmentGroupService _service;
 
-        public EquipmentGroupController(IEquipmentGroupService service)
+        public EquipmentGroupsController(IEquipmentGroupService service)
         {
             _service = service;
         }
         
-        // GET: api/<EquipmentGroupController>
+        // GET: api/<EquipmentGroupsController>
         [HttpGet]
         public async Task<IResult> Get([FromQuery] QueryRequest query)
         {
@@ -28,7 +28,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
 
-        // GET api/<EquipmentGroupController>/5
+        // GET api/<EquipmentGroupsController>/5
         [HttpGet("{id}")]
         public async Task<IResult> Get(int id)
         {
@@ -36,7 +36,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
 
-        // POST api/<EquipmentGroupController>
+        // POST api/<EquipmentGroupsController>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IResult> Post([FromBody] EquipmentGroup entity)
@@ -45,7 +45,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
 
-        // PUT api/<EquipmentGroupController>/5
+        // PUT api/<EquipmentGroupsController>/5
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IResult> Put( [FromBody] EquipmentGroup entity)
@@ -54,7 +54,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
         
-        // PATCH api/<EquipmentGroupController>/5/add
+        // PATCH api/<EquipmentGroupsController>/5/add
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/add")]
         public async Task<IResult> AddEquipment([FromBody] AddRemoveEquipmentGroupDto dto)
@@ -63,7 +63,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
         
-        // PATCH api/<EquipmentGroupController>/5/remove
+        // PATCH api/<EquipmentGroupsController>/5/remove
         [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/remove")]
         public async Task<IResult> RemoveEquipment([FromBody] AddRemoveEquipmentGroupDto dto)
@@ -73,7 +73,7 @@ namespace Heracles.API.Controllers
         }
         
         
-        // DELETE api/<EquipmentGroupController>/5
+        // DELETE api/<EquipmentGroupsController>/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IResult> Delete([FromRoute] int id)

@@ -42,14 +42,7 @@ public class EquipmentService : IEquipmentService
         //var result =  await _repository.GetAsync(queryHelper.Filter, queryHelper.Sorter, query.PageSize, query.PageNumber);
         var result = await _repository.GetAsync(queryHelper);
       
-        return DomainResponse.Success(
-            new QueryResponse<Equipment>
-            {
-                Data = result,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize,
-            }
-        );
+        return DomainResponse.Success(result);
     }
     /// <summary>
     ///  Get equipment by id

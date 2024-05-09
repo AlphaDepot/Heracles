@@ -63,14 +63,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         // Get the exercise muscle groups
        var result = await _repository.GetAsync(queryHelper);
        
-        return DomainResponse.Success(
-                new QueryResponse<ExerciseMuscleGroup>
-                {
-                    Data = result,
-                    PageNumber = query?.PageNumber ?? 1,
-                    PageSize = query?.PageSize ?? 20
-                }
-            );
+       return DomainResponse.Success(result);
         
     }
     
@@ -107,13 +100,8 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         
         var result = await _repository.GetByExerciseIdAsync(queryHelper);
         
-        return DomainResponse.Success(
-            new QueryResponse<ExerciseMuscleGroup>
-            {
-                Data = result,
-                
-            }
-        );
+        return DomainResponse.Success(result);
+        
     }
 
     /// <summary>

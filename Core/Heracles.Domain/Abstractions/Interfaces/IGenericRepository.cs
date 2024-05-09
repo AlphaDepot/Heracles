@@ -5,7 +5,7 @@ namespace Heracles.Domain.Abstractions.Interfaces;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
-    Task<List<T>> GetAsync(QuariableDto<T> query);
+    Task<QueryResponse<T>> GetAsync(QuariableDto<T> query);
     Task<T> GetByIdAsync(int id);
     Task<int> CreateAsync(T entity);
     Task<int> UpdateAsync(T entity);

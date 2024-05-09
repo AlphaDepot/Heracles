@@ -20,16 +20,25 @@ public abstract class MockUserRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<User>>()))
             .ReturnsAsync((QuariableDto<User> queryableDto) =>
             {
-                var result = users.AsQueryable();
+                var queryable = users.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+
+                var result = queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize)
+                    .Take(queryableDto.PageSize).ToList();
+                
+                
+                return new QueryResponse<User>()
+                {
+                    Data = result,
+                    TotalPages = result.Count()
+                };
             });
         
         mockRepo.Setup(r => r.GetUserByUserIdAsync(It.IsAny<string>()))

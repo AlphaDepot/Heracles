@@ -18,16 +18,24 @@ public abstract class MockMuscleFunctionRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<MuscleFunction>>()))
             .ReturnsAsync((QuariableDto<MuscleFunction> queryableDto) =>
             {
-                var result = muscleFunctions.AsQueryable();
+                var queryable = muscleFunctions.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                var result = queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<MuscleFunction>()
+                {
+                    Data =  result,
+                    TotalPages = result.Count(),
+                    PageSize = queryableDto.PageSize,
+                    PageNumber = queryableDto.PageNumber
+                };
             });
 
         

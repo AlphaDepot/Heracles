@@ -7,12 +7,12 @@ using Xunit.Abstractions;
 
 namespace Heracles.API.IntegrationTest.Controllers;
 /// <summary>
-/// This class contains integration tests for the ExerciseMuscleGroupController.
+/// This class contains integration tests for the ExerciseMuscleGroupsController.
 /// </summary>
-public class TestExerciseMuscleGroupController : BaseIntegrationTest
+public class TestExerciseMuscleGroupsController : BaseIntegrationTest
 {
-    const string BaseUrl = "/api/exercisemusclegroup";
-    public TestExerciseMuscleGroupController(HeraclesWebApplicationFactory factory, ITestOutputHelper console) : base(factory, console)
+    const string BaseUrl = "/api/ExerciseMuscleGroups";
+    public TestExerciseMuscleGroupsController(HeraclesWebApplicationFactory factory, ITestOutputHelper console) : base(factory, console)
     {
     }
     

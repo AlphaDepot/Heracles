@@ -19,16 +19,25 @@ public abstract class MockWorkoutSessionRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<WorkoutSession>>()))
             .ReturnsAsync((QuariableDto<WorkoutSession> queryableDto) =>
             {
-                var result = workoutSessions.AsQueryable();
+                var queryable = workoutSessions.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                var result = queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize)
+                    .Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<WorkoutSession>()
+                    {
+                        Data =  result,
+                        TotalPages = result.Count(),
+                        PageSize = queryableDto.PageSize,
+                        PageNumber = queryableDto.PageNumber
+                    };
             });
         
         mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!

@@ -16,13 +16,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         _dbContext = dbContext;
     }
     
+    
     /// <summary>
     /// Retrieves a list of entities asynchronously based on the provided filter, order by function, page size, and page number.
     /// </summary>
     /// <typeparam name="T">The type of entity.</typeparam>
     /// <param name="query">The QuariableDto object containing the filter, order by function, page size, and page number.</param>
-    /// <returns>A task representing the asynchronous operation that returns a list of entities matching the provided criteria.</returns>
-    public async Task<List<T>> GetAsync(QuariableDto<T> query)
+    /// <returns>A task representing the asynchronous operation that returns a QueryResponse object containing the list of entities matching the provided criteria.</returns>
+    public async Task<QueryResponse<T>> GetAsync(QuariableDto<T> query)
     {
         IQueryable<T> queryable = _dbContext.Set<T>();
         
@@ -37,8 +38,21 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         // Apply paging
         queryable = queryable.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize);
         
-        return await queryable.ToListAsync();
+        var result = await queryable.ToListAsync();
+        
+        // get total pages
+        var totalItems = await _dbContext.Set<T>().CountAsync();
+        
+        return new QueryResponse<T>
+        {
+            Data = result,
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize)
+        };
     }
+
+    
 
     /// <summary>
     /// Retrieves an entity asynchronously based on its ID.

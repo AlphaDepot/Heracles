@@ -62,14 +62,7 @@ public class EquipmentGroupService : IEquipmentGroupService
         var result = await _repository.GetAsync(queryHelper);
       
 
-        return DomainResponse.Success(
-            new QueryResponse<EquipmentGroup>
-            {
-                Data = result,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize,
-            }
-        );
+        return DomainResponse.Success(result);
     }
 
     /// <summary>

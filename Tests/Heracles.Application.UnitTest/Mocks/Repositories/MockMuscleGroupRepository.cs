@@ -20,16 +20,24 @@ public abstract class MockMuscleGroupRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<MuscleGroup>>()))
             .ReturnsAsync((QuariableDto<MuscleGroup> queryableDto) =>
             {
-                var result = muscleGroups.AsQueryable();
+                var queryable = muscleGroups.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<MuscleGroup>()
+                {
+                    Data =  result,
+                    TotalPages = result.Count(),
+                    PageSize = queryableDto.PageSize,
+                    PageNumber = queryableDto.PageNumber
+                };
             });
         
         mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!

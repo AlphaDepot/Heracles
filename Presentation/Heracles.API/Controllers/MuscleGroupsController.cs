@@ -10,17 +10,17 @@ namespace Heracles.API.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class MuscleGroupController : ControllerBase
+    public class MuscleGroupsController : ControllerBase
     {
         private readonly IMuscleGroupService _service;
 
-        public MuscleGroupController(IMuscleGroupService service)
+        public MuscleGroupsController(IMuscleGroupService service)
         {
             _service = service;
         }
         
         
-        // GET: api/<MuscleGroupController>
+        // GET: api/<MuscleGroupsController>
         [HttpGet]
         public async Task<IResult> Get([FromQuery] QueryRequest query)
         {
@@ -29,7 +29,7 @@ namespace Heracles.API.Controllers
         }
 
 
-        // GET api/<MuscleGroupController>/5
+        // GET api/<MuscleGroupsController>/5
         [HttpGet("{id}")]
         public  async Task<IResult> Get(int id)
         {
@@ -37,7 +37,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
 
-        // POST api/<MuscleGroupController>
+        // POST api/<MuscleGroupsController>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public  async Task<IResult> Post([FromBody] MuscleGroup entity)
@@ -47,7 +47,7 @@ namespace Heracles.API.Controllers
         }
 
 
-        // PUT api/<MuscleGroupController>/5
+        // PUT api/<MuscleGroupsController>/5
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public  async Task<IResult> Put( [FromBody] MuscleGroup entity)
@@ -56,7 +56,7 @@ namespace Heracles.API.Controllers
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
         }
 
-        // DELETE api/<MuscleGroupController>/5
+        // DELETE api/<MuscleGroupsController>/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public  async Task<IResult> Delete([FromRoute] int id)

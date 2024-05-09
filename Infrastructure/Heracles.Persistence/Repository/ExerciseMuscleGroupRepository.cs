@@ -20,7 +20,7 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
     /// </summary>
     /// <param name="queryableDto">The query DTO containing the filter, sort, and pagination options.</param>
     /// <returns>The list of ExerciseMuscleGroup entities that match the provided exercise ID.</returns>
-    public async Task<List<ExerciseMuscleGroup>> GetByExerciseIdAsync(QuariableDto<ExerciseMuscleGroup> queryableDto)
+    public async Task<QueryResponse<ExerciseMuscleGroup>> GetByExerciseIdAsync(QuariableDto<ExerciseMuscleGroup> queryableDto)
     {
         IQueryable<ExerciseMuscleGroup> query = _dbContext.Set<ExerciseMuscleGroup>();
         // Apply filter
@@ -34,8 +34,22 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
         // Apply paging
         query = query.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize);
         
+        var result = await query.ToListAsync();
+        
+        // get total pages
+        var totalItems = await _dbContext.Set<ExerciseMuscleGroup>().CountAsync();
+        
         // Return the list of entities
-        return await query.ToListAsync();
+        //return await query.ToListAsync();
+        
+        return new QueryResponse<ExerciseMuscleGroup>
+        {
+            Data = result,
+            PageNumber = queryableDto.PageNumber,
+            PageSize = queryableDto.PageSize,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)queryableDto.PageSize)
+        };
+        
     }
 
     /// <summary>

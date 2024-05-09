@@ -7,12 +7,12 @@ using Xunit.Abstractions;
 
 namespace Heracles.API.IntegrationTest.Controllers;
 /// <summary>
-/// This class contains integration tests for the EquipmentGroupController.
+/// This class contains integration tests for the EquipmentGroupsController.
 /// </summary>
-public class TestEquipmentGroupController : BaseIntegrationTest
+public class TestEquipmentGroupsController : BaseIntegrationTest
 {
-    const string BaseUrl = "/api/equipmentgroup";
-    public TestEquipmentGroupController(HeraclesWebApplicationFactory factory, ITestOutputHelper console) : base(factory, console)
+    const string BaseUrl = "/api/EquipmentGroups";
+    public TestEquipmentGroupsController(HeraclesWebApplicationFactory factory, ITestOutputHelper console) : base(factory, console)
     {
     }
     

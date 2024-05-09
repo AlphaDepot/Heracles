@@ -18,16 +18,25 @@ public abstract class MockEquipmentGroupRepository
         mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<EquipmentGroup>>()))
             .ReturnsAsync((QuariableDto<EquipmentGroup> queryableDto) =>
             {
-                var result = equipmentGroups.AsQueryable();
+                var queryable = equipmentGroups.AsQueryable();
                 if (queryableDto.Filter != null)
                 {
-                    result = result.Where(queryableDto.Filter);
+                    queryable = queryable.Where(queryableDto.Filter);
                 }
                 if (queryableDto.Sorter != null)
                 {
-                    result = queryableDto.Sorter(result);
+                    queryable = queryableDto.Sorter(queryable);
                 }
-                return result.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
+                
+                return new QueryResponse<EquipmentGroup>()
+                {
+                    Data =  result,
+                    TotalPages = result.Count(),
+                    PageSize = queryableDto.PageSize,
+                    PageNumber = queryableDto.PageNumber
+                };
+                
             });
 
         

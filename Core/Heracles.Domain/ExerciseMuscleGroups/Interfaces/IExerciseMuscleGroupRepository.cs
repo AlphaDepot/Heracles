@@ -7,9 +7,9 @@ namespace Heracles.Domain.ExerciseMuscleGroups.Interfaces;
 
 public interface IExerciseMuscleGroupRepository : IGenericRepository<ExerciseMuscleGroup>
 {
-  
-    
-    Task<List<ExerciseMuscleGroup>> GetByExerciseIdAsync(QuariableDto<ExerciseMuscleGroup> queryableDto);
+
+
+    Task<QueryResponse<ExerciseMuscleGroup>> GetByExerciseIdAsync(QuariableDto<ExerciseMuscleGroup> queryableDto);
     
     Task<bool> IsUnique(int exerciseId, int muscleGroupId, int muscleFunctionId);
 

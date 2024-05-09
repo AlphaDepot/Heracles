@@ -46,14 +46,7 @@ public class UserService :IUserService
         var queryHelper = new QueryHelper().CreateQueriable(query, sortExpression, filter);
         var result = await  _userRepository.GetAsync(queryHelper);
         
-        return DomainResponse.Success(
-            new QueryResponse<User>
-            {
-                Data = result,
-                PageNumber = query.PageNumber,
-                PageSize = query.PageSize,
-            }
-        );
+        return DomainResponse.Success(result);
     }
 
     /// <summary>

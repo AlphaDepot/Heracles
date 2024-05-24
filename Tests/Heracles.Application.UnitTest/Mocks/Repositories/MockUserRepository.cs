@@ -29,7 +29,7 @@ public  class MockUserRepository :  MockBaseRepository<User, IUserRepository>
     ///  Get a new instance of the MockUserRepository
     /// </summary>
     /// <returns> A new instance of the MockUserRepository </returns>
-    public new static Mock<IUserRepository> Get()
+    public static Mock<IUserRepository> Get()
     {
         return new MockUserRepository(UserFixture.Get()).MockRepo;
     }

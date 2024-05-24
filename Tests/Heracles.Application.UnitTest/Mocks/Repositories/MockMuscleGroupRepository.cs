@@ -24,7 +24,7 @@ public  class MockMuscleGroupRepository : MockBaseRepository<MuscleGroup, IMuscl
     ///  Get the Mock for the MuscleGroupRepository.
     /// </summary>
     /// <returns> The Mock for the MuscleGroupRepository.</returns>
-    public new static Mock<IMuscleGroupRepository> Get()
+    public static Mock<IMuscleGroupRepository> Get()
     {
         return new MockMuscleGroupRepository(MuscleGroupFixture.Get()).MockRepo;
     }

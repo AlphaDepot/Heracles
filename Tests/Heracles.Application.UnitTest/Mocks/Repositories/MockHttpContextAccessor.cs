@@ -7,7 +7,6 @@ namespace Heracles.Application.UnitTest.Mocks.Repositories;
 
 public abstract class MockHttpContextAccessor
 {
-    
     public static Mock<IHttpContextAccessor> GetAdmin()
     {
         var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -22,13 +21,13 @@ public abstract class MockHttpContextAccessor
                 ClaimTypes.NameIdentifier, 
                 userId
             ));
-         // set the id on httpContextAccessor.items["UserId"]
-         
-         mockHttpContextAccessor.Setup(h => h.HttpContext.Items["UserId"]).Returns(userId);
+
+        // set the id on httpContextAccessor.items["UserId"]
+        mockHttpContextAccessor.Setup(h => h.HttpContext!.Items["UserId"]).Returns(userId);
         
         // set up the user to be an admin
         adminUser.Setup(u => u.IsInRole("Admin")).Returns(true);
-        mockHttpContextAccessor.Setup(h => h.HttpContext.User).Returns(adminUser.Object);
+        mockHttpContextAccessor.Setup(h => h.HttpContext!.User).Returns(adminUser.Object);
         
         
         return mockHttpContextAccessor;
@@ -47,15 +46,16 @@ public abstract class MockHttpContextAccessor
                 userId
                 ));
 
-        mockHttpContextAccessor.Setup(h => h.HttpContext.Items["UserId"]).Returns(userId);
+        mockHttpContextAccessor.Setup(h => h.HttpContext!.Items["UserId"]).Returns(userId);
         
         // set up the user to be an admin
         notAdminUser.Setup(u => u.IsInRole("Admin")).Returns(false);
         
-        mockHttpContextAccessor.Setup(h => h.HttpContext.User).Returns(notAdminUser.Object);
+        mockHttpContextAccessor.Setup(h => h.HttpContext!.User).Returns(notAdminUser.Object);
         
         
         return mockHttpContextAccessor;
     }
-    
+
+
 }

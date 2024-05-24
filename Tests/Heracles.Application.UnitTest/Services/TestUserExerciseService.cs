@@ -109,7 +109,7 @@ public class TestUserExerciseService : BaseUnitTest
     ///  <param name="expected">The expected result of the test.</param>
     [Theory]
     [MemberData(nameof(CreateData))]
-    public async Task CreateAsync_ReturnsResponse(string userId, int exerciseId, string expected)
+    public async Task CreateAsync_ReturnsResponse(string? userId, int exerciseId, string expected)
     {
         // Arrange
         // create a new id based on the count of the user exercises
@@ -117,7 +117,7 @@ public class TestUserExerciseService : BaseUnitTest
 
         var dto = new CreateUserExerciseDto
         {
-            UserId = userId,
+            UserId = userId ?? "",
             ExerciseId = exerciseId
         };
 
@@ -212,8 +212,9 @@ public class TestUserExerciseService : BaseUnitTest
         else if (expected == TestDomainResponse.BadRequest)
             ExpectedDeleteResult.ValidationFail<UserExerciseService, UserExercise>(_logger, result, result.Error.Errors!);
     }
-    
-    
+
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
+
     /// <summary>
     ///  Test case for CreateAsync method.
     /// </summary>
@@ -251,4 +252,6 @@ public class TestUserExerciseService : BaseUnitTest
             { new UserExercise { Id = 1, UserId = InvalidUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestDomainResponse.BadRequest }
         };
     }
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
 }

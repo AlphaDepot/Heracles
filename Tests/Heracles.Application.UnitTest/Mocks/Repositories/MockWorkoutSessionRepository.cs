@@ -24,7 +24,7 @@ public  class MockWorkoutSessionRepository : MockBaseRepository<WorkoutSession, 
     ///   Get a new instance of the MockWorkoutSessionRepository
     /// </summary>
     /// <returns> A new instance of the MockWorkoutSessionRepository </returns>
-    public new static Mock<IWorkoutSessionRepository> Get()
+    public static Mock<IWorkoutSessionRepository> Get()
     {
         return new MockWorkoutSessionRepository(WorkoutSessionFixture.Get()).MockRepo;
     }

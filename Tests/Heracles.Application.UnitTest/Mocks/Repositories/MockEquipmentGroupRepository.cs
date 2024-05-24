@@ -22,7 +22,7 @@ public  class MockEquipmentGroupRepository : MockBaseRepository<EquipmentGroup, 
     ///  Get the Mock for the EquipmentGroupRepository.
     /// </summary>
     /// <returns> The Mock for the EquipmentGroupRepository.</returns>
-    public new static Mock<IEquipmentGroupRepository> Get()
+    public static Mock<IEquipmentGroupRepository> Get()
     {
         return new MockEquipmentGroupRepository(EquipmentGroupFixture.Get()).MockRepo;
     }

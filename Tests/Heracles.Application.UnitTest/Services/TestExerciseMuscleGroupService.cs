@@ -176,6 +176,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
 
 
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
     ///     Provides data for the CreateExerciseMuscleGroupDtoData test.
@@ -207,5 +208,6 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
             { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 0 }, TestDomainResponse.BadRequest }
         };
     }
-    
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
 }

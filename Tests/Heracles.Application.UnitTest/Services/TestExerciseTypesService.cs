@@ -156,6 +156,8 @@ public class TestExerciseTypesService : BaseUnitTest
                 EntityErrorMessage<ExerciseType>.NotFound(id), id);
     }
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
+
     /// <summary>
     ///     Provides data for the CreateData test.
     /// </summary>
@@ -189,4 +191,7 @@ public class TestExerciseTypesService : BaseUnitTest
             { 1, "name", new string('a', 1001), TestDomainResponse.BadRequest } // to long description
         };
     }
+
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
 }

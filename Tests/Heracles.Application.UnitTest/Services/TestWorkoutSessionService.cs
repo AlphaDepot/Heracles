@@ -115,7 +115,7 @@ public class TestWorkoutSessionService : BaseUnitTest
         // Arrange
         var workoutSession = new WorkoutSession
         {
-            UserId = userId,
+            UserId = userId ?? "",
             Name = name,
             DayOfWeek = dayOfWeek,
             SortOrder = sortOrder
@@ -297,26 +297,31 @@ public class TestWorkoutSessionService : BaseUnitTest
                 result.Error.Errors!);
     }
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
     ///     Test case for CreateAsync method.
     /// </summary>
     /// <returns> TheoryData </returns>
-    public static TheoryData<string, string, DayOfWeek, int, string> CreateData =>
-        new()
+    public static TheoryData<string, string, DayOfWeek, int, string> CreateData()
+    {
+        
+        return new TheoryData<string, string, DayOfWeek, int, string>
         {
-            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
-            {ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
-            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
-            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
-            {ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest}
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
+            { ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
+            { null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
+            { ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
+            { ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
+            { ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
+            { ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
+            { InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }
         };
+        
+    }
 
     /// <summary>
     ///     Test case for UpdateAsync method.
@@ -354,6 +359,6 @@ public class TestWorkoutSessionService : BaseUnitTest
             {InvalidUserId, 1, 1, TestDomainResponse.BadRequest}
         };
     }
-
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
 }

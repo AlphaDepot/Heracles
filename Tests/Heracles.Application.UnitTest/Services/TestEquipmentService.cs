@@ -156,6 +156,7 @@ public class TestEquipmentService : BaseUnitTest
                 EntityErrorMessage<Equipment>.BadRequest());
     }
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
     /// Provides data for the CreateAsync test.
@@ -191,5 +192,6 @@ public class TestEquipmentService : BaseUnitTest
             { 1, "Dumbbell", 20, -1, TestDomainResponse.BadRequest } // invalid resistance
         };
     }
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
 }

@@ -160,6 +160,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
             ExpectedDeleteResult.ValidationFail<UserExerciseHistoryService, UserExerciseHistory>(_logger, result, result.Error.Errors!);
     }
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
     ///  Test for the CreateAsync method.
@@ -204,5 +205,6 @@ public class TestUserExerciseHistoryService : BaseUnitTest
             { 1, InvalidUserId, 5, 100, TestDomainResponse.BadRequest } // invalid user id
         };
     }
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
 }

@@ -87,10 +87,10 @@ public class TestEquipmentGroupService : BaseUnitTest
     /// <param name="expected">The expected result.</param>
     [Theory]
     [MemberData(nameof(CreateAsyncData))]
-    public async Task CreateAsync_ReturnsResponse(string name, string expected)
+    public async Task CreateAsync_ReturnsResponse(string? name, string expected)
     {
         // Arrange
-        var equipmentGroup = new EquipmentGroup { Name = name };
+        var equipmentGroup = new EquipmentGroup { Name = name ?? "" };
 
         // Act
         var result = await _service.CreateAsync(equipmentGroup);
@@ -118,7 +118,7 @@ public class TestEquipmentGroupService : BaseUnitTest
         var equipmentGroup = EquipmentGroups.FirstOrDefault(q => q.Id == id)
                              ?? new EquipmentGroup { Id = id, Name = name };
 
-        equipmentGroup.Name = name;
+        equipmentGroup.Name = name ?? "";
 
         // Act
         var result = await _service.UpdateAsync(equipmentGroup);
@@ -207,6 +207,7 @@ public class TestEquipmentGroupService : BaseUnitTest
                 result.Error.Errors!);
     }
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
     ///  Test for the CreateAsync method.
@@ -258,5 +259,6 @@ public class TestEquipmentGroupService : BaseUnitTest
             { 1, -1, TestDomainResponse.BadRequest }, // invalid id
         };
     }
-   
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
 }

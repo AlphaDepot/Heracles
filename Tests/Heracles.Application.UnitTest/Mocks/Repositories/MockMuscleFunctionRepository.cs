@@ -23,7 +23,7 @@ public class MockMuscleFunctionRepository : MockBaseRepository<MuscleFunction, I
     ///     Get the Mock for the MuscleFunctionRepository.
     /// </summary>
     /// <returns> The Mock for the MuscleFunctionRepository.</returns>
-    public new static Mock<IMuscleFunctionRepository> Get()
+    public static Mock<IMuscleFunctionRepository> Get()
     {
         return new MockMuscleFunctionRepository(MuscleFunctionFixture.Get()).MockRepo;
     }

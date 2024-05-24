@@ -24,7 +24,7 @@ public  class MockExerciseTypeRepository : MockBaseRepository<ExerciseType, IExe
     ///  Get the Mock for the ExerciseTypeRepository.
     /// </summary>
     /// <returns> The Mock for the ExerciseTypeRepository.</returns>
-    public new static Mock<IExerciseTypeRepository> Get()
+    public static Mock<IExerciseTypeRepository> Get()
     {
         return new MockExerciseTypeRepository(ExerciseTypeFixture.Get()).MockRepo;
     }

@@ -23,7 +23,7 @@ public  class MockUserExerciseHistoryRepository : MockBaseRepository<UserExercis
     ///  Get the Mock for the UserExerciseHistoryRepository.
     /// </summary>
     /// <returns> The Mock for the UserExerciseHistoryRepository.</returns>
-    public new static Mock<IUserExerciseHistoryRepository> Get()
+    public static Mock<IUserExerciseHistoryRepository> Get()
     {
         return new MockUserExerciseHistoryRepository(UserExerciseHistoryFixture.Get()).MockRepo;
     }

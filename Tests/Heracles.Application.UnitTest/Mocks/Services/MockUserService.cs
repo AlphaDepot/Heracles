@@ -16,7 +16,7 @@ public abstract class MockUserService
             .ReturnsAsync( (string userId, string currentUserId) =>
             {
                 var isSameUser = userId == currentUserId;
-                var isUserAdmin = users.Any(q => q.Roles.Contains("Admin"));
+                var isUserAdmin = users.Any(q => q.Roles!.Contains("Admin"));
                 return isSameUser || isUserAdmin;
             });
 

@@ -23,7 +23,7 @@ public  class MockEquipmentRepository : MockBaseRepository<Equipment, IEquipment
     ///  Get a new instance of the MockEquipmentRepository
     /// </summary>
     /// <returns> A new instance of the MockEquipmentRepository </returns>
-    public new static Mock<IEquipmentRepository> Get()
+    public static Mock<IEquipmentRepository> Get()
     {
         return new MockEquipmentRepository(EquipmentFixture.Get()).MockRepo;
     }

@@ -306,7 +306,10 @@ public class TestUserService : BaseUnitTest
         _logger.Verify(x => x.LogWarning(It.IsAny<string>()), Times.Once);
         _logger.Verify(x => x.LogInformation(It.IsAny<string>()), Times.Never);
     }
-    
+
+
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
+
     /// <summary>
     ///  Provides user data for CreateUserAsync test case.
     /// </summary>
@@ -336,5 +339,6 @@ public class TestUserService : BaseUnitTest
             new User {Id= 1 , UserId = "i"} // invalid user id
         };
     }
-        
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
 }

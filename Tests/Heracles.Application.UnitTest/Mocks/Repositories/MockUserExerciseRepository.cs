@@ -23,7 +23,7 @@ public  class MockUserExerciseRepository : MockBaseRepository<UserExercise, IUse
     ///  Get a new instance of the MockUserExerciseRepository
     /// </summary>
     /// <returns> A new instance of the MockUserExerciseRepository</returns>
-    public new static Mock<IUserExerciseRepository> Get()
+    public static Mock<IUserExerciseRepository> Get()
     {
         return new MockUserExerciseRepository(UserExerciseFixture.Get()).MockRepo;
     }

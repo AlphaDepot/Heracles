@@ -25,7 +25,7 @@ public class MockExerciseMuscleGroupRepository : MockBaseRepository<ExerciseMusc
     ///  Get the Mock for the ExerciseMuscleGroupRepository.
     /// </summary>
     /// <returns> The Mock for the ExerciseMuscleGroupRepository.</returns>
-    public new static Mock<IExerciseMuscleGroupRepository> Get()
+    public static Mock<IExerciseMuscleGroupRepository> Get()
     {
         return new MockExerciseMuscleGroupRepository(ExerciseMuscleGroupFixture.Get()).MockRepo;
     }
@@ -68,7 +68,7 @@ public class MockExerciseMuscleGroupRepository : MockBaseRepository<ExerciseMusc
                 return new QueryResponse<ExerciseMuscleGroup>()
                 {
                     Data =  result,
-                    TotalPages = result.Count(),
+                    TotalPages = result.Count,
                     PageSize = queryableDto.PageSize,
                     PageNumber = queryableDto.PageNumber
                 };

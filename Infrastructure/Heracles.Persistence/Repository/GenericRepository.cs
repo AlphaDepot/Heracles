@@ -59,14 +59,38 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         };
     }
 
-    
 
     /// <summary>
     /// Retrieves an entity asynchronously based on its ID.
     /// </summary>
     /// <param name="id">The ID of the entity.</param>
+    /// <param name="includeProperties">The related entities to include in the query.</param>
     /// <returns>A task representing the asynchronous operation that returns the entity matching the provided ID.</returns>
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(int id,params string[]? includeProperties)
+    {
+        IQueryable<T?> query = _dbContext.Set<T>();
+
+        if (includeProperties != null)
+        {
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+        }
+
+        return  await query.FirstOrDefaultAsync(e => e.Id == id);
+        
+        
+        //var entity = await _dbContext.Set<T>().FindAsync(id);
+        //return entity;
+    }
+    
+    /// <summary>
+    /// Retrieves an entity asynchronously based on its ID.
+    /// </summary>
+    /// <param name="id">The ID of the entity.</param>
+    /// <returns>A task representing the asynchronous operation that returns the entity matching the provided ID.</returns>
+    public async  Task<T> GetByIdAsync(int id)
     {
         var entity = await _dbContext.Set<T>().FindAsync(id);
         return entity;

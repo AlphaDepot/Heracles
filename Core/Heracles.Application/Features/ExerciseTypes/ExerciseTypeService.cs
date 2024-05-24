@@ -52,7 +52,8 @@ public class ExerciseTypeService : IExerciseTypeService
         }
             
         
-        var exerciseType = await _repository.GetByIdAsync(id);
+        var exerciseType = await _repository.GetByIdAsync(
+            id,"MuscleGroups.Muscle", "MuscleGroups.Function" );
 
         if (exerciseType == null)
         {

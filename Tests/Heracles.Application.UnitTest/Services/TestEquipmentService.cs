@@ -156,65 +156,40 @@ public class TestEquipmentService : BaseUnitTest
                 EntityErrorMessage<Equipment>.BadRequest());
     }
 
-    /// <summary>
-    /// Provides data for the GetAsync test.
-    /// </summary>
-    public static IEnumerable<object[]> QueryData()
-    {
-        yield return new object[] { new QueryRequest() };
-        yield return new object[] { new QueryRequest { SearchTerm = "Barbell" } };
-        yield return new object[] { new QueryRequest { SortColumn = "id", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "id", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "created", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "created", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "updated", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "updated", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "type", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "type", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "weight", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "weight", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "resistance", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "resistance", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { PageSize = 1, PageNumber = 3 } };
-    }
-    /// <summary>
-    /// Provides data for the GetByIdAsync test.
-    /// </summary>
-    public static IEnumerable<object[]> GetByIdAsyncData()
-    {
-        yield return new object[] { 0, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { -1, TestDomainResponse.BadRequest }; // invalid id
-
-        yield return new object[] { 1000000, TestDomainResponse.NotFound }; // out of bound id
-        yield return new object[] { 1, TestDomainResponse.Success }; // valid id
-    }
 
     /// <summary>
     /// Provides data for the CreateAsync test.
     /// </summary>
-    public static IEnumerable<object?[]> CreateData()
+    public static TheoryData<string, double, double, string> CreateData()
     {
-        yield return new object?[] { "NOT A DUPLICATE", 10, 10, TestDomainResponse.Success };
-        yield return new object?[] { "Dumbbell", 10, 10, TestDomainResponse.BadRequest }; // duplicate
-        yield return new object?[] { "", 20, 10, TestDomainResponse.BadRequest }; // invalid type to short
-        yield return new object?[] { null, 20, 10, TestDomainResponse.BadRequest }; // invalid type null
-        yield return new object?[] { "Dumbbell", -1, 10, TestDomainResponse.BadRequest }; // invalid weight
-        yield return new object?[] { "Dumbbell", 20, -1, TestDomainResponse.BadRequest }; // invalid resistance
+        return new TheoryData<string, double, double, string>
+        {
+            { "NOT A DUPLICATE", 10, 10, TestDomainResponse.Success },
+            { "Dumbbell", 10, 10, TestDomainResponse.BadRequest }, // duplicate
+            { "", 20, 10, TestDomainResponse.BadRequest }, // invalid type to short
+            { null, 20, 10, TestDomainResponse.BadRequest }, // invalid type null
+            { "Dumbbell", -1, 10, TestDomainResponse.BadRequest }, // invalid weight
+            { "Dumbbell", 20, -1, TestDomainResponse.BadRequest } // invalid resistance
+        };
     }
+
     /// <summary>
     /// Provides data for the UpdateAsync test.
     /// </summary>
-    public static IEnumerable<object?[]> UpdateData()
+    public static TheoryData<int, string, double, double, string> UpdateData()
     {
-        yield return new object?[] { 1, "NOT A DUPLICATE", 10, 10, TestDomainResponse.Success };
-
-        yield return new object?[] { 0, "NOT A DUPLICATE", 10, 10, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[] { -1, "NOT A DUPLICATE", 10, 10, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[] { 1000000, "NOT A DUPLICATE", 10, 10, TestDomainResponse.BadRequest }; // out of bound id
-        yield return new object?[] { 1, "Dumbbell", 10, 10, TestDomainResponse.BadRequest }; // duplicate
-        yield return new object?[] { 1, "", 20, 10, TestDomainResponse.BadRequest }; // invalid type to short
-        yield return new object?[] { 1, null, 20, 10, TestDomainResponse.BadRequest }; // invalid type null
-        yield return new object?[] { 1, "Dumbbell", -1, 10, TestDomainResponse.BadRequest }; // invalid weight
-        yield return new object?[] { 1, "Dumbbell", 20, -1, TestDomainResponse.BadRequest }; // invalid resistance
+        return new TheoryData<int, string, double, double, string>
+        {
+            { 1, "NOT A DUPLICATE", 10, 10, TestDomainResponse.Success },
+            { 0, "NOT A DUPLICATE", 10, 10, TestDomainResponse.BadRequest }, // invalid id
+            { -1, "NOT A DUPLICATE", 10, 10, TestDomainResponse.BadRequest }, // invalid id
+            { 1000000, "NOT A DUPLICATE", 10, 10, TestDomainResponse.BadRequest }, // out of bound id
+            { 1, "Dumbbell", 10, 10, TestDomainResponse.BadRequest }, // duplicate
+            { 1, "", 20, 10, TestDomainResponse.BadRequest }, // invalid type to short
+            { 1, null, 20, 10, TestDomainResponse.BadRequest }, // invalid type null
+            { 1, "Dumbbell", -1, 10, TestDomainResponse.BadRequest }, // invalid weight
+            { 1, "Dumbbell", 20, -1, TestDomainResponse.BadRequest } // invalid resistance
+        };
     }
+
 }

@@ -161,58 +161,48 @@ public class TestUserExerciseHistoryService : BaseUnitTest
     }
 
 
-    
-
     /// <summary>
     ///  Test for the CreateAsync method.
     /// </summary>
-    /// <returns> Task</returns>
-    public static IEnumerable<object?[]> CreateData()
+    /// <returns> TheoryData</returns>
+    public static TheoryData<string, int, int, int, DateTime, string> CreateData()
     {
         var validUserExerciseId = 1;
         var validDate = new DateTime(2022, 1, 1);
 
-
-        yield return new object[] {ValidAdminUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.Success }; // valid data
-        yield return new object[] {ValidUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.Success }; // valid data
-        yield return new object?[] {ValidAdminUserId,  null, 5, 100, validDate, TestDomainResponse.BadRequest }; // invalid user exercise id
-        yield return new object?[] {ValidAdminUserId,  0, 5, 100, validDate, TestDomainResponse.BadRequest }; // invalid user exercise id
-        yield return new object?[]
-            {ValidAdminUserId,  validUserExerciseId, null, 100, validDate, TestDomainResponse.BadRequest }; // invalid repetition
-        yield return new object?[]
-            {ValidAdminUserId,  validUserExerciseId, -1, 100, validDate, TestDomainResponse.BadRequest }; // invalid repetition
-        yield return new object?[]
-            { ValidAdminUserId, validUserExerciseId, 0, 100, validDate, TestDomainResponse.BadRequest }; // invalid repetition
-        yield return new object?[]
-            {ValidAdminUserId,  validUserExerciseId, 5, null, validDate, TestDomainResponse.BadRequest }; // invalid weight
-        yield return new object?[] {ValidAdminUserId,  validUserExerciseId, 5, -1, validDate, TestDomainResponse.BadRequest }; // invalid weight
-        yield return new object?[] {ValidAdminUserId,  validUserExerciseId, 5, 0, validDate, TestDomainResponse.BadRequest }; // invalid weight
-        
-        yield return new object?[] {InvalidUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.BadRequest }; // invalid user id
+        return new TheoryData<string, int, int, int, DateTime, string>()
+        {
+            { ValidAdminUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.Success }, // valid data
+            { ValidUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.Success }, // valid data
+            { ValidAdminUserId,  0, 5, 100, validDate, TestDomainResponse.BadRequest }, // invalid user exercise id
+            { ValidAdminUserId,  validUserExerciseId, -1, 100, validDate, TestDomainResponse.BadRequest }, // invalid repetition
+            { ValidAdminUserId, validUserExerciseId, 0, 100, validDate, TestDomainResponse.BadRequest }, // invalid repetition
+            { ValidAdminUserId,  validUserExerciseId, 5, -1, validDate, TestDomainResponse.BadRequest }, // invalid weight
+            { ValidAdminUserId,  validUserExerciseId, 5, 0, validDate, TestDomainResponse.BadRequest }, // invalid weight
+            { InvalidUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.BadRequest } // invalid user id
+        };
     }
 
 
     /// <summary>
     ///  Test for the UpdateAsync method.
     /// </summary>
-    /// <returns> Task</returns>
-    public static IEnumerable<object?[]> UpdateData()
+    /// <returns> TheoryData</returns>
+    public static TheoryData<int, string, int, int, string> UpdateData()
     {
-        yield return new object[] { 1,ValidAdminUserId, 56, 150, TestDomainResponse.Success }; // valid data
-        yield return new object[] { 1,ValidAdminUserId, 56, 150, TestDomainResponse.Success }; // valid data
-//yield return new object?[] { 1,_validUserId, 5, 100, TestDomainResponse.BadRequest }; // invalid user id
-        
-        yield return new object[] { 0,ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[] { null,ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { -1,ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[] { 1,ValidAdminUserId, null, 100, TestDomainResponse.BadRequest }; // invalid repetition
-        yield return new object?[] { 1,ValidAdminUserId, -1, 100, TestDomainResponse.BadRequest }; // invalid repetition
-        yield return new object?[] { 1,ValidAdminUserId, 0, 100, TestDomainResponse.BadRequest }; // invalid repetition
-        yield return new object?[] { 1,ValidAdminUserId, 5, null, TestDomainResponse.BadRequest }; // invalid weight
-        yield return new object?[] { 1,ValidAdminUserId, 5, -1, TestDomainResponse.BadRequest }; // invalid weight
-        yield return new object?[] { 1,ValidAdminUserId, 5, 0, TestDomainResponse.BadRequest }; // invalid weight
-        
-        yield return new object?[] { 1,null, 5, 100, TestDomainResponse.BadRequest }; // invalid user id
-        yield return new object?[] { 1,InvalidUserId, 5, 100, TestDomainResponse.BadRequest }; // invalid user id
+        return new TheoryData<int, string, int, int, string>()
+        {
+            { 1, ValidAdminUserId, 56, 150, TestDomainResponse.Success }, // valid data
+            { 1, ValidAdminUserId, 56, 150, TestDomainResponse.Success }, // valid data
+            { 0, ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }, // invalid id
+            { -1, ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }, // invalid id
+            { 1, ValidAdminUserId, -1, 100, TestDomainResponse.BadRequest }, // invalid repetition
+            { 1, ValidAdminUserId, 0, 100, TestDomainResponse.BadRequest }, // invalid repetition
+            { 1, ValidAdminUserId, 5, -1, TestDomainResponse.BadRequest }, // invalid weight
+            { 1, ValidAdminUserId, 5, 0, TestDomainResponse.BadRequest }, // invalid weight
+            { 1, null, 5, 100, TestDomainResponse.BadRequest }, // invalid user id
+            { 1, InvalidUserId, 5, 100, TestDomainResponse.BadRequest } // invalid user id
+        };
     }
+
 }

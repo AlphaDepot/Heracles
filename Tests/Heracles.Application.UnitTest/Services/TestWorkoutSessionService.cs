@@ -297,86 +297,63 @@ public class TestWorkoutSessionService : BaseUnitTest
                 result.Error.Errors!);
     }
 
-    
 
-    
-    public static IEnumerable<object?[]> CreateData()
-    {
-        
+    /// <summary>
+    ///     Test case for CreateAsync method.
+    /// </summary>
+    /// <returns> TheoryData </returns>
+    public static TheoryData<string, string, DayOfWeek, int, string> CreateData =>
+        new()
+        {
+            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
+            {ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
+            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
+            {ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
+            {ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest}
+        };
 
-        // userId, name, dayOfWeek, sortOrder, expected
-        yield return new object?[] { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success };
-        yield return new object?[]
-            { ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // duplicate
-
-        yield return new object?[]
-            { null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid userId
-        yield return
-            new object?[] { ValidAdminUserId, "NOT DUPLICATE", -1, 2, TestDomainResponse.BadRequest }; // invalid day of week
-        yield return
-            new object?[] { ValidAdminUserId, "NOT DUPLICATE", 8, 2, TestDomainResponse.BadRequest }; // invalid day of week
-        yield return new object?[]
-            { ValidAdminUserId, "NOT DUPLICATE", null, 2, TestDomainResponse.BadRequest }; // invalid day of week
-        yield return new object?[] { ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        yield return new object?[] { ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        yield return new object?[]
-            { ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        yield return new object?[] { ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-
-        
-         yield return new object?[] { InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid userId
-         yield return new object?[] { null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid userId
-    }
-    
     /// <summary>
     ///     Test case for UpdateAsync method.
     /// </summary>
-    /// <returns> Task </returns>
-    public static IEnumerable<object?[]> UpdateData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<int, string, string, DayOfWeek, int, string> UpdateData()
     {
-        
-        // id, userId, name, dayOfWeek, sortOrder, expected
-        yield return new object?[] { 1, ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success };
-
-        yield return new object?[]
-            { 1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // duplicate
-        yield return new object?[]
-            { 0, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[]
-            { -1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid id
-
-
-        yield return new object?[]
-            { 1, ValidAdminUserId, "NOT DUPLICATE", -1, 2, TestDomainResponse.BadRequest }; // invalid day of week
-        yield return new object?[]
-            { 1, ValidAdminUserId, "NOT DUPLICATE", 8, 2, TestDomainResponse.BadRequest }; // invalid day of week
-        yield return new object?[]
-            { 1, ValidAdminUserId, "NOT DUPLICATE", null, 2, TestDomainResponse.BadRequest }; // invalid day of week
-        yield return new object?[] { 1, ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        yield return new object?[]
-            { 1, ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        yield return new object?[]
-            { 1, ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        yield return new object?[]
-            { 1, ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid name
-        
-        yield return new object?[] { 1, null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid userId
-        yield return new object?[] {1, InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }; // invalid userId
+        return new TheoryData<int, string, string, DayOfWeek, int, string>
+        {
+            {1, ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
+            {1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {0, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {-1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {1, ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {1, ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {1, ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {1, ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {1, null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
+            {1, InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest}
+        };
     }
+        
 
     /// <summary>
-    ///   Test case for AddUserExerciseAsync method.
+    /// Test case for AddUserExerciseAsync method.
     /// </summary>
-    /// <returns> Task </returns>
-    public static IEnumerable<object[]> AddUserExerciseData()
+    /// <returns> TheoryData </returns> 
+    public static TheoryData<string, int, int, string> AddUserExerciseData()
     {
-        yield return new object[] { ValidAdminUserId, 1, 1, TestDomainResponse.Success };
-        yield return new object[] { ValidAdminUserId, 1, 0, TestDomainResponse.BadRequest };
-        yield return new object[] { ValidAdminUserId, 0, 1, TestDomainResponse.BadRequest };
-        yield return new object[] { ValidAdminUserId, 0, 0, TestDomainResponse.BadRequest };
-        yield return new object[] {InvalidUserId,  1, 1, TestDomainResponse.BadRequest };
+        return new TheoryData<string, int, int, string> {
+            {ValidAdminUserId, 1, 1, TestDomainResponse.Success},
+            {ValidAdminUserId, 1, 0, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, 0, 1, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, 0, 0, TestDomainResponse.BadRequest},
+            {InvalidUserId, 1, 1, TestDomainResponse.BadRequest}
+        };
     }
 
-    
-    
+
 }

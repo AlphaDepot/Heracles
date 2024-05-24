@@ -307,25 +307,34 @@ public class TestUserService : BaseUnitTest
         _logger.Verify(x => x.LogInformation(It.IsAny<string>()), Times.Never);
     }
     
-    public static IEnumerable<object?[]> CreateBadData()
+    /// <summary>
+    ///  Provides user data for CreateUserAsync test case.
+    /// </summary>
+    /// <returns></returns>
+    public static TheoryData<string> CreateBadData()
     {
-        yield return new object?[] { null };
-        yield return new object?[] { InvalidUserId };
-        yield return new object[] { new string('a', 256) };
 
+        return new TheoryData<string>
+        {
+            null,
+            InvalidUserId,
+            new string('a', 256)
+        };
     }
-
+        
 
     /// <summary>
     /// Provides invalid user data for UpdateUserAsync test case.
     /// </summary>
-    public static IEnumerable<object?[]> UpdateInvalidData()
+    /// <returns> Invalid user data.</returns>
+    public static TheoryData<User> UpdateInvalidData()
     {
-        yield return new object?[] { new User {Id= 0 , UserId = "test-userid-greater-than-2-but-less-than-256-characters"} }; // invalid id
-        yield return new object?[] { new User {Id=-1 , UserId = "test-userid-greater-than-2-but-less-than-256-characters"} }; // invalid id
-        yield return new object?[] { new User {Id= 1 , UserId = "i"} }; // invalid user id
-        
+        return new TheoryData<User>
+        {
+            new User {Id= 0 , UserId = "test-userid-greater-than-2-but-less-than-256-characters"}, // invalid id
+            new User {Id=-1 , UserId = "test-userid-greater-than-2-but-less-than-256-characters"}, // invalid id
+            new User {Id= 1 , UserId = "i"} // invalid user id
+        };
     }
         
-
 }

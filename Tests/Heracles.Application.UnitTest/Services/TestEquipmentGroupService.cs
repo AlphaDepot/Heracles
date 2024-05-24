@@ -206,45 +206,57 @@ public class TestEquipmentGroupService : BaseUnitTest
             ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 result.Error.Errors!);
     }
-    
+
 
     /// <summary>
     ///  Test for the CreateAsync method.
     /// </summary>
-    public static IEnumerable<object?[]> CreateAsyncData()
+    /// <returns> TheoryData</returns>
+    public static TheoryData<string?, string> CreateAsyncData()
     {
-        yield return new object[] { "NOT A DUPLICATE", TestDomainResponse.Success }; // valid entity
-        yield return new object[] { "Home Gym", TestDomainResponse.BadRequest }; // duplicate entity
-        yield return new object[] { "", TestDomainResponse.BadRequest }; // invalid entity
-        yield return new object?[] { null, TestDomainResponse.BadRequest }; // invalid entity
-        yield return new object[] { new string('a', 256), TestDomainResponse.BadRequest }; // invalid entity
+        TheoryData<string?, string> theoryData = new()
+        {
+            { "NOT A DUPLICATE", TestDomainResponse.Success }, // valid entity
+            { "Home Gym", TestDomainResponse.BadRequest }, // duplicate entity
+            { "", TestDomainResponse.BadRequest }, // invalid entity
+            { null, TestDomainResponse.BadRequest }, // invalid entity
+            { new string('a', 256), TestDomainResponse.BadRequest }, // invalid entity
+        };
+        return theoryData;
     }
 
     /// <summary>
     ///  Test for the UpdateAsync method.
     /// </summary>
-    public static IEnumerable<object?[]> UpdateAsyncData()
+    /// <returns> TheoryData</returns>
+    public static TheoryData<int, string, string> UpdateAsyncData()
     {
-        yield return new object[] { 1, "NOT A DUPLICATE", TestDomainResponse.Success }; // valid entity
-        yield return new object[] { 1, "Home Gym", TestDomainResponse.BadRequest }; // duplicate entity
-        yield return new object[] { 1, "", TestDomainResponse.BadRequest }; // invalid entity
-        yield return new object?[] { 1, null, TestDomainResponse.BadRequest }; // invalid entity
-        yield return new object[] { 1, new string('a', 256), TestDomainResponse.BadRequest }; // invalid entity
-        yield return new object[] { 0, "Gym", TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[] { null, "Gym", TestDomainResponse.BadRequest }; // invalid id
+        return new TheoryData<int, string, string>()
+        {
+            { 1, "NOT A DUPLICATE", TestDomainResponse.Success }, // valid entity
+            { 1, "Home Gym", TestDomainResponse.BadRequest }, // duplicate entity
+            { 1, "", TestDomainResponse.BadRequest }, // invalid entity
+            { 1, null, TestDomainResponse.BadRequest }, // invalid entity
+            { 1, new string('a', 256), TestDomainResponse.BadRequest }, // invalid entity
+            { 0, "Gym", TestDomainResponse.BadRequest }, // invalid id
+        };
     }
 
     /// <summary>
     ///  Test for the AddEquipmentAsync and RemoveEquipmentAsync methods.
     /// </summary>
-    public static IEnumerable<object?[]> AddRemoveAsyncData()
+    /// <returns> TheoryData</returns>
+    public static TheoryData<int, int, string> AddRemoveAsyncData()
     {
-        yield return new object[] { 1, 1, TestDomainResponse.Success }; // valid entity
-        yield return new object[] { 1, 1000000, TestDomainResponse.BadRequest }; // out of bound id
-        yield return new object[] { 1000000, 1, TestDomainResponse.BadRequest }; // out of bound id
-        yield return new object[] { 0, 1, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object?[] { null, 1, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { 1, 0, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { 1, -1, TestDomainResponse.BadRequest }; // invalid id
+        return new TheoryData<int, int, string>()
+        {
+            { 1, 1, TestDomainResponse.Success }, // valid entity
+            { 1, 1000000, TestDomainResponse.BadRequest }, // out of bound id
+            { 1000000, 1, TestDomainResponse.BadRequest }, // out of bound id
+            { 0, 1, TestDomainResponse.BadRequest }, // invalid id
+            { 1, 0, TestDomainResponse.BadRequest }, // invalid id
+            { 1, -1, TestDomainResponse.BadRequest }, // invalid id
+        };
     }
+   
 }

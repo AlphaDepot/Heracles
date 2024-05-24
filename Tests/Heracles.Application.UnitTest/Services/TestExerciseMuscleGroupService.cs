@@ -174,56 +174,38 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
                 EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id), id);
     }
 
- 
 
-    
+
+
     /// <summary>
     ///     Provides data for the CreateExerciseMuscleGroupDtoData test.
     /// </summary>
-    public static IEnumerable<object[]> CreateExerciseMuscleGroupDtoData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<CreateExerciseMuscleGroupDto, string> CreateExerciseMuscleGroupDtoData()
     {
-        yield return new object[]
+        return new TheoryData<CreateExerciseMuscleGroupDto, string>
         {
-            new CreateExerciseMuscleGroupDto
-                { ExerciseTypeId = 1, MuscleGroupId = 2, MuscleFunctionId = 3, FunctionPercentage = 50 },
-            TestDomainResponse.Success
-        };
-        yield return new object[]
-        {
-            new CreateExerciseMuscleGroupDto
-                { ExerciseTypeId = 0, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 50 },
-            TestDomainResponse.BadRequest
-        };
-        yield return new object[]
-        {
-            new CreateExerciseMuscleGroupDto
-                { ExerciseTypeId = 1, MuscleGroupId = 0, MuscleFunctionId = 1, FunctionPercentage = 50 },
-            TestDomainResponse.BadRequest
-        };
-        yield return new object[]
-        {
-            new CreateExerciseMuscleGroupDto
-                { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 0, FunctionPercentage = 50 },
-            TestDomainResponse.BadRequest
-        };
-        yield return new object[]
-        {
-            new CreateExerciseMuscleGroupDto
-                { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 0 },
-            TestDomainResponse.BadRequest
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 2, MuscleFunctionId = 3, FunctionPercentage = 50 }, TestDomainResponse.Success },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 0, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 0, MuscleFunctionId = 1, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 0, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 0 }, TestDomainResponse.BadRequest }
         };
     }
+    
 
     /// <summary>
     ///     Provides data for the UpdateExerciseMuscleGroupDtoData test.
     /// </summary>
-    public static IEnumerable<object[]> UpdateExerciseMuscleGroupDtoData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<UpdateExerciseMuscleGroupDto, string> UpdateExerciseMuscleGroupDtoData()
     {
-        yield return new object[]
-            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 50 }, TestDomainResponse.Success };
-        yield return new object[]
-            { new UpdateExerciseMuscleGroupDto { Id = 0, FunctionPercentage = 50 }, TestDomainResponse.BadRequest };
-        yield return new object[]
-            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 0 }, TestDomainResponse.BadRequest };
+        return new TheoryData<UpdateExerciseMuscleGroupDto, string>
+        {
+            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 50 }, TestDomainResponse.Success },
+            { new UpdateExerciseMuscleGroupDto { Id = 0, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
+            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 0 }, TestDomainResponse.BadRequest }
+        };
     }
+    
 }

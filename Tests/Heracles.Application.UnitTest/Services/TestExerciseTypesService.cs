@@ -156,34 +156,37 @@ public class TestExerciseTypesService : BaseUnitTest
                 EntityErrorMessage<ExerciseType>.NotFound(id), id);
     }
 
-    
     /// <summary>
     ///     Provides data for the CreateData test.
     /// </summary>
-    public static IEnumerable<object?[]> CreateData()
+    public static TheoryData<string, string, string> CreateData()
     {
-        yield return new object[] { "New Exercise Type", "New Exercise Type Description", TestDomainResponse.Success };
-
-        yield return new object[] { "Bench Press", "New Exercise Type Description", TestDomainResponse.BadRequest };
-        yield return new object?[] { null, null, TestDomainResponse.BadRequest };
-        yield return new object?[] { "name", null, TestDomainResponse.BadRequest };
-        yield return new object?[] { null, "description", TestDomainResponse.BadRequest };
-        yield return new object[] { new string('a', 256), "description", TestDomainResponse.BadRequest };
-        yield return new object[] { "name", new string('a', 1001), TestDomainResponse.BadRequest };
+        return new TheoryData<string, string, string>
+        {
+            { "New Exercise Type", "New Exercise Type Description", TestDomainResponse.Success },
+            { "Bench Press", "New Exercise Type Description", TestDomainResponse.BadRequest },
+            { null, null, TestDomainResponse.BadRequest },
+            { "name", null, TestDomainResponse.BadRequest },
+            { null, "description", TestDomainResponse.BadRequest },
+            { new string('a', 256), "description", TestDomainResponse.BadRequest },
+            { "name", new string('a', 1001), TestDomainResponse.BadRequest }
+        };
     }
 
     /// <summary>
     ///     Provides data for the UpdateData test.
     /// </summary>
-    public static IEnumerable<object?[]> UpdateData()
+    public static TheoryData<int, string, string, string> UpdateData()
     {
-        yield return new object[] { 1, "Updated Name", "Updated Description", TestDomainResponse.Success };
-
-        yield return new object[] { 100, "name", "description", TestDomainResponse.BadRequest }; // id out of range
-        yield return new object?[] { null, null, null, TestDomainResponse.BadRequest }; // all null
-        yield return new object?[] { 1, "name", null, TestDomainResponse.BadRequest }; // null description
-        yield return new object?[] { 1, null, "description", TestDomainResponse.BadRequest }; // null name
-        yield return new object[] { 1, new string('a', 256), "description", TestDomainResponse.BadRequest }; // to long name
-        yield return new object[] { 1, "name", new string('a', 1001), TestDomainResponse.BadRequest }; // to long description
+        return new TheoryData<int, string, string, string>
+        {
+            { 1, "Updated Name", "Updated Description", TestDomainResponse.Success },
+            { 100, "name", "description", TestDomainResponse.BadRequest }, // id out of range
+            { 0, null, null, TestDomainResponse.BadRequest }, // all null
+            { 1, "name", null, TestDomainResponse.BadRequest }, // null description
+            { 1, null, "description", TestDomainResponse.BadRequest }, // null name
+            { 1, new string('a', 256), "description", TestDomainResponse.BadRequest }, // to long name
+            { 1, "name", new string('a', 1001), TestDomainResponse.BadRequest } // to long description
+        };
     }
 }

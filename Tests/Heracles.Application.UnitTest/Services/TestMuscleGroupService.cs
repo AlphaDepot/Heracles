@@ -125,7 +125,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the DeleteAsync method of the MuscleGroupService.
+    ///  Test case for the DeleteAsync method of the MuscleGroupService.
     /// </summary>
     /// <param name="id">The id of the muscle group.</param>
     /// <param name="expected">The expected result.</param>
@@ -149,32 +149,37 @@ public class TestMuscleGroupService : BaseUnitTest
             ExpectedDeleteResult.NotFound<MuscleGroupService, MuscleGroup>(_logger, result,
                 EntityErrorMessage<MuscleGroup>.NotFound(id), id);
     }
-    
+
 
     /// <summary>
     ///     Provides data for the CreateAsync test case.
     /// </summary>
-    public static IEnumerable<object?[]> CreateMuscleGroupsData()
+    public static TheoryData<string, string> CreateMuscleGroupsData()
     {
-        yield return new object[] { "Calfs", TestDomainResponse.Success }; // Valid MuscleGroup
-        yield return new object?[] { null, TestDomainResponse.BadRequest }; // Null name
-        yield return new object?[] { "a", TestDomainResponse.BadRequest }; // To Short name
-        yield return new object?[] { new string('a', 101), TestDomainResponse.BadRequest }; // To Long name
-        yield return new object?[] { "Chest", TestDomainResponse.BadRequest }; // Duplicate name
+        return new TheoryData<string, string>
+        {
+            { "Calfs", TestDomainResponse.Success }, // Valid MuscleGroup
+            { null, TestDomainResponse.BadRequest }, // Null name
+            { "a", TestDomainResponse.BadRequest }, // To Short name
+            { new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
+            { "Chest", TestDomainResponse.BadRequest } // Duplicate name
+        };
     }
 
     /// <summary>
     ///     Provides data for the UpdateAsync test case.
     /// </summary>
-    public static IEnumerable<object?[]> UpdateMuscleGroupData()
+    public static TheoryData<int, string, string> UpdateMuscleGroupData()
     {
-        yield return new object[] { 1, "Updated Name", TestDomainResponse.Success }; // Valid MuscleGroup
-
-        yield return new object[] { 0, "Calf", TestDomainResponse.BadRequest }; // Null id
-        yield return new object?[] { 1, null, TestDomainResponse.BadRequest }; // Null name
-        yield return new object[] { 1, "a", TestDomainResponse.BadRequest }; // To Short name
-        yield return new object[] { 1, new string('a', 101), TestDomainResponse.BadRequest }; // To Long name
-        yield return new object[] { 1, "Chest", TestDomainResponse.BadRequest }; // Duplicate name
-        yield return new object[] { 100, "Chest", TestDomainResponse.BadRequest }; // Id out of range
+        return new TheoryData<int, string, string>
+        {
+            { 1, "Updated Name", TestDomainResponse.Success }, // Valid MuscleGroup
+            { 0, "Calf", TestDomainResponse.BadRequest }, // Null id
+            { 1, null, TestDomainResponse.BadRequest }, // Null name
+            { 1, "a", TestDomainResponse.BadRequest }, // To Short name
+            { 1, new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
+            { 1, "Chest", TestDomainResponse.BadRequest }, // Duplicate name
+            { 100, "Chest", TestDomainResponse.BadRequest } // Id out of range
+        };
     }
 }

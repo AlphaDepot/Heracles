@@ -30,7 +30,9 @@ using Xunit.Abstractions;
 
 
 namespace Heracles.Application.UnitTest;
-
+/// <summary>
+///  Base class for all unit tests.
+/// </summary>
 public class BaseUnitTest
 {
     // Search term 
@@ -86,82 +88,93 @@ public class BaseUnitTest
     /// <summary>
     ///  Test case for UpdateUserExerciseAsync method.
     /// </summary>
-    /// <returns> Task </returns>
-    public static IEnumerable<object[]> QueryData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<QueryRequest> QueryData()
     {
-        yield return new object[] { new QueryRequest() };
-        yield return new object[] { new QueryRequest { SearchTerm = SearchTerm } };
-        yield return new object[] { new QueryRequest { SortColumn = "id", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "id", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "created", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "created", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "updated", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "updated", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "name", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "name", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "dayofweek", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "dayofweek", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "sortorder", SortOrder = "asc" } };
-        yield return new object[] { new QueryRequest { SortColumn = "sortorder", SortOrder = "desc" } };
-        yield return new object[] { new QueryRequest { PageSize = 1, PageNumber = 3 } };
+        var data = new TheoryData<QueryRequest>
+        {
+            new QueryRequest(),
+            new QueryRequest { SearchTerm = SearchTerm },
+            new QueryRequest { SortColumn = "id", SortOrder = "asc" },
+            new QueryRequest { SortColumn = "id", SortOrder = "desc" },
+            new QueryRequest { SortColumn = "created", SortOrder = "asc" },
+            new QueryRequest { SortColumn = "created", SortOrder = "desc" },
+            new QueryRequest { SortColumn = "updated", SortOrder = "asc" },
+            new QueryRequest { SortColumn = "updated", SortOrder = "desc" },
+            new QueryRequest { SortColumn = "name", SortOrder = "desc" },
+            new QueryRequest { SortColumn = "name", SortOrder = "asc" },
+            new QueryRequest { SortColumn = "dayofweek", SortOrder = "asc" },
+            new QueryRequest { SortColumn = "dayofweek", SortOrder = "desc" },
+            new QueryRequest { SortColumn = "sortorder", SortOrder = "asc" },
+            new QueryRequest { SortColumn = "sortorder", SortOrder = "desc" },
+            new QueryRequest { PageSize = 1, PageNumber = 3 }
+        };
+        return data;
     }
 
 
     /// <summary>
-    /// Test case for GetByIdAsync method.
-    /// This version is used when the data is validated using FluentValidation.
+    ///  Test case for GetByIdAsync method.
+    ///  This version is used when the data is validated using FluentValidation.
     /// </summary>
-    /// <returns>A Task object representing the asynchronous operation</returns>
-    public static IEnumerable<object[]> GetByIdAsyncFluentData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<int, string> GetByIdAsyncFluentData()
     {
-        yield return new object[] { 0, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { -1, TestDomainResponse.BadRequest }; // invalid id
-
-        yield return new object[] { 1000000, TestDomainResponse.BadRequest }; // out of bound id
-        yield return new object[] { 1, TestDomainResponse.Success }; // valid id
+        return new TheoryData<int, string>
+        {
+            { 0, TestDomainResponse.BadRequest }, // invalid id
+            { -1, TestDomainResponse.BadRequest }, // invalid id
+            { 1000000, TestDomainResponse.BadRequest }, // out of bound id
+            { 1, TestDomainResponse.Success } // valid id
+        };
     }
 
-    
-    
-    
     /// <summary>
     ///  Test for the GetByIdAsync method.
     ///  This version is used when the data is validated using the ModelState.
     /// </summary>
-    public static IEnumerable<object[]> GetByIdAsyncData()
+    /// <returns> TheoryData </returns>   
+    public static TheoryData<int, string> GetByIdAsyncData()
     {
-        yield return new object[] { 0, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { -1, TestDomainResponse.BadRequest }; // invalid id
-
-        yield return new object[] { 1000000, TestDomainResponse.NotFound }; // out of bound id
-        yield return new object[] { 1, TestDomainResponse.Success }; // valid id
+        return new TheoryData<int, string>
+        {
+            { 0, TestDomainResponse.BadRequest }, // invalid id
+            { -1, TestDomainResponse.BadRequest }, // invalid id
+            { 1000000, TestDomainResponse.NotFound }, // out of bound id
+            { 1, TestDomainResponse.Success } // valid id
+        };
     }
-    
-    
+
     /// <summary>
     ///  Test case for DeleteAsync method.
     /// This version is used when the data is validated using FluentValidation.
     /// </summary>
-    public static IEnumerable<object[]> DeleteAsyncFluentData()
+    /// <returns> TheoryData </returns>   
+    public static TheoryData<int, string> DeleteAsyncFluentData()
     {
-        yield return new object[] { 0, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { -1, TestDomainResponse.BadRequest }; // invalid id
-
-        yield return new object[] { 1000000, TestDomainResponse.BadRequest }; // out of bound id
-        yield return new object[] { 1, TestDomainResponse.Success }; // valid id
+        return new TheoryData<int, string>
+        {
+            { 0, TestDomainResponse.BadRequest }, // invalid id
+            { -1, TestDomainResponse.BadRequest }, // invalid id
+            { 1000000, TestDomainResponse.BadRequest }, // out of bound id
+            { 1, TestDomainResponse.Success } // valid id
+        };
     }
-    
+
     /// <summary>
     ///  Test for the DeleteAsync method.
     ///  This version is used when the data is validated using the ModelState.
     /// </summary>
-    public static IEnumerable<object[]> DeleteAsyncData()
+    /// <returns> TheoryData </returns>  
+    public static TheoryData<int, string> DeleteAsyncData()
     {
-        yield return new object[] { 0, TestDomainResponse.BadRequest }; // invalid id
-        yield return new object[] { -1, TestDomainResponse.BadRequest }; // invalid id
-
-        yield return new object[] { 1000000, TestDomainResponse.NotFound }; // out of bound id
-        yield return new object[] { 1, TestDomainResponse.Success }; // valid id
+        return new TheoryData<int, string>
+        {
+            { 0, TestDomainResponse.BadRequest }, // invalid id
+            { -1, TestDomainResponse.BadRequest }, // invalid id
+            { 1000000, TestDomainResponse.NotFound }, // out of bound id
+            { 1, TestDomainResponse.Success } // valid id
+        };
     }
    
 }

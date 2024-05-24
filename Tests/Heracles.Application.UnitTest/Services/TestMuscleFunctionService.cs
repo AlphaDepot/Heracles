@@ -150,31 +150,36 @@ public class TestMuscleFunctionService : BaseUnitTest
                 EntityErrorMessage<MuscleFunction>.NotFound(id), id);
     }
 
-    
     /// <summary>
     ///     Provides data for the CreateAsync test case.
     /// </summary>
-    public static IEnumerable<object?[]> CreateMuscleFunctionsData()
+    public static TheoryData<string, string> CreateMuscleFunctionsData()
     {
-        yield return new object[] { NotADuplicateName, TestDomainResponse.Success }; // Valid name
-        yield return new object?[] { null, TestDomainResponse.BadRequest }; // Null name
-        yield return new object[] { "a", TestDomainResponse.BadRequest }; // To Short name
-        yield return new object[] { new string('a', 101), TestDomainResponse.BadRequest }; // To Long name
-        yield return new object[] { "Stabilizer", TestDomainResponse.BadRequest }; // Duplicate name 
+        return new TheoryData<string, string>
+        {
+            { NotADuplicateName, TestDomainResponse.Success }, // Valid name
+            { null, TestDomainResponse.BadRequest }, // Null name
+            { "a", TestDomainResponse.BadRequest }, // To Short name
+            { new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
+            { "Stabilizer", TestDomainResponse.BadRequest } // Duplicate name 
+        };
     }
 
     /// <summary>
     ///     Provides data for the UpdateAsync test case.
     /// </summary>
-    public static IEnumerable<object?[]> UpdateMuscleFunctionsData()
+    public static TheoryData<int, string, string> UpdateMuscleFunctionsData()
     {
-        yield return new object[] { 1, NotADuplicateName, TestDomainResponse.Success }; // Valid MuscleFunction
-
-        yield return new object[] { 0, NotADuplicateName, TestDomainResponse.BadRequest }; // Null id
-        yield return new object?[] { 1, null, TestDomainResponse.BadRequest }; // Null name
-        yield return new object[] { 1, "a", TestDomainResponse.BadRequest }; // To Short name
-        yield return new object[] { 1, new string('a', 101), TestDomainResponse.BadRequest }; // To Long name
-        yield return new object[] { 1, "Stabilizer", TestDomainResponse.BadRequest }; // Duplicate name 
-        yield return new object[] { 100, "Synergist", TestDomainResponse.BadRequest }; // Id out of range
+        return new TheoryData<int, string, string>
+        {
+            { 1, NotADuplicateName, TestDomainResponse.Success }, // Valid MuscleFunction
+            { 0, NotADuplicateName, TestDomainResponse.BadRequest }, // Null id
+            { 1, null, TestDomainResponse.BadRequest }, // Null name
+            { 1, "a", TestDomainResponse.BadRequest }, // To Short name
+            { 1, new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
+            { 1, "Stabilizer", TestDomainResponse.BadRequest }, // Duplicate name 
+            { 100, "Synergist", TestDomainResponse.BadRequest } // Id out of range
+        };
     }
+
 }

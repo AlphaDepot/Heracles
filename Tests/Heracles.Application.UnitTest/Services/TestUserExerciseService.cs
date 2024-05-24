@@ -2,6 +2,7 @@ using Heracles.Application.Features.UserExercises;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
 using Heracles.Domain.Abstractions.Logging;
 using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.EquipmentGroups.Models;
 using Heracles.Domain.UserExercises.DTOs;
 using Heracles.Domain.UserExercises.Models;
 using Heracles.TestUtilities.Fixtures;
@@ -129,66 +130,56 @@ public class TestUserExerciseService : BaseUnitTest
         else if (expected == TestDomainResponse.BadRequest)
             ExpectedCreateResult.BadRequest<UserExerciseService, UserExercise>(_logger, result, result.Error.Errors!);
     }
-    
-    
-    
+
+
+
     /// <summary>
     /// Test case for UpdateAsync method.
     /// </summary>
-    ///  <param name="id">The id of the user exercise to update.</param>
-    ///  <param name="userId">The user id of the user exercise to update.</param>
-    ///  <param name="currentWeight">The current weight of the user exercise to update.</param>
-    ///  <param name="personalRecord">The personal record of the user exercise to update.</param>
-    ///  <param name="durationInSeconds">The duration in seconds of the user exercise to update.</param>
-    ///  <param name="sortOrder">The sort order of the user exercise to update.</param>
-    ///  <param name="repetitions">The repetitions of the user exercise to update.</param>
-    ///  <param name="sets">The sets of the user exercise to update.</param>
-    ///  <param name="timed">The timed of the user exercise to update.</param>
-    ///  <param name="bodyWeight">The body weight of the user exercise to update.</param>
+    ///  <param name="exercise"> The user exercise to update.</param>
     ///  <param name="equipmentGroupId">The equipment group id of the user exercise to update.</param>
     ///  <param name="expected">The expected result of the test.</param>
     [Theory]
     [MemberData(nameof(UpdateData))]
-    public async Task UpdateAsync_ReturnsResponse(int id, string userId, double? currentWeight, double? personalRecord,
-        int durationInSeconds, int sortOrder, int repetitions, int sets, bool timed, bool bodyWeight,
-        int equipmentGroupId, string expected)
+    public async Task UpdateAsync_ReturnsResponse(UserExercise exercise, int equipmentGroupId, string expected)
     {
         // Arrange
         // get the list of equipment groups
         var equipmentGroup = EquipmentGroupFixture.Get();
         // get the user exercise by id or create a new one
-        var userExercise = UserExercises.FirstOrDefault(x => x.Id == id)
-                           ?? new UserExercise
+        var userExercise = UserExercises.FirstOrDefault(x => x.Id == exercise.Id)
+                           ?? new UserExercise()
                            {
-                               Id = id,
-                               UserId = userId,
-                               CurrentWeight = currentWeight,
-                               PersonalRecord = personalRecord,
-                               DurationInSeconds = durationInSeconds,
-                               SortOrder = sortOrder,
-                               Repetitions = repetitions,
-                               Sets = sets,
-                               Timed = timed,
-                               BodyWeight = bodyWeight,
-                               EquipmentGroup = equipmentGroup.First()
+                               Id = exercise.Id,
+                                 UserId = exercise.UserId,
+                                 CurrentWeight = exercise.CurrentWeight,
+                                 PersonalRecord = exercise.PersonalRecord,
+                                 DurationInSeconds = exercise.DurationInSeconds,
+                                 SortOrder = exercise.SortOrder,
+                                 Repetitions = exercise.Repetitions,
+                                 Sets = exercise.Sets,
+                                 Timed = exercise.Timed,
+                                 BodyWeight = exercise.BodyWeight,
+                                 EquipmentGroup = equipmentGroup.First()
                            };
 
 
         // create the dto
         var dto = new UpdateUserExerciseDto
         {
-            Id = id,
-            UserId = userId,
-            CurrentWeight = currentWeight,
-            PersonalRecord = personalRecord,
-            DurationInSeconds = durationInSeconds,
-            SortOrder = sortOrder,
-            Repetitions = repetitions,
-            Sets = sets,
-            Timed = timed,
-            BodyWeight = bodyWeight,
+            Id = userExercise.Id, 
+            UserId = exercise.UserId, 
+            CurrentWeight = exercise.CurrentWeight, 
+            PersonalRecord = exercise.PersonalRecord, 
+            DurationInSeconds = exercise.DurationInSeconds, 
+            SortOrder = exercise.SortOrder, 
+            Repetitions = exercise.Repetitions, 
+            Sets = exercise.Sets, 
+            Timed = exercise.Timed, 
+            BodyWeight = exercise.BodyWeight, 
             EquipmentGroupId = equipmentGroupId
         };
+        
 
         // Act
         var result = await _serviceWithAdminUser.UpdateAsync(dto);
@@ -199,6 +190,7 @@ public class TestUserExerciseService : BaseUnitTest
         else if (expected == TestDomainResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<UserExerciseService, UserExercise>(_logger, result, result.Error.Errors!);
     }
+
     /// <summary>
     /// Test case for DeleteAsync method.
     /// </summary>
@@ -225,48 +217,38 @@ public class TestUserExerciseService : BaseUnitTest
     /// <summary>
     ///  Test case for CreateAsync method.
     /// </summary>
-    /// <returns>   Task </returns>
-    public static IEnumerable<object?[]> CreateData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<string?, int, string> CreateData()
     {
-        yield return new object[] { ValidAdminUserId, 1, TestDomainResponse.Success };
-        yield return new object?[] { null, null, TestDomainResponse.BadRequest };
-        yield return new object[] { null, 1, TestDomainResponse.BadRequest };
-        yield return new object?[] { ValidAdminUserId, null, TestDomainResponse.BadRequest };
-        yield return new object?[] { ValidAdminUserId, 0, TestDomainResponse.BadRequest };
-        
-        yield return new object[] {InvalidUserId, 1, TestDomainResponse.BadRequest };
+        return new TheoryData<string?, int, string>()
+        {
+            {ValidAdminUserId, 1, TestDomainResponse.Success},
+            {null, 0, TestDomainResponse.BadRequest},
+            {null, 1, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, 0, TestDomainResponse.BadRequest},
+            {ValidAdminUserId, 0, TestDomainResponse.BadRequest},
+            {InvalidUserId, 1, TestDomainResponse.BadRequest}
+        };
     }
 
     /// <summary>
     ///  Test case for UpdateAsync method.
     /// </summary>
-    /// <returns>   Task </returns>
-    public static IEnumerable<object?[]> UpdateData()
+    /// <returns> TheoryData </returns>
+    public static TheoryData<UserExercise, int, string> UpdateData()
     {
         //NOTE: cannot validate most fields  for null values because they are optional in the dto
-        
-        // id, userId, currentWeight, personalRecord, durationInSeconds, sortOrder, repetitions, sets, timed, bodyWeight, equipmentGroupId
-        yield return new object[] { 1, ValidAdminUserId, 100.0, 200.0, 60, 1, 10, 3, true, false, 1, TestDomainResponse.Success };
 
-        yield return new object?[]
-            { 0, ValidAdminUserId, 100.0, 200.0, 60, 1, 10, 3, true, false, 1, TestDomainResponse.BadRequest }; // id
-        yield return new object?[]
-            { 1, null, 100.0, 200.0, 60, 1, 10, 3, true, false, 1, TestDomainResponse.BadRequest }; // userId
-
-        yield return new object[]
+        return new TheoryData<UserExercise, int, string>
         {
-            1, ValidAdminUserId, 100.0, 200.0, -1, 1, 10, 3, true, false, 1, TestDomainResponse.BadRequest
-        }; // durationInSeconds
-        yield return new object[]
-            { 1, ValidAdminUserId, 100.0, 200.0, 60, 1, -1, 3, true, false, 1, TestDomainResponse.BadRequest }; // repetitions
-        yield return new object[]
-            { 1, ValidAdminUserId, 100.0, 200.0, 60, 1, 10, -1, true, false, 1, TestDomainResponse.BadRequest }; // sets
-        yield return new object[]
-        {
-            1, ValidAdminUserId, 100.0, 200.0, 60, 1, 10, 3, true, false, -1, TestDomainResponse.BadRequest
-        }; // equipmentGroupId
-        
-        yield return new object[] {1,InvalidUserId, 100.0, 200.0, 60, 1, 10, 3, true, false, -1, TestDomainResponse.BadRequest
-        };  // invalid user id
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.Success },
+            { new UserExercise { Id = 0, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = null, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = -1, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = -1, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = -1, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestDomainResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = InvalidUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestDomainResponse.BadRequest }
+        };
     }
 }

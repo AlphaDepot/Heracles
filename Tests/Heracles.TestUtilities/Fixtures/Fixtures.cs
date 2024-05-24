@@ -29,13 +29,17 @@ public   static class Fixtures
         var getSortExpressionMethod = typeof(T).GetMethod("GetSortExpression", BindingFlags.Static | BindingFlags.Public);
 
         // if search term is not null, get the filter expression
-        var filter = (Expression<Func<T, bool>>)getFilterExpressionMethod?.Invoke(null, new object[] { query.SearchTerm });
+        var filter = getFilterExpressionMethod?.Invoke(null, [query.SearchTerm]) 
+                         as Expression<Func<T, bool>> 
+                     ?? throw new Exception("Filter expression is null.");
 
         // apply filter
         list = list.Where(filter.Compile()).ToList();
 
         // get the sort expression
-        var sortExpressions = (Dictionary<string, Expression<Func<T, object>>>)getSortExpressionMethod?.Invoke(null, null);
+        var sortExpressions = getSortExpressionMethod?.Invoke(null, null) 
+                                  as Dictionary<string, Expression<Func<T, object>>> 
+                              ?? throw new Exception("Sort expressions are null.");
 
         // create the queryable dto
         var sorter = new QueryHelper().Sorter(query, sortExpressions);
@@ -51,34 +55,45 @@ public   static class Fixtures
     }
     
     
-   public static List<T> QueryWithUser<T>(List<T> list, QueryRequest? query, string userId, bool isAdmin) where T : BaseEntity
-{
-    if (query == null)
+    /// <summary>
+    /// Executes a query on a list of entities with user information.
+    /// </summary>
+    /// <typeparam name="T">The type of entities in the list.</typeparam>
+    /// <param name="list">The list of entities to query.</param>
+    /// <param name="query">The query parameters.</param>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="isAdmin">A flag indicating if the user is an admin.</param>
+    /// <returns>The filtered and sorted list of entities based on the query parameters.</returns>
+    public static List<T> QueryWithUser<T>(List<T> list, QueryRequest? query, string userId, bool isAdmin) where T : BaseEntity
+    {
+        // if query is null, return all exercise muscle groups
+        if (query == null)
+            return list;
+
+        // Get the static method from the type or throw an exception
+        var getFilterExpressionMethod = typeof(T).GetMethod("GetFilterExpression", BindingFlags.Static | BindingFlags.Public) ?? throw
+            new Exception("Method GetFilterExpression not found in type " + typeof(T).Name);
+        // Get the static method from the type or throw an exception
+        var getSortExpressionMethod = typeof(T).GetMethod("GetSortExpression", BindingFlags.Static | BindingFlags.Public) ?? throw
+            new Exception("Method GetSortExpression not found in type " + typeof(T).Name);
+
+        // if search term is not null, get the filter expression
+        if (getFilterExpressionMethod?.Invoke(null, new object[] { query.SearchTerm, userId, isAdmin }) is Expression<Func<T, bool>> filter)
+            list = list.Where(filter.Compile()).ToList();
+
+        // apply filter to the list
+        if (getSortExpressionMethod?.Invoke(null, null) is not Dictionary<string, Expression<Func<T, object>>> sortExpressions)
+            throw new Exception("Sort expressions are null.");
+
+        // get the sort expression
+        var sorter = new QueryHelper().Sorter(query, sortExpressions);
+        // create the queryable dto
+        if (sorter != null)
+            list = sorter(list.AsQueryable()).ToList();
+        // sort the list if sorter is not null
+        list = list.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
+
         return list;
-
-    var getFilterExpressionMethod = typeof(T).GetMethod("GetFilterExpression", BindingFlags.Static | BindingFlags.Public);
-    var getSortExpressionMethod = typeof(T).GetMethod("GetSortExpression", BindingFlags.Static | BindingFlags.Public);
-
-    if (getFilterExpressionMethod == null || getSortExpressionMethod == null)
-        throw new Exception("Methods GetFilterExpression or GetSortExpression not found in type " + typeof(T).Name);
-    
-    var filter = (Expression<Func<T, bool>>)getFilterExpressionMethod?.Invoke(null, new object[] { query.SearchTerm, userId, isAdmin});
-    
-    if (filter != null)
-        list = list.Where(filter.Compile()).ToList();
-
-    var sortExpressions = (Dictionary<string, Expression<Func<T, object>>>)getSortExpressionMethod?.Invoke(null, null);
-    if (sortExpressions == null)
-        throw new Exception("Sort expressions are null.");
-
-    var sorter = new QueryHelper().Sorter(query, sortExpressions);
-    
-    if (sorter != null)
-        list = sorter(list.AsQueryable()).ToList();
-
-    list = list.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
-
-    return list;
-}
+    }
     
 }

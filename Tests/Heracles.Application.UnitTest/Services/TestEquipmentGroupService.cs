@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Heracles.Application.Features.EquipmentGroups;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
 using Heracles.Domain.Abstractions.Errors;
@@ -66,7 +67,13 @@ public class TestEquipmentGroupService : BaseUnitTest
 
         // Assert
         if (expected == TestDomainResponse.Success)
+
+        {
+            TestConsole.WriteLine($"Expected: {JsonSerializer.Serialize(expectedEquipmentGroup)}");
+            TestConsole.WriteLine($"Result: {result.Error}");
             ExpectedGetByIdResult.Success(_logger, result, expectedEquipmentGroup!, id);
+        }
+            
         else if (expected == TestDomainResponse.NotFound)
             ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<EquipmentGroup>.NotFound(id), id);
         else if (expected == TestDomainResponse.BadRequest)

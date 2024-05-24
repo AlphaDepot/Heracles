@@ -7,7 +7,7 @@ namespace Heracles.TestUtilities.Fixtures;
 /// <summary>
 ///     Fixture for ExerciseMuscleGroups entity for unit tests
 /// </summary>
-public static class ExerciseMuscleGroupFixture
+public abstract class ExerciseMuscleGroupFixture
 {
     /// <summary>
     /// Retrieves a list of ExerciseMuscleGroup objects.

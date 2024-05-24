@@ -7,7 +7,7 @@ namespace Heracles.TestUtilities.Fixtures;
 /// <summary>
 ///     Fixture for Equipment entity for unit tests
 /// </summary>
-public class EquipmentFixture
+public abstract class EquipmentFixture
 {
     public static List<Equipment> Get() => EquipmentSeedData.Equipments();
 

@@ -4,9 +4,9 @@ using Heracles.TestUtilities.TestData;
 
 namespace Heracles.TestUtilities.Fixtures;
 
-public class UserFixture
+public abstract class UserFixture
 {
-    public static List<User?> Get() => UserExerciseSeedData.Users();
+    public static List<User> Get() => UserExerciseSeedData.Users();
     
     public static List<User> Query(QueryRequest? query, string userId, bool isAdmin)
     {

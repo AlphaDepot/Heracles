@@ -7,7 +7,7 @@ namespace Heracles.TestUtilities.Fixtures;
 /// <summary>
 ///     Fixture for Equipment entity for unit tests
 /// </summary>
-public class WorkoutSessionFixture
+public abstract class WorkoutSessionFixture
 {
     public static List<WorkoutSession> Get() => UserExerciseSeedData.WorkoutSessions();
 

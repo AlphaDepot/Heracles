@@ -7,7 +7,7 @@ namespace Heracles.TestUtilities.Fixtures;
 /// <summary>
 ///     Fixture for Equipment entity for unit tests
 /// </summary>
-public static class ExerciseTypeFixture
+public abstract class ExerciseTypeFixture
 {
     /// <summary>
     /// Retrieves a list of exercise types.

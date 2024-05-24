@@ -9,7 +9,7 @@ namespace Heracles.TestUtilities.Fixtures;
 /// <summary>
 ///   Fixture  for all entities based on BaseEntity for unit tests
 /// </summary>
-public  static class Fixtures
+public   static class Fixtures
 {
     /// <summary>
     /// Executes a query on a list of entities.

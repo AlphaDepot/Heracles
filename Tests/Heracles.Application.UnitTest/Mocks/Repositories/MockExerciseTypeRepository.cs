@@ -7,77 +7,37 @@ using Heracles.TestUtilities.Fixtures;
 using Moq;
 
 namespace Heracles.Application.UnitTest.Mocks.Repositories;
-
-public abstract class MockExerciseTypeRepository
+/// <summary>
+///  This class is responsible for mocking the ExerciseTypeRepository.
+/// </summary>
+public  class MockExerciseTypeRepository : MockBaseRepository<ExerciseType, IExerciseTypeRepository>
 {
-    public static Mock<IExerciseTypeRepository> Get()
+    /// <summary>
+    ///  Constructor for the MockExerciseTypeRepository.
+    /// </summary>
+    /// <param name="entities"> The list of ExerciseType entities.</param>
+    public MockExerciseTypeRepository(List<ExerciseType> entities) : base(entities)
     {
-        var exerciseTypes = ExerciseTypeFixture.Get();
-        
-        var mockRepo = new Mock<IExerciseTypeRepository>();
-        
-        
-        mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<ExerciseType>>()))
-            .ReturnsAsync((QuariableDto<ExerciseType> queryableDto) =>
-            {
-                var queryable = exerciseTypes.AsQueryable();
-                if (queryableDto.Filter != null)
-                {
-                    queryable = queryable.Where(queryableDto.Filter);
-                }
-                if (queryableDto.Sorter != null)
-                {
-                    queryable = queryableDto.Sorter(queryable);
-                }
-                var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
-                
-                return new QueryResponse<ExerciseType>()
-                {
-                    Data =  result,
-                    TotalPages = result.Count(),
-                    PageSize = queryableDto.PageSize,
-                    PageNumber = queryableDto.PageNumber
-                };
-            });
-        
-        
-        mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!
-            .ReturnsAsync((int id) => exerciseTypes.FirstOrDefault(q => q.Id == id ));
-        
-        mockRepo.Setup(r => r.CreateAsync(It.IsAny<ExerciseType>()))
-            .Returns((ExerciseType exerciseType) =>
-            {
-                exerciseType.Id = exerciseTypes.Count + 1;
-                exerciseTypes.Add(exerciseType);
-                return Task.FromResult(exerciseType.Id);
-            });
-        
-        mockRepo.Setup(r => r.IsNameUnique(It.IsAny<string>()))
-            .ReturnsAsync((string name) => { 
-                return !exerciseTypes.Any(q => q.Name == name);
-            });
-        
-        mockRepo.Setup(r => r.ItExist(It.IsAny<int>()))
-            .ReturnsAsync((int id) => exerciseTypes.Any(q => q.Id == id));
-        
-        mockRepo.Setup(r => r.UpdateAsync(It.IsAny<ExerciseType>()))
-            .ReturnsAsync((ExerciseType exerciseType) =>
-            {
-                var index = exerciseTypes.FindIndex(q => q.Id == exerciseType.Id);
-                exerciseTypes[index] = exerciseType;
-                return 1; // number of rows affected
-            });
-        
-        mockRepo.Setup(r => r.DeleteAsync(It.IsAny<int>()))
-            .ReturnsAsync((int id) =>
-            {
-                var index = exerciseTypes.FindIndex(q => q.Id == id);
-                exerciseTypes.RemoveAt(index);
-                return 1; // number of rows affected
-            });
-        
-        return mockRepo;
-        
-        
+        IsNameUniqueMock();
     }
+    /// <summary>
+    ///  Get the Mock for the ExerciseTypeRepository.
+    /// </summary>
+    /// <returns> The Mock for the ExerciseTypeRepository.</returns>
+    public new static Mock<IExerciseTypeRepository> Get()
+    {
+        return new MockExerciseTypeRepository(ExerciseTypeFixture.Get()).MockRepo;
+    }
+    
+    /// <summary>
+    ///  Mock for the IsNameUnique method of the ExerciseTypeRepository.
+    ///  This method is used to check if the ExerciseType is unique.
+    /// </summary>
+    private void IsNameUniqueMock()
+    {
+        MockRepo.Setup(r => r.IsNameUnique(It.IsAny<string>()))
+            .ReturnsAsync((string name) => Entities.All(q => q.Name != name));
+    }
+    
+    
 }

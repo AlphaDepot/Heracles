@@ -5,76 +5,38 @@ using Heracles.TestUtilities.Fixtures;
 using Moq;
 
 namespace Heracles.Application.UnitTest.Mocks.Repositories;
-
-public abstract class MockEquipmentRepository
+/// <summary>
+///  A mock repository for the Equipment entity
+/// </summary>
+public  class MockEquipmentRepository : MockBaseRepository<Equipment, IEquipmentRepository>
 {
-    
-    public static Mock<IEquipmentRepository> Get()
+    /// <summary>
+    ///  Create a new instance of the MockEquipmentRepository
+    /// </summary>
+    /// <param name="entities"> The list of entities to use for the mock repository </param>
+    public MockEquipmentRepository(List<Equipment> entities) : base(entities)
     {
-        var equipments = EquipmentFixture.Get();
-        
-        var mockRepo = new Mock<IEquipmentRepository>();
-        
-        mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<Equipment>>()))
-            .ReturnsAsync((QuariableDto<Equipment> queryableDto) =>
-            {
-                var queryable = equipments.AsQueryable();
-                if (queryableDto.Filter != null)
-                {
-                    queryable = queryable.Where(queryableDto.Filter);
-                }
-                if (queryableDto.Sorter != null)
-                {
-                    queryable = queryableDto.Sorter(queryable);
-                }
-                var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
-                
-                return new QueryResponse<Equipment>()
-                {
-                    Data =  result,
-                    TotalPages = result.Count(),
-                    PageSize = queryableDto.PageSize,
-                    PageNumber = queryableDto.PageNumber
-                };
-            });
-
-        
-        mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!
-            .ReturnsAsync((int id) => equipments.FirstOrDefault(q => q.Id == id ));
-        
-        mockRepo.Setup(r => r.CreateAsync(It.IsAny<Equipment>()))
-            .ReturnsAsync((Equipment equipment) =>
-            {
-                equipment.Id = equipments.Count + 1;
-                equipments.Add(equipment);
-                return equipment.Id;
-            });
-        
-        mockRepo.Setup(r => r.ItExist(It.IsAny<int>()))
-            .ReturnsAsync((int id) => equipments.Any(q => q.Id == id));
-        
-        mockRepo.Setup(r => r.UpdateAsync(It.IsAny<Equipment>()))
-            .ReturnsAsync((Equipment equipment) =>
-            {
-                var index = equipments.FindIndex(q => q.Id == equipment.Id);
-                equipments[index] = equipment;
-                return 1; // number of rows affected
-            });
-        
-        mockRepo.Setup(r => r.DeleteAsync(It.IsAny<int>()))
-            .ReturnsAsync((int id) =>
-            {
-                var index = equipments.FindIndex(q => q.Id == id);
-                equipments.RemoveAt(index);
-                return 1; // number of rows affected
-            });
-        
-        
-        mockRepo.Setup(r => r.IsTypeUnique(It.IsAny<string>()))
-            .ReturnsAsync((string type) => !equipments.Any(q => q.Type == type));
-        
-        return mockRepo;
-        
+        IsTypeUniqueMock();
     }
+    
+    /// <summary>
+    ///  Get a new instance of the MockEquipmentRepository
+    /// </summary>
+    /// <returns> A new instance of the MockEquipmentRepository </returns>
+    public new static Mock<IEquipmentRepository> Get()
+    {
+        return new MockEquipmentRepository(EquipmentFixture.Get()).MockRepo;
+    }
+    
+    /// <summary>
+    ///  Set up the IsTypeUnique mock method for the EquipmentRepository
+    /// </summary>
+    private void IsTypeUniqueMock()
+    {
+        // Setup Equipment specific mock methods here
+        MockRepo.Setup(r => r.IsTypeUnique(It.IsAny<string>()))
+            .ReturnsAsync((string type) => Entities.All(q => q.Type != type));
+    }
+    
     
 }

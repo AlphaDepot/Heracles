@@ -1,80 +1,43 @@
-using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
+
 using Heracles.Domain.WorkoutSessions.Interfaces;
 using Heracles.Domain.WorkoutSessions.Models;
 using Heracles.TestUtilities.Fixtures;
 using Moq;
 
 namespace Heracles.Application.UnitTest.Mocks.Repositories;
-
-public abstract class MockWorkoutSessionRepository
+/// <summary>
+///  MockWorkoutSessionRepository is a mock repository for the WorkoutSession entity
+/// </summary>
+public  class MockWorkoutSessionRepository : MockBaseRepository<WorkoutSession, IWorkoutSessionRepository>
 {
-
-    public static Mock<IWorkoutSessionRepository> Get()
+    
+    /// <summary>
+    ///  Create a new instance of the MockWorkoutSessionRepository  
+    /// </summary>
+    /// <param name="entities"> The list of WorkoutSession entities to use for the mock repository </param>
+    public MockWorkoutSessionRepository(List<WorkoutSession> entities) : base(entities)
     {
-        var workoutSessions = WorkoutSessionFixture.Get();
-        
-        var mockRepo = new Mock<IWorkoutSessionRepository>();
-        
-        mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<WorkoutSession>>()))
-            .ReturnsAsync((QuariableDto<WorkoutSession> queryableDto) =>
-            {
-                var queryable = workoutSessions.AsQueryable();
-                if (queryableDto.Filter != null)
-                {
-                    queryable = queryable.Where(queryableDto.Filter);
-                }
-                if (queryableDto.Sorter != null)
-                {
-                    queryable = queryableDto.Sorter(queryable);
-                }
-                var result = queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize)
-                    .Take(queryableDto.PageSize).ToList();
-                
-                return new QueryResponse<WorkoutSession>()
-                    {
-                        Data =  result,
-                        TotalPages = result.Count(),
-                        PageSize = queryableDto.PageSize,
-                        PageNumber = queryableDto.PageNumber
-                    };
-            });
-        
-        mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!
-            .ReturnsAsync((int id) => workoutSessions.FirstOrDefault(q => q.Id == id ));
-        
-        mockRepo.Setup(r => r.CreateAsync(It.IsAny<WorkoutSession>()))
-            .ReturnsAsync((WorkoutSession workoutSession) =>
-            {
-                workoutSession.Id = workoutSessions.Count + 1;
-                workoutSessions.Add(workoutSession);
-                return workoutSession.Id;
-            });
-        
-        mockRepo.Setup(r => r.ItExist(It.IsAny<int>()))
-            .ReturnsAsync((int id) => workoutSessions.Any(q => q.Id == id));
-        
-        mockRepo.Setup(r => r.UpdateAsync(It.IsAny<WorkoutSession>()))
-            .ReturnsAsync((WorkoutSession workoutSession) =>
-            {
-                var index = workoutSessions.FindIndex(q => q.Id == workoutSession.Id);
-                workoutSessions[index] = workoutSession;
-                return 1; // number of rows affected
-            });
-        
-        mockRepo.Setup(r => r.DeleteAsync(It.IsAny<int>()))
-            .ReturnsAsync((int id) =>
-            {
-                var index = workoutSessions.FindIndex(q => q.Id == id);
-                workoutSessions.RemoveAt(index);
-                return 1; // number of rows affected
-            });
-        
-        mockRepo.Setup(r => r.IsUnique(It.IsAny<string>()))
-            .ReturnsAsync((string name) => !workoutSessions.Any(q => q.Name == name));
-        
-        return mockRepo;
-        
+        IsUniqueMock();
+    }
+    
+    /// <summary>
+    ///   Get a new instance of the MockWorkoutSessionRepository
+    /// </summary>
+    /// <returns> A new instance of the MockWorkoutSessionRepository </returns>
+    public new static Mock<IWorkoutSessionRepository> Get()
+    {
+        return new MockWorkoutSessionRepository(WorkoutSessionFixture.Get()).MockRepo;
+    }
+    
+    /// <summary>
+    ///  Set up the IsUnique mock method for the WorkoutSessionRepository
+    ///  This method is used to check if a WorkoutSession name is unique.
+    /// </summary>
+    private void IsUniqueMock()
+    {
+        // Setup WorkoutSession specific mock methods here
+        MockRepo.Setup(r => r.IsUnique(It.IsAny<string>()))
+            .ReturnsAsync((string name) => Entities.All(q => q.Name != name));
     }
     
     

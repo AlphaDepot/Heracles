@@ -6,74 +6,36 @@ using Heracles.TestUtilities.Fixtures;
 using Moq;
 
 namespace Heracles.Application.UnitTest.Mocks.Repositories;
-
-public abstract class MockUserExerciseHistoryRepository
+/// <summary>
+///  This class is responsible for mocking the UserExerciseHistoryRepository.
+/// </summary>
+public  class MockUserExerciseHistoryRepository : MockBaseRepository<UserExerciseHistory, IUserExerciseHistoryRepository>
 {
-    
-    public static Mock<IUserExerciseHistoryRepository> Get()
+    /// <summary>
+    ///  Constructor for the MockUserExerciseHistoryRepository.
+    /// </summary>
+    /// <param name="entities"> The list of UserExerciseHistory entities.</param>
+    public MockUserExerciseHistoryRepository(List<UserExerciseHistory> entities) : base(entities)
     {
-        var userExerciseHistories = UserExerciseHistoryFixture.Get();
-        
-        var mockRepo = new Mock<IUserExerciseHistoryRepository>();
-        
-        mockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<UserExerciseHistory>>()))
-            .ReturnsAsync((QuariableDto<UserExerciseHistory> queryableDto) =>
-            {
-                var queryable = userExerciseHistories.AsQueryable();
-                if (queryableDto.Filter != null)
-                {
-                    queryable = queryable.Where(queryableDto.Filter);
-                }
-                if (queryableDto.Sorter != null)
-                {
-                    queryable = queryableDto.Sorter(queryable);
-                }
-                
-                var result = queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize)
-                    .Take(queryableDto.PageSize).ToList();
-                
-                return new QueryResponse<UserExerciseHistory>()
-                {
-                    Data =  result,
-                    TotalPages = result.Count(),
-                    PageSize = queryableDto.PageSize,
-                    PageNumber = queryableDto.PageNumber
-                };
-                
-                //return queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
-            });
-        
-        mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!
-            .ReturnsAsync((int id) => userExerciseHistories.FirstOrDefault(q => q.Id == id ));
-        
-        mockRepo.Setup(r => r.CreateAsync(It.IsAny<UserExerciseHistory>()))
-            .ReturnsAsync((UserExerciseHistory userExerciseHistory) =>
-            {
-                userExerciseHistory.Id = userExerciseHistories.Count + 1;
-                userExerciseHistories.Add(userExerciseHistory);
-                return userExerciseHistory.Id;
-            });
-        
-        mockRepo.Setup(r => r.ItExist(It.IsAny<int>()))
-            .ReturnsAsync((int id) => userExerciseHistories.Any(q => q.Id == id));
-        
-        mockRepo.Setup(r => r.UpdateAsync(It.IsAny<UserExerciseHistory>()))
-            .ReturnsAsync((UserExerciseHistory userExerciseHistory) =>
-            {
-                var index = userExerciseHistories.FindIndex(q => q.Id == userExerciseHistory.Id);
-                userExerciseHistories[index] = userExerciseHistory;
-                return 1; // number of rows affected
-            });
-        
-        mockRepo.Setup(r => r.DeleteAsync(It.IsAny<int>()))
-            .ReturnsAsync((int id) =>
-            {
-                var index = userExerciseHistories.FindIndex(q => q.Id == id);
-                userExerciseHistories.RemoveAt(index);
-                return 1; // number of rows affected
-            });
-        
-        return mockRepo;
-        
+        SetupUserExerciseHistorySpecificMocks();
     }
+    /// <summary>
+    ///  Get the Mock for the UserExerciseHistoryRepository.
+    /// </summary>
+    /// <returns> The Mock for the UserExerciseHistoryRepository.</returns>
+    public new static Mock<IUserExerciseHistoryRepository> Get()
+    {
+        return new MockUserExerciseHistoryRepository(UserExerciseHistoryFixture.Get()).MockRepo;
+    }
+    
+    /// <summary>
+    ///  Mock for the UserExerciseHistoryRepository. 
+    /// </summary>
+    private void SetupUserExerciseHistorySpecificMocks()
+    {
+        // Setup UserExerciseHistory specific mock methods here
+        // None At this time
+    }
+    
+    
 }

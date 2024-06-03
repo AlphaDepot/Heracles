@@ -76,7 +76,7 @@ public class UserExerciseHistoryService : IUserExerciseHistoryService
             return DomainResponse.Failure<UserExerciseHistory>(EntityErrorMessage<UserExerciseHistory>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var result = await _repository.GetByIdAsync(id);
+        var result = await _repository.GetEntityByIdAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityRetrieved<UserExerciseHistory>(id));
         return DomainResponse.Success(result);
@@ -99,7 +99,7 @@ public class UserExerciseHistoryService : IUserExerciseHistoryService
             return DomainResponse.Failure<int>(EntityErrorMessage<UserExerciseHistory>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var id = await _repository.CreateAsync(entity);
+        var id = await _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<UserExerciseHistory>(id));
         
         return DomainResponse.Success(id);
@@ -122,12 +122,12 @@ public class UserExerciseHistoryService : IUserExerciseHistoryService
             return DomainResponse.Failure<bool>(EntityErrorMessage<UserExerciseHistory>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var entity = await _repository.GetByIdAsync(dto.Id);
+        var entity = await _repository.GetEntityByIdAsync(dto.Id);
 
         entity.Repetition = dto.Repetition;
         entity.Weight = dto.Weight;
         
-        await _repository.UpdateAsync(entity);
+        await _repository.UpdateEntityAsync(entity);
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<UserExerciseHistory>(entity.Id));
         
@@ -151,7 +151,7 @@ public class UserExerciseHistoryService : IUserExerciseHistoryService
             return DomainResponse.Failure<bool>(EntityErrorMessage<UserExerciseHistory>.BadRequest(validationResult.ToDictionary()));
         }
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<UserExerciseHistory>(id));
         return DomainResponse.Success(true); 
         

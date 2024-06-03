@@ -63,7 +63,7 @@ public class WorkoutSessionService : IWorkoutSessionService
             return DomainResponse.Failure<WorkoutSession>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var result = await _repository.GetByIdAsync(id);
+        var result = await _repository.GetEntityByIdAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityRetrieved<WorkoutSession>(id));
         return DomainResponse.Success(result);
@@ -80,7 +80,7 @@ public class WorkoutSessionService : IWorkoutSessionService
             return DomainResponse.Failure<int>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var id = await  _repository.CreateAsync(entity);
+        var id = await  _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<WorkoutSession>(id));
         return DomainResponse.Success(id);
         
@@ -97,14 +97,14 @@ public class WorkoutSessionService : IWorkoutSessionService
             return DomainResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var workoutSession = await _repository.GetByIdAsync(entity.Id);
+        var workoutSession = await _repository.GetEntityByIdAsync(entity.Id);
         
         workoutSession.Name = entity.Name ?? workoutSession.Name;
         workoutSession.DayOfWeek = entity.DayOfWeek;
         workoutSession.SortOrder = entity.SortOrder ?? workoutSession.SortOrder;
         
         
-        await _repository.UpdateAsync(workoutSession);
+        await _repository.UpdateEntityAsync(workoutSession);
         
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<WorkoutSession>(entity.Id));
@@ -125,7 +125,7 @@ public class WorkoutSessionService : IWorkoutSessionService
                EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
        }
        
-       await _repository.DeleteAsync(id);
+       await _repository.DeleteEntityAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityDeleted<WorkoutSession>(id));
         return DomainResponse.Success(true);
@@ -142,12 +142,12 @@ public class WorkoutSessionService : IWorkoutSessionService
             return DomainResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var workoutSession = await _repository.GetByIdAsync(entity.WorkoutSessionId);
-        var userExercise = await _userExerciseRepository.GetByIdAsync(entity.UserExerciseId);
+        var workoutSession = await _repository.GetEntityByIdAsync(entity.WorkoutSessionId);
+        var userExercise = await _userExerciseRepository.GetEntityByIdAsync(entity.UserExerciseId);
         
         workoutSession!.UserExercises?.Add(userExercise!);
         
-        await _repository.UpdateAsync(workoutSession);
+        await _repository.UpdateEntityAsync(workoutSession);
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<WorkoutSession>(entity.WorkoutSessionId));
         
@@ -166,12 +166,12 @@ public class WorkoutSessionService : IWorkoutSessionService
             return DomainResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
 
-        var workoutSession = await _repository.GetByIdAsync(entity.WorkoutSessionId);
-        var userExercise = await _userExerciseRepository.GetByIdAsync(entity.UserExerciseId);
+        var workoutSession = await _repository.GetEntityByIdAsync(entity.WorkoutSessionId);
+        var userExercise = await _userExerciseRepository.GetEntityByIdAsync(entity.UserExerciseId);
         
         workoutSession!.UserExercises?.Remove(userExercise!);
         
-        await _repository.UpdateAsync(workoutSession);
+        await _repository.UpdateEntityAsync(workoutSession);
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<WorkoutSession>(entity.WorkoutSessionId));
         

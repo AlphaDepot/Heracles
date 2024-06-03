@@ -49,7 +49,7 @@ public class TestEquipmentService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the GetByIdAsync method of the EquipmentService.
+    /// Test for the GetEntityByIdAsync method of the EquipmentService.
     /// </summary>
     /// <param name="id">The id of the equipment to get.</param>
     /// <param name="expected">The expected result.</param>
@@ -73,7 +73,7 @@ public class TestEquipmentService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the CreateAsync method of the EquipmentService.
+    /// Test for the CreateEntityAsync method of the EquipmentService.
     /// </summary>
     /// <param name="type">The type of the equipment to create.</param>
     /// <param name="weight">The weight of the equipment to create.</param>
@@ -101,7 +101,7 @@ public class TestEquipmentService : BaseUnitTest
             ExpectedCreateResult.BadRequest<EquipmentService, Equipment>(_logger, result, result.Error.Errors!);
     }
     /// <summary>
-    /// Test for the UpdateAsync method of the EquipmentService.
+    /// Test for the UpdateEntityAsync method of the EquipmentService.
     /// </summary>
     /// <param name="id">The id of the equipment to update.</param>
     /// <param name="type">The new type of the equipment.</param>
@@ -131,7 +131,7 @@ public class TestEquipmentService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the DeleteAsync method of the EquipmentService.
+    /// Test for the DeleteEntityAsync method of the EquipmentService.
     /// </summary>
     /// <param name="id">The id of the equipment to delete.</param>
     /// <param name="expected">The expected result.</param>
@@ -159,7 +159,7 @@ public class TestEquipmentService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    /// Provides data for the CreateAsync test.
+    /// Provides data for the CreateEntityAsync test.
     /// </summary>
     public static TheoryData<string, double, double, string> CreateData()
     {
@@ -175,7 +175,7 @@ public class TestEquipmentService : BaseUnitTest
     }
 
     /// <summary>
-    /// Provides data for the UpdateAsync test.
+    /// Provides data for the UpdateEntityAsync test.
     /// </summary>
     public static TheoryData<int, string, double, double, string> UpdateData()
     {

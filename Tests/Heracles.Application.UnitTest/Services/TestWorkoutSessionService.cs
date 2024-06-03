@@ -78,7 +78,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test case for GetByIdAsync method.
+    /// Test case for GetEntityByIdAsync method.
     /// </summary>
     ///  <param name="id">Workout session id</param>
     ///  <param name="expected">Expected response</param>
@@ -100,7 +100,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test case for CreateAsync method.
+    /// Test case for CreateEntityAsync method.
     /// </summary>
     ///  <param name="userId">User id</param>
     ///  <param name="name">Workout session name</param>
@@ -134,7 +134,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     }
     
     /// <summary>
-    /// Test case for UpdateAsync method.
+    /// Test case for UpdateEntityAsync method.
     /// </summary>
     ///  <param name="id">Workout session id</param>
     ///  <param name="userId">User id</param>
@@ -176,7 +176,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test case for DeleteAsync method.
+    /// Test case for DeleteEntityAsync method.
     /// </summary>
     ///  <param name="id">Workout session id</param>
     ///  <param name="expected">Expected response</param>
@@ -300,7 +300,7 @@ public class TestWorkoutSessionService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    ///     Test case for CreateAsync method.
+    ///     Test case for CreateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData </returns>
     public static TheoryData<string, string, DayOfWeek, int, string> CreateData()
@@ -324,7 +324,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for UpdateAsync method.
+    ///     Test case for UpdateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData </returns>
     public static TheoryData<int, string, string, DayOfWeek, int, string> UpdateData()

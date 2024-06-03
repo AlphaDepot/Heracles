@@ -50,7 +50,7 @@ public class TestExerciseTypesService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the GetByIdAsync method of the ExerciseTypeService.
+    ///     Test for the GetEntityByIdAsync method of the ExerciseTypeService.
     /// </summary>
     /// <param name="id">The id to be used for the test.</param>
     /// <param name="expected">The expected result of the test.</param>
@@ -75,7 +75,7 @@ public class TestExerciseTypesService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the CreateAsync method of the ExerciseTypeService.
+    ///     Test for the CreateEntityAsync method of the ExerciseTypeService.
     /// </summary>
     /// <param name="name">The name to be used for the test.</param>
     /// <param name="description">The description to be used for the test.</param>
@@ -103,7 +103,7 @@ public class TestExerciseTypesService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the UpdateAsync method of the ExerciseTypeService.
+    ///     Test for the UpdateEntityAsync method of the ExerciseTypeService.
     /// </summary>
     /// <param name="id">The id to be used for the test.</param>
     /// <param name="name">The name to be used for the test.</param>
@@ -132,7 +132,7 @@ public class TestExerciseTypesService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the DeleteAsync method of the ExerciseTypeService.
+    ///     Test for the DeleteEntityAsync method of the ExerciseTypeService.
     /// </summary>
     /// <param name="id">The id to be used for the test.</param>
     /// <param name="expected">The expected result of the test.</param>

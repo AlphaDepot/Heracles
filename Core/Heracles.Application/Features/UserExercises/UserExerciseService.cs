@@ -81,7 +81,7 @@ public class UserExerciseService : IUserExerciseService
             return DomainResponse.Failure<UserExercise>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var userExercise = await _repository.GetByIdAsync(id);
+        var userExercise = await _repository.GetEntityByIdAsync(id);
         // return the user exercise
         _logger.LogInformation(ServiceMessages.EntityRetrieved<UserExercise>(userExercise.Id));
         return DomainResponse.Success(userExercise);
@@ -112,7 +112,7 @@ public class UserExerciseService : IUserExerciseService
             version = userExerciseExist.Version + 1;
         }
         
-        var exercise = await _exerciseRepository.GetByIdAsync(dto.ExerciseId);
+        var exercise = await _exerciseRepository.GetEntityByIdAsync(dto.ExerciseId);
         
         var userExercise = new UserExercise
         {
@@ -122,7 +122,7 @@ public class UserExerciseService : IUserExerciseService
             Version = version,
         };
         
-        var userExerciseId = await _repository.CreateAsync(userExercise);
+        var userExerciseId = await _repository.CreateEntityAsync(userExercise);
         
         _logger.LogInformation(ServiceMessages.EntityCreated<UserExercise>(userExercise.Id));
         return DomainResponse.Success(userExerciseId);
@@ -145,11 +145,11 @@ public class UserExerciseService : IUserExerciseService
             return DomainResponse.Failure<bool>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var userExercise = await _repository.GetByIdAsync(dto.Id);
+        var userExercise = await _repository.GetEntityByIdAsync(dto.Id);
         
         // check if the equipment group is valid and exists in the database then update the user exercise
         var equipmentGroup = dto.EquipmentGroupId != 0
-            ? await _equipmentGroupRepository.GetByIdAsync(dto.EquipmentGroupId)
+            ? await _equipmentGroupRepository.GetEntityByIdAsync(dto.EquipmentGroupId)
             : userExercise!.EquipmentGroup;
         
         // Update the user exercise
@@ -163,7 +163,7 @@ public class UserExerciseService : IUserExerciseService
         userExercise.BodyWeight = dto.BodyWeight ?? userExercise.BodyWeight;
         userExercise.EquipmentGroup = equipmentGroup;
         
-        await _repository.UpdateAsync(userExercise);
+        await _repository.UpdateEntityAsync(userExercise);
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<UserExercise>(userExercise.Id));
         
@@ -186,7 +186,7 @@ public class UserExerciseService : IUserExerciseService
             return DomainResponse.Failure<bool>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityDeleted<UserExercise>(id));
         return DomainResponse.Success(true);

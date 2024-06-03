@@ -78,7 +78,7 @@ public class EquipmentGroupService : IEquipmentGroupService
             return DomainResponse.Failure<EquipmentGroup>(EntityErrorMessage<EquipmentGroup>.BadRequest());
         }
         
-        var result = await _repository.GetByIdAsync(id);
+        var result = await _repository.GetEntityByIdAsync(id);
         
         if (result == null)
         {
@@ -106,7 +106,7 @@ public class EquipmentGroupService : IEquipmentGroupService
             return DomainResponse.Failure<int>(EntityErrorMessage<EquipmentGroup>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var id = await _repository.CreateAsync(entity);
+        var id = await _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<EquipmentGroup>(id));
         return DomainResponse.Success(id);
         
@@ -128,7 +128,7 @@ public class EquipmentGroupService : IEquipmentGroupService
             return DomainResponse.Failure<bool>(EntityErrorMessage<EquipmentGroup>.BadRequest(validationResult.ToDictionary()));
         }
         
-        await _repository.UpdateAsync(entity);
+        await _repository.UpdateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityUpdated<EquipmentGroup>(entity.Id));
         
         return DomainResponse.Success(true);
@@ -155,7 +155,7 @@ public class EquipmentGroupService : IEquipmentGroupService
             return DomainResponse.Failure<bool>(EntityErrorMessage<EquipmentGroup>.NotFound(id));
         }
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<EquipmentGroup>(id));
         return DomainResponse.Success(true);
     }
@@ -176,11 +176,11 @@ public class EquipmentGroupService : IEquipmentGroupService
             return DomainResponse.Failure<bool>(EntityErrorMessage<EquipmentGroup>.BadRequest(validationResult.Result.ToDictionary()));
         }
         
-        var equipmentGroup = await _repository.GetByIdAsync(entityDto.EquipmentGroupId);
-        var equipment = await _equipmentRepository.GetByIdAsync(entityDto.EquipmentId);
+        var equipmentGroup = await _repository.GetEntityByIdAsync(entityDto.EquipmentGroupId);
+        var equipment = await _equipmentRepository.GetEntityByIdAsync(entityDto.EquipmentId);
         
         equipmentGroup.Equipments?.Add(equipment);
-        await _repository.UpdateAsync(equipmentGroup);
+        await _repository.UpdateEntityAsync(equipmentGroup);
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<EquipmentGroup>(equipmentGroup.Id));
         return DomainResponse.Success(true);
@@ -202,11 +202,11 @@ public class EquipmentGroupService : IEquipmentGroupService
             return DomainResponse.Failure<bool>(EntityErrorMessage<EquipmentGroup>.BadRequest(validationResult.Result.ToDictionary()));
         }
         
-        var equipmentGroup = await _repository.GetByIdAsync(entityDto.EquipmentGroupId);
-        var equipment = await _equipmentRepository.GetByIdAsync(entityDto.EquipmentId);
+        var equipmentGroup = await _repository.GetEntityByIdAsync(entityDto.EquipmentGroupId);
+        var equipment = await _equipmentRepository.GetEntityByIdAsync(entityDto.EquipmentId);
         
         equipmentGroup.Equipments?.Remove(equipment);
-        await _repository.UpdateAsync(equipmentGroup);
+        await _repository.UpdateEntityAsync(equipmentGroup);
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<EquipmentGroup>(equipmentGroup.Id));
         return DomainResponse.Success(true);

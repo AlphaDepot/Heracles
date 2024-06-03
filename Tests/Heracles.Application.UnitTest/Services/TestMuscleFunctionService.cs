@@ -48,7 +48,7 @@ public class TestMuscleFunctionService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the GetByIdAsync method of the MuscleFunctionService.
+    ///     Test case for the GetEntityByIdAsync method of the MuscleFunctionService.
     /// </summary>
     /// <param name="id">The id of the muscle function.</param>
     /// <param name="expected">The expected result.</param>
@@ -72,7 +72,7 @@ public class TestMuscleFunctionService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the CreateAsync method of the MuscleFunctionService.
+    ///     Test case for the CreateEntityAsync method of the MuscleFunctionService.
     /// </summary>
     /// <param name="name">The name of the muscle function.</param>
     /// <param name="expected">The expected result.</param>
@@ -99,7 +99,7 @@ public class TestMuscleFunctionService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the UpdateAsync method of the MuscleFunctionService.
+    ///     Test case for the UpdateEntityAsync method of the MuscleFunctionService.
     /// </summary>
     /// <param name="id">The id of the muscle function.</param>
     /// <param name="name">The new name of the muscle function.</param>
@@ -125,7 +125,7 @@ public class TestMuscleFunctionService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the DeleteAsync method of the MuscleFunctionService.
+    ///     Test case for the DeleteEntityAsync method of the MuscleFunctionService.
     /// </summary>
     /// <param name="id">The id of the muscle function.</param>
     /// <param name="expected">The expected result.</param>
@@ -153,7 +153,7 @@ public class TestMuscleFunctionService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    ///     Provides data for the CreateAsync test case.
+    ///     Provides data for the CreateEntityAsync test case.
     /// </summary>
     public static TheoryData<string, string> CreateMuscleFunctionsData()
     {
@@ -168,7 +168,7 @@ public class TestMuscleFunctionService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Provides data for the UpdateAsync test case.
+    ///     Provides data for the UpdateEntityAsync test case.
     /// </summary>
     public static TheoryData<int, string, string> UpdateMuscleFunctionsData()
     {

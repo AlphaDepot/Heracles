@@ -49,7 +49,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the GetByIdAsync method of the MuscleGroupService.
+    ///     Test case for the GetEntityByIdAsync method of the MuscleGroupService.
     /// </summary>
     /// <param name="id">The id of the muscle group.</param>
     /// <param name="expected">The expected result.</param>
@@ -73,7 +73,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the CreateAsync method of the MuscleGroupService.
+    ///     Test case for the CreateEntityAsync method of the MuscleGroupService.
     /// </summary>
     /// <param name="name">The name of the muscle group.</param>
     /// <param name="expected">The expected result.</param>
@@ -98,7 +98,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the UpdateAsync method of the MuscleGroupService.
+    ///     Test case for the UpdateEntityAsync method of the MuscleGroupService.
     /// </summary>
     /// <param name="id">The id of the muscle group.</param>
     /// <param name="name">The new name of the muscle group.</param>
@@ -125,7 +125,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///  Test case for the DeleteAsync method of the MuscleGroupService.
+    ///  Test case for the DeleteEntityAsync method of the MuscleGroupService.
     /// </summary>
     /// <param name="id">The id of the muscle group.</param>
     /// <param name="expected">The expected result.</param>
@@ -153,7 +153,7 @@ public class TestMuscleGroupService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    ///     Provides data for the CreateAsync test case.
+    ///     Provides data for the CreateEntityAsync test case.
     /// </summary>
     public static TheoryData<string, string> CreateMuscleGroupsData()
     {
@@ -168,7 +168,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Provides data for the UpdateAsync test case.
+    ///     Provides data for the UpdateEntityAsync test case.
     /// </summary>
     public static TheoryData<int, string, string> UpdateMuscleGroupData()
     {

@@ -58,7 +58,7 @@ public class MuscleFunctionService : IMuscleFunctionService
             return DomainResponse.Failure<MuscleFunction>(EntityErrorMessage<MuscleFunction>.BadRequest());
         }
         
-        var muscleFunction = await _repository.GetByIdAsync(id);
+        var muscleFunction = await _repository.GetEntityByIdAsync(id);
         
         if (muscleFunction == null)
         {
@@ -88,7 +88,7 @@ public class MuscleFunctionService : IMuscleFunctionService
         }
         
         // create muscle function
-        var id = await _repository.CreateAsync(entity);
+        var id = await _repository.CreateEntityAsync(entity);
         
         _logger.LogInformation(ServiceMessages.EntityCreated<MuscleFunction>(id));
         return DomainResponse.Success(id);
@@ -111,7 +111,7 @@ public class MuscleFunctionService : IMuscleFunctionService
         }
         
         
-        await _repository.UpdateAsync(entity);
+        await _repository.UpdateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityUpdated<MuscleFunction>(entity.Id));
         
         return DomainResponse.Success(true);
@@ -138,7 +138,7 @@ public class MuscleFunctionService : IMuscleFunctionService
             return DomainResponse.Failure<bool>(EntityErrorMessage<MuscleFunction>.NotFound(id));
         }
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<MuscleFunction>(id));
         
         return DomainResponse.Success(true);

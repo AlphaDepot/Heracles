@@ -77,7 +77,7 @@ public class TestUserExerciseService : BaseUnitTest
     }
     
     /// <summary>
-    /// Test case for GetByIdAsync method.
+    /// Test case for GetEntityByIdAsync method.
     /// </summary>
     ///  <param name="id">The id of the user exercise to get.</param>
     ///  <param name="expected">The expected result of the test.</param>
@@ -102,7 +102,7 @@ public class TestUserExerciseService : BaseUnitTest
     
     
     /// <summary>
-    /// Test case for CreateAsync method.
+    /// Test case for CreateEntityAsync method.
     /// </summary>
     ///  <param name="userId">The user id of the user exercise to create.</param>
     ///  <param name="exerciseId">The exercise id of the user exercise to create.</param>
@@ -134,7 +134,7 @@ public class TestUserExerciseService : BaseUnitTest
 
 
     /// <summary>
-    /// Test case for UpdateAsync method.
+    /// Test case for UpdateEntityAsync method.
     /// </summary>
     ///  <param name="exercise"> The user exercise to update.</param>
     ///  <param name="equipmentGroupId">The equipment group id of the user exercise to update.</param>
@@ -192,7 +192,7 @@ public class TestUserExerciseService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test case for DeleteAsync method.
+    /// Test case for DeleteEntityAsync method.
     /// </summary>
     ///  <param name="id">The id of the user exercise to delete.</param>
     ///  <param name="expected">The expected result of the test.</param>
@@ -216,7 +216,7 @@ public class TestUserExerciseService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    ///  Test case for CreateAsync method.
+    ///  Test case for CreateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData </returns>
     public static TheoryData<string?, int, string> CreateData()
@@ -233,7 +233,7 @@ public class TestUserExerciseService : BaseUnitTest
     }
 
     /// <summary>
-    ///  Test case for UpdateAsync method.
+    ///  Test case for UpdateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData </returns>
     public static TheoryData<UserExercise, int, string> UpdateData()

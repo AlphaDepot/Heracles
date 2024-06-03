@@ -9,7 +9,7 @@ using Moq;
 namespace Heracles.Application.UnitTest.Helpers.ExpectedResults;
 
 /// <summary>
-/// This class provides helper methods for asserting the expected results of the GetByIdAsync method in the ExerciseTypeService class.
+/// This class provides helper methods for asserting the expected results of the GetEntityByIdAsync method in the ExerciseTypeService class.
 /// </summary>
 public static class ExpectedGetByIdResult
 {

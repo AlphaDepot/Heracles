@@ -52,7 +52,7 @@ public class MuscleGroupService : IMuscleGroupService
             return DomainResponse.Failure<MuscleGroup>(EntityErrorMessage<MuscleGroup>.BadRequest());
         }
         
-        var muscleGroup = await _repository.GetByIdAsync(id);
+        var muscleGroup = await _repository.GetEntityByIdAsync(id);
 
         if (muscleGroup == null)
         {
@@ -82,7 +82,7 @@ public class MuscleGroupService : IMuscleGroupService
         }
         
         // create muscle group
-        var id = await _repository.CreateAsync(entity);
+        var id = await _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<MuscleGroup>(id));
         
         return DomainResponse.Success(id);
@@ -105,7 +105,7 @@ public class MuscleGroupService : IMuscleGroupService
         }
         
         
-        await _repository.UpdateAsync(entity);
+        await _repository.UpdateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityUpdated<MuscleGroup>(entity.Id));
         return DomainResponse.Success(true);
     }
@@ -130,7 +130,7 @@ public class MuscleGroupService : IMuscleGroupService
             return DomainResponse.Failure<bool>(EntityErrorMessage<MuscleGroup>.NotFound(id));
         }
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<MuscleGroup>(id));
         
         return DomainResponse.Success(true);

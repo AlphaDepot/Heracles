@@ -45,14 +45,14 @@ public abstract class MockBaseRepository<T, TRepository> where T : BaseEntity wh
                 
             });
         
-        MockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>()))!
+        MockRepo.Setup(r => r.GetEntityByIdAsync(It.IsAny<int>()))!
            .ReturnsAsync((int id) => Entities.FirstOrDefault(q => q.Id == id ));
 
         
-        MockRepo.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>()))!
+        MockRepo.Setup(r => r.GetEntityByIdAsync(It.IsAny<int>(), It.IsAny<string[]>()))!
             .ReturnsAsync((int id, string[] includeProperties) => Entities.FirstOrDefault(q => q.Id == id ));
         
-        MockRepo.Setup(r => r.CreateAsync(It.IsAny<T>()))
+        MockRepo.Setup(r => r.CreateEntityAsync(It.IsAny<T>()))
             .ReturnsAsync((T entity) =>
             {
                 entity.Id = Entities.Count + 1;
@@ -63,7 +63,7 @@ public abstract class MockBaseRepository<T, TRepository> where T : BaseEntity wh
         MockRepo.Setup(r => r.ItExist(It.IsAny<int>()))
             .ReturnsAsync((int id) => Entities.Any(q => q.Id == id));
         
-        MockRepo.Setup(r => r.UpdateAsync(It.IsAny<T>()))
+        MockRepo.Setup(r => r.UpdateEntityAsync(It.IsAny<T>()))
             .ReturnsAsync((T entity) =>
             {
                 var index = Entities.FindIndex(q => q.Id == entity.Id);
@@ -71,7 +71,7 @@ public abstract class MockBaseRepository<T, TRepository> where T : BaseEntity wh
                 return 1; // number of rows affected
             });
         
-        MockRepo.Setup(r => r.DeleteAsync(It.IsAny<int>()))
+        MockRepo.Setup(r => r.DeleteEntityAsync(It.IsAny<int>()))
             .ReturnsAsync((int id) =>
             {
                 var entity = Entities.FirstOrDefault(q => q.Id == id);

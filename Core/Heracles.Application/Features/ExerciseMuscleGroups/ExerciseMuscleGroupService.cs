@@ -118,7 +118,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         }
             
         
-        var exerciseMuscleGroup = await _repository.GetByIdAsync(id);
+        var exerciseMuscleGroup = await _repository.GetEntityByIdAsync(id);
         if (exerciseMuscleGroup == null)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<ExerciseMuscleGroup>(id));
@@ -150,8 +150,8 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         }
         
     
-        var muscleGroup = await _muscleGroupRepository.GetByIdAsync(entity.MuscleGroupId);
-        var muscleFunction = await _muscleFunctionRepository.GetByIdAsync(entity.MuscleFunctionId);
+        var muscleGroup = await _muscleGroupRepository.GetEntityByIdAsync(entity.MuscleGroupId);
+        var muscleFunction = await _muscleFunctionRepository.GetEntityByIdAsync(entity.MuscleFunctionId);
         
         
         // Create the exercise muscle group
@@ -165,7 +165,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         };
         
         // Add the exercise muscle group to the database
-        var result = await _repository.CreateAsync(exerciseMuscleGroup);
+        var result = await _repository.CreateEntityAsync(exerciseMuscleGroup);
         _logger.LogInformation(ServiceMessages.EntityCreated<ExerciseMuscleGroup>(result));
         
         return DomainResponse.Success(result);
@@ -192,13 +192,13 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
             
         
         // Get exercise muscle group - existence already validated by the validator
-        var exerciseMuscleGroup = await _repository.GetByIdAsync(entity.Id);
+        var exerciseMuscleGroup = await _repository.GetEntityByIdAsync(entity.Id);
         
         // Only the function percentage can be updated
         exerciseMuscleGroup.FunctionPercentage = entity.FunctionPercentage;
         
         // Update the exercise muscle group in the database
-        await _repository.UpdateAsync(exerciseMuscleGroup);
+        await _repository.UpdateEntityAsync(exerciseMuscleGroup);
         _logger.LogInformation(ServiceMessages.EntityUpdated<ExerciseMuscleGroup>(entity.Id));
         
         return DomainResponse.Success(true);
@@ -226,7 +226,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         }
         
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<ExerciseMuscleGroup>(id));
         
         return DomainResponse.Success(true);

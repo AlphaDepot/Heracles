@@ -114,7 +114,7 @@ public class BaseUnitTest
 
 
     /// <summary>
-    ///  Test case for GetByIdAsync method.
+    ///  Test case for GetEntityByIdAsync method.
     ///  This version is used when the data is validated using FluentValidation.
     /// </summary>
     /// <returns> TheoryData </returns>
@@ -130,7 +130,7 @@ public class BaseUnitTest
     }
 
     /// <summary>
-    ///  Test for the GetByIdAsync method.
+    ///  Test for the GetEntityByIdAsync method.
     ///  This version is used when the data is validated using the ModelState.
     /// </summary>
     /// <returns> TheoryData </returns>   
@@ -146,7 +146,7 @@ public class BaseUnitTest
     }
 
     /// <summary>
-    ///  Test case for DeleteAsync method.
+    ///  Test case for DeleteEntityAsync method.
     /// This version is used when the data is validated using FluentValidation.
     /// </summary>
     /// <returns> TheoryData </returns>   
@@ -162,7 +162,7 @@ public class BaseUnitTest
     }
 
     /// <summary>
-    ///  Test for the DeleteAsync method.
+    ///  Test for the DeleteEntityAsync method.
     ///  This version is used when the data is validated using the ModelState.
     /// </summary>
     /// <returns> TheoryData </returns>  

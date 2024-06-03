@@ -49,7 +49,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
         ExpectedQueryResult.Success(result, expected);
     }
     /// <summary>
-    /// Test for the GetByIdAsync method.
+    /// Test for the GetEntityByIdAsync method.
     /// </summary>
     /// <param name="id">The id of the UserExerciseHistory to retrieve.</param>
     /// <param name="expected">The expected result of the test.</param>
@@ -71,7 +71,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the CreateAsync method.
+    /// Test for the CreateEntityAsync method.
     /// </summary>
     /// <param name="userExerciseId">The id of the UserExercise to associate with the UserExerciseHistory.</param>
     /// <param name="repetition">The number of repetitions for the UserExerciseHistory.</param>
@@ -105,7 +105,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
                 result.Error.Errors!);
     }
     /// <summary>
-    /// Test for the UpdateAsync method.
+    /// Test for the UpdateEntityAsync method.
     /// </summary>
     /// <param name="id">The id of the UserExerciseHistory to update.</param>
     ///  <param name="userId">The id of the User to update.</param>
@@ -139,7 +139,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the DeleteAsync method.
+    /// Test for the DeleteEntityAsync method.
     /// </summary>
     /// <param name="id">The id of the UserExerciseHistory to delete.</param>
     /// <param name="expected">The expected result of the test.</param>
@@ -163,7 +163,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    ///  Test for the CreateAsync method.
+    ///  Test for the CreateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData</returns>
     public static TheoryData<string, int, int, int, DateTime, string> CreateData()
@@ -186,7 +186,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
 
 
     /// <summary>
-    ///  Test for the UpdateAsync method.
+    ///  Test for the UpdateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData</returns>
     public static TheoryData<int, string, int, int, string> UpdateData()

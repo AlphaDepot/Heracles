@@ -79,7 +79,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the GetByIdAsync method of the ExerciseMuscleGroupService.
+    ///     Test for the GetEntityByIdAsync method of the ExerciseMuscleGroupService.
     /// </summary>
     /// <param name="id">The id to be used for the test.</param>
     /// <param name="expected">The expected result of the test.</param>
@@ -103,7 +103,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the CreateAsync method of the ExerciseMuscleGroupService.
+    ///     Test for the CreateEntityAsync method of the ExerciseMuscleGroupService.
     /// </summary>
     /// <param name="entity">The entity to be used for the test.</param>
     /// <param name="expected">The expected result of the test.</param>
@@ -126,7 +126,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the UpdateAsync method of the ExerciseMuscleGroupService.
+    ///     Test for the UpdateEntityAsync method of the ExerciseMuscleGroupService.
     /// </summary>
     /// <param name="entity">The entity to be used for the test.</param>
     /// <param name="expected">The expected result of the test.</param>
@@ -149,7 +149,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the DeleteAsync method of the ExerciseMuscleGroupService.
+    ///     Test for the DeleteEntityAsync method of the ExerciseMuscleGroupService.
     /// </summary>
     /// <param name="id">The id to be used for the test.</param>
     /// <param name="expected">The expected result of the test.</param>

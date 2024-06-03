@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 
 namespace Heracles.Application.UnitTest.Services;
 /// <summary>
-/// Provides data for the UpdateAsync test.
+/// Provides data for the UpdateEntityAsync test.
 /// </summary>
 public class TestEquipmentGroupService : BaseUnitTest
 {
@@ -51,7 +51,7 @@ public class TestEquipmentGroupService : BaseUnitTest
     }
     
     /// <summary>
-    /// Test for the GetByIdAsync method.
+    /// Test for the GetEntityByIdAsync method.
     /// </summary>
     /// <param name="id">The id of the equipment group to retrieve.</param>
     /// <param name="expected">The expected result.</param>
@@ -81,7 +81,7 @@ public class TestEquipmentGroupService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the CreateAsync method.
+    /// Test for the CreateEntityAsync method.
     /// </summary>
     /// <param name="name">The name of the equipment group to create.</param>
     /// <param name="expected">The expected result.</param>
@@ -105,7 +105,7 @@ public class TestEquipmentGroupService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the UpdateAsync method.
+    /// Test for the UpdateEntityAsync method.
     /// </summary>
     /// <param name="id">The id of the equipment group to update.</param>
     /// <param name="name">The new name of the equipment group.</param>
@@ -132,7 +132,7 @@ public class TestEquipmentGroupService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the DeleteAsync method.
+    /// Test for the DeleteEntityAsync method.
     /// </summary>
     /// <param name="id">The id of the equipment group to delete.</param>
     /// <param name="expected">The expected result.</param>
@@ -210,7 +210,7 @@ public class TestEquipmentGroupService : BaseUnitTest
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type. This is a test class, so we need to test null values
 
     /// <summary>
-    ///  Test for the CreateAsync method.
+    ///  Test for the CreateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData</returns>
     public static TheoryData<string?, string> CreateAsyncData()
@@ -227,7 +227,7 @@ public class TestEquipmentGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///  Test for the UpdateAsync method.
+    ///  Test for the UpdateEntityAsync method.
     /// </summary>
     /// <returns> TheoryData</returns>
     public static TheoryData<int, string, string> UpdateAsyncData()

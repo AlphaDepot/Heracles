@@ -85,7 +85,7 @@ public class UserService :IUserService
             return DomainResponse.Failure<int>(EntityErrorMessage<User>.BadRequest(validationResult.ToDictionary()));
         }
 
-        var result = await _userRepository.CreateAsync(newUser);
+        var result = await _userRepository.CreateEntityAsync(newUser);
         _logger.LogInformation(ServiceMessages.EntityCreated<User>(result));
         
         return DomainResponse.Success(result);
@@ -107,7 +107,7 @@ public class UserService :IUserService
             return DomainResponse.Failure<bool>(EntityErrorMessage<User>.BadRequest(validationResult.ToDictionary()));
         }
         
-        var result = await _userRepository.UpdateAsync(updatedUser);
+        var result = await _userRepository.UpdateEntityAsync(updatedUser);
         _logger.LogInformation(ServiceMessages.EntityUpdated<User>(result));
         
         return DomainResponse.Success(true);

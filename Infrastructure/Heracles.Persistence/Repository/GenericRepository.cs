@@ -18,12 +18,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     }
     
     
-    /// <summary>
-    /// Retrieves a list of entities asynchronously based on the provided filter, order by function, page size, and page number.
-    /// </summary>
-    /// <typeparam name="T">The type of entity.</typeparam>
-    /// <param name="query">The QueryableEntityDto object containing the filter, order by function, page size, and page number.</param>
-    /// <returns>A task representing the asynchronous operation that returns a QueryResponseDto object containing the list of entities matching the provided criteria.</returns>
     public async Task<QueryResponseDto<T>> GetAsync(QueryableEntityDto<T> query)
     {
         var queryable = QueryBuilder(query);
@@ -41,99 +35,52 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         };
     }
 
-
-    /// <summary>
-    /// Retrieves an entity asynchronously based on its ID.
-    /// </summary>
-    /// <param name="id">The ID of the entity.</param>
-    /// <param name="includeProperties">The related entities to include in the query.</param>
-    /// <returns>A task representing the asynchronous operation that returns the entity matching the provided ID.</returns>
-    public async Task<T> GetByIdAsync(int id,params string[]? includeProperties)
+    
+    public async Task<T?> GetEntityByIdAsync(int id,params string[]? includeProperties)
     {
         IQueryable<T?> query = DbContext.Set<T>();
-
-        if (includeProperties != null)
-        {
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
-        }
-
-        return  await query.FirstOrDefaultAsync(e => e.Id == id);
-        
-
+        query = includeProperties != null ? IncludeProperties(includeProperties) : query;
+        return await query.FirstOrDefaultAsync(e => e != null && e.Id == id);
     }
     
-    /// <summary>
-    /// Retrieves an entity asynchronously based on its ID.
-    /// </summary>
-    /// <param name="id">The ID of the entity.</param>
-    /// <returns>A task representing the asynchronous operation that returns the entity matching the provided ID.</returns>
-    public async  Task<T> GetByIdAsync(int id)
-    {
-        var entity = await DbContext.Set<T>().FindAsync(id);
-        return entity;
-    }
 
-    /// <summary>
-    /// Creates a new entity asynchronously.
-    /// </summary>
-    /// <typeparam name="T">The type of entity.</typeparam>
-    /// <param name="entity">The entity to create.</param>
-    /// <returns>A task representing the asynchronous operation that returns the ID of the created entity.</returns>
-    public async Task<int> CreateAsync(T entity)
+    public virtual async  Task<T?> GetEntityByIdAsync(int id)
+    {
+        return await DbContext.Set<T>().FindAsync(id);
+    }
+    
+    
+    public virtual async  Task<int> CreateEntityAsync(T entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = DateTime.UtcNow;
         DbContext.Set<T>().Add(entity);
         return await DbContext.SaveChangesAsync();
     }
 
-    /// <summary>
-    /// Updates the provided entity asynchronously.
-    /// </summary>
-    /// <typeparam name="T">The type of entity.</typeparam>
-    /// <param name="entity">The entity to update.</param>
-    /// <returns>A task representing the asynchronous operation that returns the number of entities updated in the database.</returns>
-    public async Task<int> UpdateAsync(T entity)
+    public virtual  async Task<int> UpdateEntityAsync(T entity)
     {
         var existingEntity = await DbContext.Set<T>().FindAsync(entity.Id);
-        if (existingEntity != null)
-        {
-            DbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
-        }
-        else
-        {
-            DbContext.Entry(entity).State = EntityState.Modified;
-        }
+        if (existingEntity == null) return 0;
+        entity.UpdatedAt = DateTime.UtcNow;
+        DbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
         return await DbContext.SaveChangesAsync();
     }
-
-    /// <summary>
-    /// Deletes an entity asynchronously based on its ID.
-    /// </summary>
-    /// <typeparam name="T">The type of entity.</typeparam>
-    /// <param name="id">The ID of the entity to delete.</param>
-    /// <returns>A task representing the asynchronous operation that returns the number of entities affected.</returns>
-    public async Task<int> DeleteAsync(int id)
+    
+    public virtual async Task<int> DeleteEntityAsync(int id)
     {
         var entity = await DbContext.Set<T>().FindAsync(id);
+        if (entity == null) return 0;
+         
         DbContext.Set<T>().Remove(entity);
-        return await DbContext.SaveChangesAsync();
+        return await DbContext.SaveChangesAsync(); 
     }
-
-
-    /// <summary>
-    /// Checks if an entity with the specified id exists in the database.
-    /// </summary>
-    /// <param name="id">The id of the entity to check for existence.</param>
-    /// <returns>True if an entity with the specified id does not exist, false otherwise.</returns>
-    public async Task<bool> ItExist(int id)
+    
+    public virtual async Task<bool> ItExist(int id)
     {
-        var entity = await DbContext.Set<T>().FindAsync(id);
-        
-        return entity != null;
+        return await DbContext.ExerciseTypes.AnyAsync(x => x.Id == id);
     }
+    
     
     private IQueryable<T> QueryBuilder(QueryableEntityDto<T> query)
     {
@@ -142,5 +89,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
             .ApplyPaging(query);
     }
     
+    private IQueryable<T> IncludeProperties( params string[] includeProperties)
+    {
+        IQueryable<T> query = DbContext.Set<T>();
+        query = includeProperties.Aggregate(query, (current, includeProperty) => 
+            current.Include(includeProperty));
+        return query;
+    }
     
 }

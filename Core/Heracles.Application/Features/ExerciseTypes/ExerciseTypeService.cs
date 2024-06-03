@@ -52,7 +52,7 @@ public class ExerciseTypeService : IExerciseTypeService
         }
             
         
-        var exerciseType = await _repository.GetByIdAsync(
+        var exerciseType = await _repository.GetEntityByIdAsync(
             id,"MuscleGroups.Muscle", "MuscleGroups.Function" );
 
         if (exerciseType == null)
@@ -84,7 +84,7 @@ public class ExerciseTypeService : IExerciseTypeService
         }
         
         // add exercise to the database
-        var exerciseId = await _repository.CreateAsync(entity);
+        var exerciseId = await _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<ExerciseType>(entity.Id));
         
         return DomainResponse.Success(exerciseId);
@@ -106,7 +106,7 @@ public class ExerciseTypeService : IExerciseTypeService
             return DomainResponse.Failure<bool>(EntityErrorMessage<ExerciseType>.BadRequest(validationResult.ToDictionary()));
         }
         
-        await _repository.UpdateAsync(entity);
+        await _repository.UpdateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityUpdated<ExerciseType>(entity.Id));
         return DomainResponse.Success(true);
     }
@@ -131,7 +131,7 @@ public class ExerciseTypeService : IExerciseTypeService
             return DomainResponse.Failure<bool>(EntityErrorMessage<ExerciseType>.NotFound(id));
         }
         
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<ExerciseType>(id));
         return DomainResponse.Success(true);
     }

@@ -11,12 +11,7 @@ public class MuscleGroupRepository : GenericRepository<MuscleGroup>, IMuscleGrou
     public MuscleGroupRepository(HeraclesDbContext dbContext) : base(dbContext)
     {
     }
-
-    /// <summary>
-    ///   Check if the name is unique
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
+    
     public async Task<bool> IsNameUnique(string name)
     {
         return !await DbContext.MuscleGroups

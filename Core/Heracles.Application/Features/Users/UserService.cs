@@ -7,6 +7,7 @@ using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.Users.Interfaces;
 using Heracles.Domain.Users.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Heracles.Application.Features.Users;
 
@@ -17,27 +18,26 @@ public class UserService :IUserService
 {
     private readonly IAppLogger<UserService> _logger;
     private readonly IUserRepository _userRepository;
+    private readonly IMemoryCache _memoryCache;
 
     private readonly string? _userId;
     private readonly bool _isAdmin;
     
     public UserService(IAppLogger<UserService> logger, 
         IUserRepository userRepository,
+        IMemoryCache memoryCache,
         IHttpContextAccessor httpContextAccessor)
     {
         _logger = logger;
         _userRepository = userRepository;
-        
+        _memoryCache = memoryCache;
+
         // Get user id and check if user is admin from http context
         _userId = httpContextAccessor.HttpContext?.Items["UserId"]?.ToString();
         if (httpContextAccessor.HttpContext != null) _isAdmin = httpContextAccessor.HttpContext.User.IsInRole("Admin");
     }
 
-    /// <summary>
-    /// Retrieves data from the repository based on the given query.
-    /// </summary>
-    /// <param name="query">The query request object containing search and pagination parameters.</param>
-    /// <returns>A domain response containing the query response with the data, page number, and page size.</returns>
+
     public async Task<DomainResponse<QueryResponseDto<User>>> GetAsync(QueryRequestDto query)
     {
         var filter = User.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
@@ -49,30 +49,29 @@ public class UserService :IUserService
         return DomainResponse.Success(result);
     }
 
-    /// <summary>
-    ///  Gets a user by their user id.
-    /// </summary>
-    /// <param name="userId"> The user id of the user.</param>
-    /// <returns> A domain response with the user object.</returns>
+
     public async Task<DomainResponse<User>> GetUserByUserIdAsync(string userId)
     {
-        var user = await _userRepository.GetUserByUserIdAsync(userId);
+        var userFromCache = GetUserFromCache(userId);
+        if (userFromCache != null)
+        {
+            return DomainResponse.Success(userFromCache);
+        }
         
+        var user = await _userRepository.GetUserByUserIdAsync(userId);
         if (user == null)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<User>(userId));
             return DomainResponse.Failure<User>(EntityErrorMessage<User>.NotFound(userId));
         }
         
+        StoreUserInCache(user);
+        
         return DomainResponse.Success(user);
        
     }
 
-    /// <summary>
-    ///  Creates a new user in the database.
-    /// </summary>
-    /// <param name="newUser"> The new user object.</param>
-    /// <returns> A domain response with the id of the new user.</returns>
+
     public async Task<DomainResponse<int>> CreateUserAsync(User newUser)
     {
 
@@ -91,11 +90,7 @@ public class UserService :IUserService
         return DomainResponse.Success(result);
     }
 
-    /// <summary>
-    ///  Updates a user in the database.
-    /// </summary>
-    /// <param name="updatedUser"> The updated user object.</param>
-    /// <returns> A domain response with a boolean value indicating success or failure.</returns>
+
     public async  Task<DomainResponse<bool>> UpdateUserAsync(User updatedUser)
     {
         var validator = new UpdateUserValidator(_userRepository);
@@ -113,11 +108,7 @@ public class UserService :IUserService
         return DomainResponse.Success(true);
     }
 
-    /// <summary>
-    /// Deletes a user by their user id.
-    /// </summary>
-    /// <param name="userId">The user id of the user.</param>
-    /// <returns>A domain response indicating the success of the deletion operation.</returns>
+  
     public async Task<DomainResponse<bool>> DeleteUserAsync(string userId)
     {
         var user = await _userRepository.GetUserByUserIdAsync(userId);
@@ -134,12 +125,7 @@ public class UserService :IUserService
         return DomainResponse.Success(true);
     }
 
-    /// <summary>
-    /// Determines whether a user is authorized or not.
-    /// </summary>
-    /// <param name="userId">The user id of the user to check.</param>
-    /// <param name="currentUserId">The current user id.</param>
-    /// <returns>True if the user is authorized, otherwise false.</returns>
+
     public async Task<bool> IsUserAuthorized(string userId, string currentUserId)
     {
         var isSameUser = userId == currentUserId;
@@ -147,13 +133,19 @@ public class UserService :IUserService
         return isSameUser || isUserAdmin;
     }
 
-    /// <summary>
-    /// Checks if a user with the specified user id exists.
-    /// </summary>
-    /// <param name="userId">The user id to check.</param>
-    /// <returns>A task that represents the asynchronous operation and returns a boolean value indicating whether the user exists or not.</returns>
+
     public Task<bool> DoesUserExist(string userId)
     {
         return _userRepository.UserIdExistsAsync(userId);
+    }
+    
+    private void StoreUserInCache(User user)
+    {
+        _memoryCache.Set(user.UserId, user, TimeSpan.FromHours(24));
+    }
+    
+    private User? GetUserFromCache(string userId)
+    {
+        return _memoryCache.Get<User>(userId);
     }
 }

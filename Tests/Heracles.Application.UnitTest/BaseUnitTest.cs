@@ -25,6 +25,7 @@ using Heracles.TestUtilities.Fixtures;
 using Heracles.TestUtilities.Helpers;
 using Heracles.TestUtilities.TestData;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Xunit.Abstractions;
 
@@ -69,6 +70,10 @@ public class BaseUnitTest
     protected readonly Mock<IUserRepository> UserRepository =  MockUserRepository.Get();
     protected readonly Mock<IUserExerciseRepository> UserExerciseRepository = MockUserExerciseRepository.Get();
     protected readonly Mock<IWorkoutSessionRepository> WorkoutSessionRepository = MockWorkoutSessionRepository.Get();
+    
+    // memory cache
+    protected readonly Mock<IMemoryCache> MemoryCache = MockMemoryCache.Get();
+    
     // mock services
     protected readonly Mock<IUserService> UserService = MockUserService.Get();
     

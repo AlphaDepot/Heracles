@@ -30,7 +30,9 @@ public class TestUserService : BaseUnitTest
     public TestUserService(ITestOutputHelper testConsole) : base(testConsole)
     {
        _logger = new Mock<IAppLogger<UserService>>();
-        _userService = new UserService(_logger.Object, UserRepository.Object, HttpContextAccessorWithAdminUser.Object);
+        _userService = new UserService(_logger.Object, UserRepository.Object,
+            MemoryCache.Object,
+            HttpContextAccessorWithAdminUser.Object);
     }
     
     

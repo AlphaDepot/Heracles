@@ -3,18 +3,17 @@ using Heracles.Domain.Users.Interfaces;
 using Heracles.Domain.Users.Models;
 using Heracles.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 namespace Heracles.Infrastructure.Middlewares;
 
-public class UserInformationMiddleware
+public class ClaimsToUserMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
 
-    public UserInformationMiddleware(RequestDelegate next, IServiceScopeFactory serviceScopeFactory)
+    public ClaimsToUserMiddleware(RequestDelegate next, IServiceScopeFactory serviceScopeFactory)
     {
         _next = next;
         _serviceScopeFactory = serviceScopeFactory;
@@ -40,7 +39,7 @@ public class UserInformationMiddleware
         await _next(context);
     }
 
-    private string? ExtractUserId(HttpContext context)
+    private static string ExtractUserId(HttpContext context)
     {
         var userId = context.User.FindFirstValue(ClaimConstants.ObjectId);
         return userId ?? string.Empty;

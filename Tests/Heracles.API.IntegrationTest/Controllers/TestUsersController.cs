@@ -96,11 +96,14 @@ public class TestUsersController : BaseIntegrationTest
             Id = 2,
             UserId = NonAdminUserId,
             Name = "John",
+            Email = "john@outlook.com"
         };
 
         // Act
         var response = await _client.PutAsJsonAsync($"{BaseUrl}/2", user);
-
+        
+        
+        
         HandleResponseFailure(response);
 
         // Assert

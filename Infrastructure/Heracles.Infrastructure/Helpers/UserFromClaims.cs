@@ -1,8 +1,7 @@
 using System.Security.Claims;
-using Heracles.Domain.Enums;
-using Heracles.Domain.Models;
+using Heracles.Domain.Users.Models;
 using static Microsoft.Identity.Web.ClaimConstants;
-namespace Heracles.Infrastructure.Claims;
+namespace Heracles.Infrastructure.Helpers;
 
 public sealed class UserFromClaims
 {
@@ -22,19 +21,19 @@ public sealed class UserFromClaims
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userEmail))
             return null;
 
-        return new User(userId, userName, userEmail, userRoles);
+        var user =  new User(userId, userName, userEmail);
+        if (userRoles != null) user.Roles = userRoles;
+        
+        return user;
     }
 
-    private List<UserRoles>? GetUserRolesOrDefault()
+    private List<string>? GetUserRolesOrDefault()
     {
         var rolesStringList = RolesStringListFromClaims();
         if (rolesStringList == null)
             return null;
 
-        return rolesStringList
-            .Where(role => Enum.TryParse<UserRoles>(role, true, out var _))
-            .Select(role => Enum.Parse<UserRoles>(role, true))
-            .ToList();
+        return rolesStringList;
     }
 
 

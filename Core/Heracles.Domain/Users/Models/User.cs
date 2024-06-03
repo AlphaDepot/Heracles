@@ -5,11 +5,22 @@ namespace Heracles.Domain.Users.Models;
 
 public class User : BaseEntity
 {
-    public  required string UserId { get; set; }
-    public  string? Name { get; set; } = string.Empty;
-    public  string? Email { get; set; } = string.Empty;
+    public  string UserId { get; set; } = null!;
+    public  string Name { get; set; } = null!;
+    public  string Email { get; set; } = null!;
     public DateTime? LastLogin { get; set; } = DateTime.UtcNow;
     public List<string>? Roles { get; set; }
+
+
+    public User() { }
+    
+    public User(string userId, string name, string email)
+    {
+        UserId = userId;
+        Name = name;
+        Email = email;
+    }
+
 
 
     public static Dictionary<string, Expression<Func<User, object>>> GetSortExpression()

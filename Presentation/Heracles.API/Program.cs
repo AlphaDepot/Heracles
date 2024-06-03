@@ -82,7 +82,7 @@ app.UseAuthorization();
 
 // Middleware to add user information to the HttpContext
 // must be after UseAuthentication and UseAuthorization
-app.UseMiddleware<UserInformationMiddleware>();
+app.UseMiddleware<ClaimsToUserMiddleware>();
 
 app.MapControllers();
 

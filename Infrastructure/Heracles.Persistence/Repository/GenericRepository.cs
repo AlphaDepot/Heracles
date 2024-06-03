@@ -82,14 +82,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     }
     
     
-    private IQueryable<T> QueryBuilder(QueryableEntityDto<T> query)
+    protected IQueryable<T> QueryBuilder(QueryableEntityDto<T> query)
     {
         return DbContext.Set<T>().ApplyFilter(query)
             .SetSortingMode(query)
             .ApplyPaging(query);
     }
     
-    private IQueryable<T> IncludeProperties( params string[] includeProperties)
+    protected IQueryable<T> IncludeProperties( params string[] includeProperties)
     {
         IQueryable<T> query = DbContext.Set<T>();
         query = includeProperties.Aggregate(query, (current, includeProperty) => 

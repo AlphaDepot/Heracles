@@ -63,12 +63,12 @@ public  class MockUserRepository :  MockBaseRepository<User, IUserRepository>
     }
     
     /// <summary>
-    ///  Set up the UserIsAdmin mock method for the UserRepository
+    ///  Set up the IsAdminUser mock method for the UserRepository
     ///  This method is used to check if a user is an admin based on their user ID.
     /// </summary>
     private void UserIsAdminMock()
     {
-        MockRepo.Setup(r => r.UserIsAdmin(It.IsAny<string>()))
+        MockRepo.Setup(r => r.IsAdminUser(It.IsAny<string>()))
             .ReturnsAsync((string userId) => Entities.Any(q => q?.UserId == userId &&  q.Roles != null && q.Roles.Contains("Admin")));
     }
 }

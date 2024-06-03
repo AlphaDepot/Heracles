@@ -1,6 +1,4 @@
-using System.Linq.Expressions;
 using Heracles.Domain.Abstractions.DTOs;
-using Heracles.Domain.ExerciseMuscleGroups;
 using Heracles.Domain.ExerciseMuscleGroups.Interfaces;
 using Heracles.Domain.ExerciseMuscleGroups.Models;
 using Heracles.Persistence.DataContext;
@@ -14,29 +12,12 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
     {
     }
 
-
-    /// <summary>
-    /// Retrieves a list of ExerciseMuscleGroup entities by exercise ID.
-    /// </summary>
-    /// <param name="queryableDto">The query DTO containing the filter, sort, and pagination options.</param>
-    /// <returns>The list of ExerciseMuscleGroup entities that match the provided exercise ID.</returns>
+    
     public async Task<QueryResponseDto<ExerciseMuscleGroup>> GetByExerciseIdAsync(QueryableEntityDto<ExerciseMuscleGroup> queryableDto)
     {
-        IQueryable<ExerciseMuscleGroup> query = DbContext.Set<ExerciseMuscleGroup>();
-        // Apply filter
-        if (queryableDto.Filter != null)
-            query = query.Where(queryableDto.Filter);
+        var queryable = QueryBuilder(queryableDto);
+        var result = await queryable.ToListAsync();
         
-        // Apply order by
-        if (queryableDto.Sorter != null)
-            query = queryableDto.Sorter(query);
-        
-        // Apply paging
-        query = query.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize);
-        
-        var result = await query.ToListAsync();
-        
-        // get total items
         var totalItems = await DbContext.Set<ExerciseMuscleGroup>().CountAsync();
         
         return new QueryResponseDto<ExerciseMuscleGroup>
@@ -66,4 +47,6 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
                 m.Function.Id == muscleFunctionId
         );
     }
+    
+  
 }

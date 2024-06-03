@@ -14,7 +14,7 @@ public interface IUserRepository  : IGenericRepository<User>
     // Check if user id exists with the given entity id
     Task<bool> UserIdWithIdExistsAsync(string userId, int id);
     
-    Task<bool> UserIsAdmin(string userId);
+    Task<bool> IsAdminUser(string userId);
     
     Task<int> DeleteUserAsync(int id, string userId);
     

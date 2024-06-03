@@ -11,12 +11,7 @@ public class ExerciseTypeRepository: GenericRepository<ExerciseType>, IExerciseT
     public ExerciseTypeRepository(HeraclesDbContext dbContext) : base(dbContext)
     {
     }
-
-    /// <summary>
-    /// Check if the given name is unique.
-    /// </summary>
-    /// <param name="name">The name to check for uniqueness.</param>
-    /// <returns>True if the name is unique, false otherwise.</returns>
+    
     public async Task<bool> IsNameUnique(string name)
     {
         var exerciseType = await DbContext.ExerciseTypes.Where(et => et.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();

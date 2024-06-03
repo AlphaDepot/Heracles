@@ -143,7 +143,7 @@ public class UserService :IUserService
     public async Task<bool> IsUserAuthorized(string userId, string currentUserId)
     {
         var isSameUser = userId == currentUserId;
-        var isUserAdmin = await _userRepository.UserIsAdmin(currentUserId);
+        var isUserAdmin = await _userRepository.IsAdminUser(currentUserId);
         return isSameUser || isUserAdmin;
     }
 

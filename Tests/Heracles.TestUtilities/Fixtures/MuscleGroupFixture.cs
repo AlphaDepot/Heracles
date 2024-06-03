@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.MuscleGroups.Models;
 using Heracles.TestUtilities.TestData;
 
@@ -20,7 +20,7 @@ public abstract class MuscleGroupFixture
     /// </summary>
     /// <param name="query">The query parameters used to filter and sort the MuscleGroup entities.</param>
     /// <returns>A list of MuscleGroup entities.</returns>
-    public static List<MuscleGroup> GetQueryRequest(QueryRequest? query)
+    public static List<MuscleGroup> GetQueryRequest(QueryRequestDto? query)
     {
         return Fixtures.Query(Get(), query);
     }

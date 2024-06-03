@@ -1,5 +1,5 @@
 using Heracles.Domain.Abstractions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.Entities;
 
 namespace Heracles.Application.Helpers;
 

@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.Equipments.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.Equipments.Interfaces;
 using Heracles.Domain.Equipments.Models;
@@ -32,7 +32,7 @@ public class EquipmentService : IEquipmentService
     /// </summary>
     /// <param name="query"> Query request </param>
     /// <returns> Query response </returns>
-    public async Task<DomainResponse<QueryResponse<Equipment>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<Equipment>>> GetAsync(QueryRequestDto query)
     {
         
         var filter = Equipment.GetFilterExpression(query?.SearchTerm);

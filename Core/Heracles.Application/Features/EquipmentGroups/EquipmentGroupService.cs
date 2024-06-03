@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.EquipmentGroups.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.EquipmentGroups.DTOs;
 using Heracles.Domain.EquipmentGroups.Interfaces;
@@ -52,7 +52,7 @@ public class EquipmentGroupService : IEquipmentGroupService
     /// </summary>
     /// <param name="query">The query parameters.</param>
     /// <returns>A domainResponse containing the equipment groups that match the query.</returns>
-    public async Task<DomainResponse<QueryResponse<EquipmentGroup>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<EquipmentGroup>>> GetAsync(QueryRequestDto query)
     {
         
         var filter = EquipmentGroup.GetFilterExpression(query?.SearchTerm);

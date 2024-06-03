@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.Entities;
 using Heracles.Domain.ExerciseMuscleGroups.Models;
 using Heracles.Domain.UserExercises.Models;
 

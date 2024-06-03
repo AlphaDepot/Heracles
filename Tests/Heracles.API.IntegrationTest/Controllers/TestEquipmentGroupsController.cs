@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.EquipmentGroups.DTOs;
 using Heracles.Domain.EquipmentGroups.Models;
 using Xunit.Abstractions;
@@ -27,7 +27,7 @@ public class TestEquipmentGroupsController : BaseIntegrationTest
         var response = await _client.GetAsync(BaseUrl);
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<EquipmentGroup>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<EquipmentGroup>>();
         
         // Assert
         result.Should().NotBeNull();

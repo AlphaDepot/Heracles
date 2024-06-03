@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups;
 using Heracles.Domain.ExerciseMuscleGroups.Interfaces;
 using Heracles.Domain.ExerciseMuscleGroups.Models;
@@ -20,9 +20,9 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
     /// </summary>
     /// <param name="queryableDto">The query DTO containing the filter, sort, and pagination options.</param>
     /// <returns>The list of ExerciseMuscleGroup entities that match the provided exercise ID.</returns>
-    public async Task<QueryResponse<ExerciseMuscleGroup>> GetByExerciseIdAsync(QuariableDto<ExerciseMuscleGroup> queryableDto)
+    public async Task<QueryResponseDto<ExerciseMuscleGroup>> GetByExerciseIdAsync(QueryableEntityDto<ExerciseMuscleGroup> queryableDto)
     {
-        IQueryable<ExerciseMuscleGroup> query = _dbContext.Set<ExerciseMuscleGroup>();
+        IQueryable<ExerciseMuscleGroup> query = DbContext.Set<ExerciseMuscleGroup>();
         // Apply filter
         if (queryableDto.Filter != null)
             query = query.Where(queryableDto.Filter);
@@ -37,9 +37,9 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
         var result = await query.ToListAsync();
         
         // get total items
-        var totalItems = await _dbContext.Set<ExerciseMuscleGroup>().CountAsync();
+        var totalItems = await DbContext.Set<ExerciseMuscleGroup>().CountAsync();
         
-        return new QueryResponse<ExerciseMuscleGroup>
+        return new QueryResponseDto<ExerciseMuscleGroup>
         {
             Data = result,
             PageNumber = queryableDto.PageNumber,
@@ -59,7 +59,7 @@ public class ExerciseMuscleGroupRepository : GenericRepository<ExerciseMuscleGro
     /// <returns>Returns true if the combination is unique, otherwise false.</returns>
     public async Task<bool> IsUnique(int exerciseId, int muscleGroupId, int muscleFunctionId)
     {
-        return !await _dbContext.Set<ExerciseMuscleGroup>().AnyAsync(
+        return !await DbContext.Set<ExerciseMuscleGroup>().AnyAsync(
             m =>
                 m.ExerciseTypeId == exerciseId &&
                 m.Muscle.Id == muscleGroupId &&

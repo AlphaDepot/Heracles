@@ -1,8 +1,8 @@
 using Heracles.Application.Features.MuscleFunctions;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.MuscleFunctions.Models;
 using Heracles.TestUtilities.Fixtures;
 using Heracles.TestUtilities.Helpers;
@@ -34,7 +34,7 @@ public class TestMuscleFunctionService : BaseUnitTest
     /// <param name="query">The query request.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedMuscleFunctions(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedMuscleFunctions(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "Stabilizer";

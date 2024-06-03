@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.ExercisesType.Models;
 using Heracles.TestUtilities.TestData;
 
@@ -20,7 +20,7 @@ public abstract class ExerciseTypeFixture
     /// </summary>
     /// <param name="query">The query request containing search and sort parameters.</param>
     /// <returns>A list of exercise types filtered and sorted according to the query.</returns>
-    public static List<ExerciseType> Query(QueryRequest? query)
+    public static List<ExerciseType> Query(QueryRequestDto? query)
     {
         return Fixtures.Query(Get(), query);
     }

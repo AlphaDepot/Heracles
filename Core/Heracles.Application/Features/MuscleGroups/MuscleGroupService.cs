@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.MuscleGroups.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.MuscleGroups.Interfaces;
 using Heracles.Domain.MuscleGroups.Models;
@@ -26,8 +26,8 @@ public class MuscleGroupService : IMuscleGroupService
     /// Retrieves a collection of MuscleGroups based on the provided query parameters.
     /// </summary>
     /// <param name="query">The query containing the search term, page number, and page size.</param>
-    /// <returns>A Task representing the asynchronous operation. The result is a DomainResponse containing a QueryResponse of MuscleGroup objects.</returns>
-    public async Task<DomainResponse<QueryResponse<MuscleGroup>>> GetAsync(QueryRequest query)
+    /// <returns>A Task representing the asynchronous operation. The result is a DomainResponse containing a QueryResponseDto of MuscleGroup objects.</returns>
+    public async Task<DomainResponse<QueryResponseDto<MuscleGroup>>> GetAsync(QueryRequestDto query)
     {
         var filter = MuscleGroup.GetFilterExpression(query.SearchTerm);
        var sortExpressions = MuscleGroup.GetSortExpression();

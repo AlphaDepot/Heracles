@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.ExerciseMuscleGroups.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.ExerciseMuscleGroups.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.Interfaces;
@@ -44,12 +44,12 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     /// <summary>
     ///  Get all exercise muscle groups with optional search term, sorting and pagination.
     /// </summary>
-    /// <param name="query"> The QueryRequest object containing the search term, sort column and sort order.</param>
-    /// <returns> A DomainResponse object containing the QueryResponse object with the list of exercise muscle groups.</returns>
-    public async Task<DomainResponse<QueryResponse<ExerciseMuscleGroup>>> GetAsync(QueryRequest? query = null)
+    /// <param name="query"> The QueryRequestDto object containing the search term, sort column and sort order.</param>
+    /// <returns> A DomainResponse object containing the QueryResponseDto object with the list of exercise muscle groups.</returns>
+    public async Task<DomainResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetAsync(QueryRequestDto? query = null)
     {
         // Set the default query values if the query is null
-        query ??= new QueryRequest();
+        query ??= new QueryRequestDto();
         
         // Filter the exercise muscle groups
         var filter = ExerciseMuscleGroup.GetFilterExpression(query?.SearchTerm);
@@ -71,12 +71,12 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     ///     Get all exercise muscle groups for a specific exercise type.
     /// </summary>
     /// <param name="id"> The id of the exercise type.</param>
-    /// <param name="query"> The QueryRequest object containing the search term, sort column and sort order.</param>
-    /// <returns>  QueryResponse object containing the list of exercise muscle groups for the exercise type.</returns>
-    public async Task<DomainResponse<QueryResponse<ExerciseMuscleGroup>>> GetByExerciseIdAsync(int id, QueryRequest? query = null)
+    /// <param name="query"> The QueryRequestDto object containing the search term, sort column and sort order.</param>
+    /// <returns>  QueryResponseDto object containing the list of exercise muscle groups for the exercise type.</returns>
+    public async Task<DomainResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetByExerciseIdAsync(int id, QueryRequestDto? query = null)
     {
         // Set the default query values if the query is null
-        query ??= new QueryRequest();
+        query ??= new QueryRequestDto();
         
         // fixed page size and number
         // in theory no exercise should have more than 20 affected major muscle groups

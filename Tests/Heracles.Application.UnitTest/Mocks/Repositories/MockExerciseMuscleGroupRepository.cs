@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.Interfaces;
 using Heracles.Domain.ExerciseMuscleGroups.Models;
 using Heracles.TestUtilities.Fixtures;
@@ -51,8 +51,8 @@ public class MockExerciseMuscleGroupRepository : MockBaseRepository<ExerciseMusc
     /// </summary>
     private void GetByExerciseIdMock()
     {
-        MockRepo.Setup(r => r.GetByExerciseIdAsync(It.IsAny<QuariableDto<ExerciseMuscleGroup>>()))
-            .ReturnsAsync((QuariableDto<ExerciseMuscleGroup> queryableDto) =>
+        MockRepo.Setup(r => r.GetByExerciseIdAsync(It.IsAny<QueryableEntityDto<ExerciseMuscleGroup>>()))
+            .ReturnsAsync((QueryableEntityDto<ExerciseMuscleGroup> queryableDto) =>
             {
                 var queryable = Entities.AsQueryable();
                 if (queryableDto.Filter != null)
@@ -65,7 +65,7 @@ public class MockExerciseMuscleGroupRepository : MockBaseRepository<ExerciseMusc
                 }
                 var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
 
-                return new QueryResponse<ExerciseMuscleGroup>()
+                return new QueryResponseDto<ExerciseMuscleGroup>()
                 {
                     Data =  result,
                     TotalPages = result.Count,

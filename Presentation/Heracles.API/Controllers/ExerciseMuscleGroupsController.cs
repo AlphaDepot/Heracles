@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.Interfaces;
 using Heracles.Infrastructure.Extensions;
@@ -21,7 +21,7 @@ namespace Heracles.API.Controllers
         
         // GET: api/<ExerciseMuscleGroupsController>
         [HttpGet]
-        public async Task<IResult> Get([FromQuery] QueryRequest query)
+        public async Task<IResult> Get([FromQuery] QueryRequestDto query)
         {
             var result = await _service.GetAsync(query);
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
@@ -38,7 +38,7 @@ namespace Heracles.API.Controllers
         
         // GET api/<ExerciseMuscleGroupsController>/exerciseId
         [HttpGet("exercise/{exerciseId:int}")]
-        public async Task<IResult> GetByExerciseId([FromRoute] int exerciseId, [FromQuery] QueryRequest query)
+        public async Task<IResult> GetByExerciseId([FromRoute] int exerciseId, [FromQuery] QueryRequestDto query)
         {
             var result = await _service.GetByExerciseIdAsync(exerciseId, query);
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();

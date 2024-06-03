@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.Models;
 using Xunit.Abstractions;
@@ -27,7 +27,7 @@ public class TestExerciseMuscleGroupsController : BaseIntegrationTest
         var response = await _client.GetAsync(BaseUrl);
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<ExerciseMuscleGroup>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<ExerciseMuscleGroup>>();
         
         // Assert
         result.Should().NotBeNull();
@@ -65,7 +65,7 @@ public class TestExerciseMuscleGroupsController : BaseIntegrationTest
         var response = await _client.GetAsync($"{BaseUrl}/exercise/2");
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<ExerciseMuscleGroup>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<ExerciseMuscleGroup>>();
         
         // Assert
         result.Should().NotBeNull();

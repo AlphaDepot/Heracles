@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.WorkoutSessions.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.UserExercises.Interfaces;
 using Heracles.Domain.Users.Interfaces;
@@ -40,7 +40,7 @@ public class WorkoutSessionService : IWorkoutSessionService
         _isAdmin = httpContextAccessor.HttpContext.User.IsInRole("Admin");
     }
 
-    public async Task<DomainResponse<QueryResponse<WorkoutSession>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<WorkoutSession>>> GetAsync(QueryRequestDto query)
     {
        var filter = WorkoutSession.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
        var sortExpression = WorkoutSession.GetSortExpression();

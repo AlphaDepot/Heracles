@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.MuscleFunctions.Models;
 using Xunit.Abstractions;
 
@@ -28,7 +28,7 @@ public class TestMuscleFunctionsController : BaseIntegrationTest
         var response = await _client.GetAsync(BaseUrl);
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<MuscleFunction>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<MuscleFunction>>();
         
         // Assert
         result.Should().NotBeNull();

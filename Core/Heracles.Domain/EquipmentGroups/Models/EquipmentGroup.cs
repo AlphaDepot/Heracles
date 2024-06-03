@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.Entities;
 using Heracles.Domain.Equipments;
 using Heracles.Domain.Equipments.Models;
 

@@ -1,8 +1,8 @@
 using Heracles.Application.Features.MuscleGroups;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.MuscleGroups.Models;
 using Heracles.TestUtilities.Fixtures;
 using Heracles.TestUtilities.Helpers;
@@ -35,7 +35,7 @@ public class TestMuscleGroupService : BaseUnitTest
     /// <param name="query">The query request.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedMuscleGroups(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedMuscleGroups(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "Chest";

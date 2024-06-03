@@ -1,4 +1,3 @@
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Equipments.Interfaces;
 using Heracles.Domain.Equipments.Models;
 using Heracles.TestUtilities.Fixtures;

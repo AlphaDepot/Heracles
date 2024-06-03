@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.Entities;
 using Heracles.Domain.EquipmentGroups.Models;
 using Heracles.Domain.ExercisesType.Models;
 using Heracles.Domain.UserExerciseHistories.Models;

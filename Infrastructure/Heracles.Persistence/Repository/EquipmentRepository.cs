@@ -14,7 +14,7 @@ public class EquipmentRepository : GenericRepository<Equipment>, IEquipmentRepos
     public async Task<bool> IsTypeUnique(string type)
     {
         // returns true if type is unique therefore reverse the result with !
-        return !await _dbContext.Equipments
+        return !await DbContext.Equipments
             .AnyAsync(e => e.Type.ToLower() == type.ToLower());
     }
 }

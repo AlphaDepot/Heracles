@@ -19,7 +19,7 @@ public class UserExerciseRepository : GenericRepository<UserExercise>, IUserExer
     /// <returns>A task that represents the asynchronous operation and contains the user exercise with the specified exercise type ID, or null if not found.</returns>
     public async Task<UserExercise?> GetUserExerciseByExerciseTypeIdAsync(int id)
     {
-        return await _dbContext.UserExercises.FirstOrDefaultAsync(x => x.ExerciseTypeId == id);
+        return await DbContext.UserExercises.FirstOrDefaultAsync(x => x.ExerciseTypeId == id);
     }
 
 

@@ -1,8 +1,8 @@
 using Heracles.Application.Features.Users.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.Users.Interfaces;
 using Heracles.Domain.Users.Models;
@@ -38,7 +38,7 @@ public class UserService :IUserService
     /// </summary>
     /// <param name="query">The query request object containing search and pagination parameters.</param>
     /// <returns>A domain response containing the query response with the data, page number, and page size.</returns>
-    public async Task<DomainResponse<QueryResponse<User>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<User>>> GetAsync(QueryRequestDto query)
     {
         var filter = User.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
         var sortExpression = User.GetSortExpression();

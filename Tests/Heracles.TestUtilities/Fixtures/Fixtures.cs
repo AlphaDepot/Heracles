@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Heracles.Application.Helpers;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
+using Heracles.Domain.Abstractions.Entities;
 using Heracles.Domain.Users.Models;
 
 namespace Heracles.TestUtilities.Fixtures;
@@ -18,7 +19,7 @@ public   static class Fixtures
     /// <param name="list">The list of entities to query.</param>
     /// <param name="query">The query parameters.</param>
     /// <returns>The filtered and sorted list of entities based on the query parameters.</returns>
-    public static List<T> Query<T>(List<T> list, QueryRequest? query) where T : BaseEntity
+    public static List<T> Query<T>(List<T> list, QueryRequestDto? query) where T : BaseEntity
     {
         // if query is null, return all exercise muscle groups
         if (query == null)
@@ -64,7 +65,7 @@ public   static class Fixtures
     /// <param name="userId">The user ID.</param>
     /// <param name="isAdmin">A flag indicating if the user is an admin.</param>
     /// <returns>The filtered and sorted list of entities based on the query parameters.</returns>
-    public static List<T> QueryWithUser<T>(List<T> list, QueryRequest? query, string userId, bool isAdmin) where T : BaseEntity
+    public static List<T> QueryWithUser<T>(List<T> list, QueryRequestDto? query, string userId, bool isAdmin) where T : BaseEntity
     {
         // if query is null, return all exercise muscle groups
         if (query == null)

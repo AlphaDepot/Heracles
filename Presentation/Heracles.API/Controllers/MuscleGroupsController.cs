@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.MuscleGroups.Interfaces;
 using Heracles.Domain.MuscleGroups.Models;
 using Heracles.Infrastructure.Extensions;
@@ -22,7 +22,7 @@ namespace Heracles.API.Controllers
         
         // GET: api/<MuscleGroupsController>
         [HttpGet]
-        public async Task<IResult> Get([FromQuery] QueryRequest query)
+        public async Task<IResult> Get([FromQuery] QueryRequestDto query)
         {
             var result = await _service.GetAsync(query);
             return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();

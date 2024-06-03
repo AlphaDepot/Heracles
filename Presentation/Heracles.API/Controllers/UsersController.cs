@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Users.Interfaces;
 using Heracles.Domain.Users.Models;
 using Heracles.Infrastructure.Extensions;
@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IResult> Get([FromQuery] QueryRequest query)
+    public async Task<IResult> Get([FromQuery] QueryRequestDto query)
     {
         var result = await _service.GetAsync(query);
         return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();

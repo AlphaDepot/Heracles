@@ -19,7 +19,7 @@ public class WorkoutSessionRepository : GenericRepository<WorkoutSession>, IWork
     /// <returns>True if the name is unique, false otherwise.</returns>
     public async Task<bool> IsUnique(string name)
     {
-        return !await _dbContext.WorkoutSessions.AnyAsync(x => x.Name.ToLower() == name.ToLower());
+        return !await DbContext.WorkoutSessions.AnyAsync(x => x.Name.ToLower() == name.ToLower());
     }
     
 }

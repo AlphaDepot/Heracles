@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.WorkoutSessions.DTOs;
 using Heracles.Domain.WorkoutSessions.Models;
 using Xunit.Abstractions;
@@ -31,7 +31,7 @@ public class TestWorkoutSessionsController : BaseIntegrationTest
         
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<WorkoutSession>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<WorkoutSession>>();
         
         // Assert
         result.Should().NotBeNull();

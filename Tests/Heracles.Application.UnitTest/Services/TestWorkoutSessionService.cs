@@ -1,7 +1,7 @@
 using Heracles.Application.Features.WorkoutSessions;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.UserExercises.Models;
 using Heracles.Domain.WorkoutSessions.DTOs;
 using Heracles.Domain.WorkoutSessions.Models;
@@ -43,7 +43,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     ///  <param name="query">Query request</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsAdmin(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsAdmin(QueryRequestDto query)
     {
         SearchTerm = "Test Workout Session 1";
         
@@ -65,7 +65,7 @@ public class TestWorkoutSessionService : BaseUnitTest
     /// <param name="query"> Query request </param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsNotAdmin(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsNotAdmin(QueryRequestDto query)
     {
         // Arrange
         var expected = WorkoutSessionFixture.Query(query, ValidUserId, false);

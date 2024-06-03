@@ -19,7 +19,7 @@ public class ExerciseTypeRepository: GenericRepository<ExerciseType>, IExerciseT
     /// <returns>True if the name is unique, false otherwise.</returns>
     public async Task<bool> IsNameUnique(string name)
     {
-        var exerciseType = await _dbContext.ExerciseTypes.Where(et => et.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+        var exerciseType = await DbContext.ExerciseTypes.Where(et => et.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
         return exerciseType == null;
     }
 }

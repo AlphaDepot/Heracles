@@ -1,6 +1,6 @@
 
 using System.Text.Json;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.ExercisesType.Interfaces;
 using Heracles.Domain.ExercisesType.Models;
 using Heracles.Infrastructure.Extensions;
@@ -24,7 +24,7 @@ public class ExerciseTypesController : ControllerBase
     
     // GET: api/<ExerciseTypesController>
     [HttpGet]
-    public async Task<IResult> Get([FromQuery] QueryRequest query)
+    public async Task<IResult> Get([FromQuery] QueryRequestDto query)
     {
         var result = await _service.GetAsync(query);
         return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();

@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.UserExercises.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.EquipmentGroups.Interfaces;
 using Heracles.Domain.ExercisesType.Interfaces;
@@ -52,7 +52,7 @@ public class UserExerciseService : IUserExerciseService
     /// </summary>
     /// <param name="query">The query request.</param>
     /// <returns>A task representing the asynchronous operation that returns a domain response containing the query response with the filtered and sorted user exercises.</returns>
-    public async Task<DomainResponse<QueryResponse<UserExercise>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<UserExercise>>> GetAsync(QueryRequestDto query)
     {
         var filter = UserExercise.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
         var sortExpression = UserExercise.GetSortExpression();

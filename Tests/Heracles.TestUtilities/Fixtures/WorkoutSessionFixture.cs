@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.WorkoutSessions.Models;
 using Heracles.TestUtilities.TestData;
 
@@ -11,7 +11,7 @@ public abstract class WorkoutSessionFixture
 {
     public static List<WorkoutSession> Get() => UserExerciseSeedData.WorkoutSessions();
 
-    public static List<WorkoutSession> Query(QueryRequest? query, string? userId, bool isAdmin)
+    public static List<WorkoutSession> Query(QueryRequestDto? query, string? userId, bool isAdmin)
     {
       
 

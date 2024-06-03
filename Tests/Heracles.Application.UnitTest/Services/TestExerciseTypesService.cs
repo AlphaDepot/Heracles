@@ -1,9 +1,9 @@
 using System.Text.Json;
 using Heracles.Application.Features.ExerciseTypes;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.ExercisesType.Models;
 using Heracles.TestUtilities.Fixtures;
 using Heracles.TestUtilities.Helpers;
@@ -36,7 +36,7 @@ public class TestExerciseTypesService : BaseUnitTest
     /// <param name="query">The query to be used for the test.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedExerciseTypes(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedExerciseTypes(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "Bench Press";

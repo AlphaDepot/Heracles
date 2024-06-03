@@ -1,5 +1,6 @@
+using Heracles.Domain.Abstractions.DTOs;
+using Heracles.Domain.Abstractions.Entities;
 using Heracles.Domain.Abstractions.Interfaces;
-using Heracles.Domain.Abstractions.Queries;
 using Moq;
 
 namespace Heracles.Application.UnitTest.Mocks.Repositories;
@@ -20,8 +21,8 @@ public abstract class MockBaseRepository<T, TRepository> where T : BaseEntity wh
      private void Setup()
     {
         
-        MockRepo.Setup(r => r.GetAsync(It.IsAny<QuariableDto<T>>()))
-            .ReturnsAsync((QuariableDto<T> queryableDto) =>
+        MockRepo.Setup(r => r.GetAsync(It.IsAny<QueryableEntityDto<T>>()))
+            .ReturnsAsync((QueryableEntityDto<T> queryableDto) =>
             {
                 var queryable = Entities.AsQueryable();
                 if (queryableDto.Filter != null)
@@ -34,7 +35,7 @@ public abstract class MockBaseRepository<T, TRepository> where T : BaseEntity wh
                 }
                 var result =  queryable.Skip((queryableDto.PageNumber - 1) * queryableDto.PageSize).Take(queryableDto.PageSize).ToList();
                 
-                return new QueryResponse<T>()
+                return new QueryResponseDto<T>()
                 {
                     Data =  result,
                     TotalPages = result.Count,

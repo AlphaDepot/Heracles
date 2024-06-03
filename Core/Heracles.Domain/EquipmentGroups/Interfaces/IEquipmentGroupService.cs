@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.EquipmentGroups.DTOs;
 using Heracles.Domain.EquipmentGroups.Models;
@@ -7,7 +7,7 @@ namespace Heracles.Domain.EquipmentGroups.Interfaces;
 
 public interface IEquipmentGroupService
 {
-    Task<DomainResponse<QueryResponse<EquipmentGroup>>> GetAsync(QueryRequest query);
+    Task<DomainResponse<QueryResponseDto<EquipmentGroup>>> GetAsync(QueryRequestDto query);
     
     Task<DomainResponse<EquipmentGroup>> GetByIdAsync(int id);
     Task<DomainResponse<int>> CreateAsync(EquipmentGroup entity);

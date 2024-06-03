@@ -1,8 +1,8 @@
 using FluentAssertions;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.Entities;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Moq;
 

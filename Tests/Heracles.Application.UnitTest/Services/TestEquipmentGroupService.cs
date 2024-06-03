@@ -1,9 +1,9 @@
 using System.Text.Json;
 using Heracles.Application.Features.EquipmentGroups;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.EquipmentGroups.DTOs;
 using Heracles.Domain.EquipmentGroups.Models;
 using Heracles.TestUtilities.Fixtures;
@@ -37,7 +37,7 @@ public class TestEquipmentGroupService : BaseUnitTest
     /// <param name="query">The query parameters for filtering and sorting.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedEquipmentGroups(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedEquipmentGroups(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "Home Gym";

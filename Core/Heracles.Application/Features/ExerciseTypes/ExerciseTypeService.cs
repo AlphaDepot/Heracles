@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.ExerciseTypes.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.ExercisesType.Interfaces;
 using Heracles.Domain.ExercisesType.Models;
@@ -26,7 +26,7 @@ public class ExerciseTypeService : IExerciseTypeService
     /// <summary>
     /// Represents a query request for filtering and sorting a collection of ExerciseType entities asynchronously.
     /// </summary>
-    public async Task<DomainResponse<QueryResponse<ExerciseType>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<ExerciseType>>> GetAsync(QueryRequestDto query)
     {
         var filter = ExerciseType.GetFilterExpression(query?.SearchTerm);
         var sortExpressions = ExerciseType.GetSortExpression();

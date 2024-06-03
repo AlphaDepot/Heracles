@@ -18,7 +18,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     /// <returns>A <see cref="Task"/> representing the asynchronous operation with a nullable <see cref="User"/> object that matches the user ID.</returns>
     public Task<User?> GetUserByUserIdAsync(string userId)
     {
-        return _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+        return DbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<bool> UserIdExistsAsync(string userId)
     {
         // Check that user exists with the userId property or return false
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+        var user = await DbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         
         return user != null;
     }
@@ -42,7 +42,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that returns true if a user with the specified user ID and ID exists in the repository, otherwise false.</returns>
     public async Task<bool> UserIdWithIdExistsAsync(string userId, int id)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId && u.Id != id) == null;
+        return await DbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId && u.Id != id) == null;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     /// <returns>A <see cref="Task"/> representing the asynchronous operation with a <see cref="bool"/> value indicating whether the user is an admin or not.</returns>
     public async Task<bool> UserIsAdmin(string userId)
     {
-        return !await _dbContext.Users.AnyAsync(u 
+        return !await DbContext.Users.AnyAsync(u 
             => u.UserId == userId  // Check that the user exists
                && u.Roles != null   // Check that the user has roles
                && u.Roles.Contains("Admin")); // Check that the user has the Admin role
@@ -67,23 +67,23 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     public async Task<int> DeleteUserAsync(int id, string userId)
     {
         //delete id from the database and any other related data where the userid exist
-        var user = await  _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id && u.UserId == userId);
+        var user = await  DbContext.Users.FirstOrDefaultAsync(u => u.Id == id && u.UserId == userId);
         
         if (user == null) return 0;
         
-        _dbContext.Users.Remove(user);
+        DbContext.Users.Remove(user);
             
         // Find every entity that has a property of UserId == userId and delete them
-        var userExercises = await _dbContext.UserExercises.Where(ue => ue.UserId == userId).ToListAsync();
-        _dbContext.UserExercises.RemoveRange(userExercises);
+        var userExercises = await DbContext.UserExercises.Where(ue => ue.UserId == userId).ToListAsync();
+        DbContext.UserExercises.RemoveRange(userExercises);
        
-        var userExerciseHistories = await _dbContext.UserExerciseHistories.Where(ueh => ueh.UserId == userId).ToListAsync();
-        _dbContext.UserExerciseHistories.RemoveRange(userExerciseHistories);
+        var userExerciseHistories = await DbContext.UserExerciseHistories.Where(ueh => ueh.UserId == userId).ToListAsync();
+        DbContext.UserExerciseHistories.RemoveRange(userExerciseHistories);
        
-        var userWorkouts = await _dbContext.WorkoutSessions.Where(uw => uw.UserId == userId).ToListAsync();
-        _dbContext.WorkoutSessions.RemoveRange(userWorkouts);
+        var userWorkouts = await DbContext.WorkoutSessions.Where(uw => uw.UserId == userId).ToListAsync();
+        DbContext.WorkoutSessions.RemoveRange(userWorkouts);
        
-        return await _dbContext.SaveChangesAsync();
+        return await DbContext.SaveChangesAsync();
 
     }
 }

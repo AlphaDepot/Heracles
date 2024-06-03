@@ -1,8 +1,8 @@
 using Heracles.Application.Features.Equipments;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Equipments.Models;
 using Heracles.TestUtilities.Fixtures;
 using Heracles.TestUtilities.Helpers;
@@ -36,7 +36,7 @@ public class TestEquipmentService : BaseUnitTest
     /// <param name="query">The query to filter and sort equipments.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedEquipments(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ShouldReturnFilteredAndSortedEquipments(QueryRequestDto query)
     {
         // Arrange
         var expected = EquipmentFixture.Query(query);

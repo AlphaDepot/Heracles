@@ -1,7 +1,7 @@
 using Heracles.Application.Features.UserExercises;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.EquipmentGroups.Models;
 using Heracles.Domain.UserExercises.DTOs;
 using Heracles.Domain.UserExercises.Models;
@@ -44,7 +44,7 @@ public class TestUserExerciseService : BaseUnitTest
     ///  <param name="query">The query request to get user exercises.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsAdmin(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsAdmin(QueryRequestDto query)
     {
         // Arrange
         var expected = UserExerciseFixture.Query(query, ValidAdminUserId, true);
@@ -62,7 +62,7 @@ public class TestUserExerciseService : BaseUnitTest
     /// <param name="query">The query request to get user exercises.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsNotAdmin(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData_WhenUserIsNotAdmin(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "Bench Press";

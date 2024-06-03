@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.WorkoutSessions.DTOs;
 using Heracles.Domain.WorkoutSessions.Models;
@@ -7,7 +7,7 @@ namespace Heracles.Domain.WorkoutSessions.Interfaces;
 
 public interface IWorkoutSessionService
 {
-    Task<DomainResponse<QueryResponse<WorkoutSession>>> GetAsync(QueryRequest query);
+    Task<DomainResponse<QueryResponseDto<WorkoutSession>>> GetAsync(QueryRequestDto query);
     
     Task<DomainResponse<WorkoutSession>> GetByIdAsync(int id);
     Task<DomainResponse<int>> CreateAsync(WorkoutSession entity);

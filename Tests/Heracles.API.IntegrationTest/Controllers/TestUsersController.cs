@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Users.Models;
 using Xunit.Abstractions;
 
@@ -30,7 +30,7 @@ public class TestUsersController : BaseIntegrationTest
         
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<User>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<User>>();
         
         // Assert
         result.Should().NotBeNull();

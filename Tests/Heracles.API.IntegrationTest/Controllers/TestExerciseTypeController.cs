@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using FluentAssertions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.ExercisesType.Models;
 using Xunit.Abstractions;
@@ -31,7 +31,7 @@ public class TestExerciseTypeController : BaseIntegrationTest
         var response = await _client.GetAsync(BaseUrl);
         HandleResponseFailure(response);
         
-        var result = await response.Content.ReadFromJsonAsync<QueryResponse<ExerciseType>>();
+        var result = await response.Content.ReadFromJsonAsync<QueryResponseDto<ExerciseType>>();
         
         // Assert
         result.Should().NotBeNull();

@@ -1,6 +1,6 @@
-namespace Heracles.Domain.Abstractions.Queries;
+namespace Heracles.Domain.Abstractions.DTOs;
 
-public sealed class QueryResponse<T> where T : class
+public sealed class QueryResponseDto<T> where T : class
 {
     public required List<T> Data { get; set; }
     public int PageNumber { get; set; }

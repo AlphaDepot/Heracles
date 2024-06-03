@@ -1,7 +1,6 @@
-namespace Heracles.Domain.Abstractions.Queries;
+namespace Heracles.Domain.Abstractions.DTOs;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public sealed class QueryRequest
+public sealed class QueryRequestDto
 {
     public string? SearchTerm { get; set; }
     public string? SortColumn { get; set; }

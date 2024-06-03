@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 
-namespace Heracles.Domain.Abstractions.Queries;
+namespace Heracles.Domain.Abstractions.Entities;
 
 public abstract class BaseEntity
 {

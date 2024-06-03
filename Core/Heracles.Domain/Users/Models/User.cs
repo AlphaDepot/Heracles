@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.Entities;
 
 namespace Heracles.Domain.Users.Models;
 

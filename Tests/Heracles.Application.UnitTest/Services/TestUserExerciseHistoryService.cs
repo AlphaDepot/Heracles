@@ -1,7 +1,7 @@
 using Heracles.Application.Features.UserExercisesHistories;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.UserExerciseHistories.DTOs;
 using Heracles.Domain.UserExerciseHistories.Models;
 using Heracles.TestUtilities.Fixtures;
@@ -36,7 +36,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
     /// <param name="query">The query parameters for filtering and sorting.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData(QueryRequest query)
+    public async Task GetAsync_WithFilterAndSort_ReturnsFilteredAndSortedData(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "1";

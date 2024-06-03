@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Users.Models;
 using Heracles.TestUtilities.TestData;
 
@@ -8,7 +8,7 @@ public abstract class UserFixture
 {
     public static List<User> Get() => UserExerciseSeedData.Users();
     
-    public static List<User> Query(QueryRequest? query, string userId, bool isAdmin)
+    public static List<User> Query(QueryRequestDto? query, string userId, bool isAdmin)
     {
         return Fixtures.QueryWithUser(Get(), query, userId, isAdmin);
         

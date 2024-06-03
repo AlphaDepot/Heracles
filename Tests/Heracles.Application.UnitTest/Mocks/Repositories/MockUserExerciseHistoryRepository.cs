@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.UserExerciseHistories.Interfaces;
 using Heracles.Domain.UserExerciseHistories.Models;
 using Heracles.TestUtilities.Fixtures;

@@ -14,7 +14,7 @@ public class EquipmentGroupRepository : GenericRepository<EquipmentGroup>, IEqui
 
     public async Task<bool> IsUnique(string name)
     {
-        return !await _dbContext.EquipmentGroups
+        return !await DbContext.EquipmentGroups
             .AnyAsync(e => e.Name.ToLower() == name.ToLower());
     }
 }

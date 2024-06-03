@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Heracles.Application.Helpers;
@@ -17,7 +17,7 @@ public class QueryHelper
     /// <param name="sortExpressions">The sort expressions.</param>
     /// <param name="filterExpression">The filter expression.</param>
     /// <returns>A QueriableDto object.</returns>
-    public QuariableDto<T> CreateQueriable<T>(QueryRequest? query,
+    public QueryableEntityDto<T> CreateQueriable<T>(QueryRequestDto? query,
         Dictionary<string, Expression<Func<T, object>>> sortExpressions, Expression<Func<T, bool>> filterExpression)
     {
         // Filter the exercise muscle groups
@@ -28,7 +28,7 @@ public class QueryHelper
         
         
         // Return the quariable dto
-        return new QuariableDto<T>
+        return new QueryableEntityDto<T>
         {
             Filter = filter,
             Sorter = orderBy,
@@ -44,7 +44,7 @@ public class QueryHelper
     /// <param name="query">The query request.</param>
     /// <param name="sortExpressions">The sort expressions.</param>
     /// <returns>A function that sorts the data in the specified order.</returns>
-    public Func<IQueryable<T>, IOrderedQueryable<T>>? Sorter<T>(QueryRequest? query,
+    public Func<IQueryable<T>, IOrderedQueryable<T>>? Sorter<T>(QueryRequestDto? query,
         Dictionary<string, Expression<Func<T, object>>> sortExpressions)
     {
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null;

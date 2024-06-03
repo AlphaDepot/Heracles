@@ -1,8 +1,8 @@
 using Heracles.Application.Features.UserExercisesHistories.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.UserExerciseHistories.DTOs;
 using Heracles.Domain.UserExerciseHistories.Interfaces;
@@ -47,7 +47,7 @@ public class UserExerciseHistoryService : IUserExerciseHistoryService
     /// </summary>
     /// <param name="query">The query request object.</param>
     /// <returns>DomainResponse containing the query response object.</returns>
-    public async Task<DomainResponse<QueryResponse<UserExerciseHistory>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<UserExerciseHistory>>> GetAsync(QueryRequestDto query)
     {
         
         var filter = UserExerciseHistory.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);

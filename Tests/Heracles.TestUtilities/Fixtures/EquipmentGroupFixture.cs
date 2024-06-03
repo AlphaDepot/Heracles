@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.EquipmentGroups.Models;
 using Heracles.TestUtilities.TestData;
 
@@ -12,7 +12,7 @@ public abstract class EquipmentGroupFixture
     public static List<EquipmentGroup> Get() => EquipmentSeedData.EquipmentGroups();
     
     
-    public static List<EquipmentGroup> Query(QueryRequest? query)
+    public static List<EquipmentGroup> Query(QueryRequestDto? query)
     {
         return Fixtures.Query(Get(), query);
     }

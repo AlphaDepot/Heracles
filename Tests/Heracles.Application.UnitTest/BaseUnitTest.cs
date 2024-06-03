@@ -1,6 +1,6 @@
 using Heracles.Application.UnitTest.Mocks.Repositories;
 using Heracles.Application.UnitTest.Mocks.Services;
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.EquipmentGroups.Interfaces;
 using Heracles.Domain.EquipmentGroups.Models;
 using Heracles.Domain.Equipments.Interfaces;
@@ -89,25 +89,25 @@ public class BaseUnitTest
     ///  Test case for UpdateUserExerciseAsync method.
     /// </summary>
     /// <returns> TheoryData </returns>
-    public static TheoryData<QueryRequest> QueryData()
+    public static TheoryData<QueryRequestDto> QueryData()
     {
-        var data = new TheoryData<QueryRequest>
+        var data = new TheoryData<QueryRequestDto>
         {
-            new QueryRequest(),
-            new QueryRequest { SearchTerm = SearchTerm },
-            new QueryRequest { SortColumn = "id", SortOrder = "asc" },
-            new QueryRequest { SortColumn = "id", SortOrder = "desc" },
-            new QueryRequest { SortColumn = "created", SortOrder = "asc" },
-            new QueryRequest { SortColumn = "created", SortOrder = "desc" },
-            new QueryRequest { SortColumn = "updated", SortOrder = "asc" },
-            new QueryRequest { SortColumn = "updated", SortOrder = "desc" },
-            new QueryRequest { SortColumn = "name", SortOrder = "desc" },
-            new QueryRequest { SortColumn = "name", SortOrder = "asc" },
-            new QueryRequest { SortColumn = "dayofweek", SortOrder = "asc" },
-            new QueryRequest { SortColumn = "dayofweek", SortOrder = "desc" },
-            new QueryRequest { SortColumn = "sortorder", SortOrder = "asc" },
-            new QueryRequest { SortColumn = "sortorder", SortOrder = "desc" },
-            new QueryRequest { PageSize = 1, PageNumber = 3 }
+            new QueryRequestDto(),
+            new QueryRequestDto { SearchTerm = SearchTerm },
+            new QueryRequestDto { SortColumn = "id", SortOrder = "asc" },
+            new QueryRequestDto { SortColumn = "id", SortOrder = "desc" },
+            new QueryRequestDto { SortColumn = "created", SortOrder = "asc" },
+            new QueryRequestDto { SortColumn = "created", SortOrder = "desc" },
+            new QueryRequestDto { SortColumn = "updated", SortOrder = "asc" },
+            new QueryRequestDto { SortColumn = "updated", SortOrder = "desc" },
+            new QueryRequestDto { SortColumn = "name", SortOrder = "desc" },
+            new QueryRequestDto { SortColumn = "name", SortOrder = "asc" },
+            new QueryRequestDto { SortColumn = "dayofweek", SortOrder = "asc" },
+            new QueryRequestDto { SortColumn = "dayofweek", SortOrder = "desc" },
+            new QueryRequestDto { SortColumn = "sortorder", SortOrder = "asc" },
+            new QueryRequestDto { SortColumn = "sortorder", SortOrder = "desc" },
+            new QueryRequestDto { PageSize = 1, PageNumber = 3 }
         };
         return data;
     }

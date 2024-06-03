@@ -1,4 +1,4 @@
-using Heracles.Domain.Abstractions.Queries;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.MuscleFunctions.Models;
 using Heracles.TestUtilities.TestData;
 
@@ -20,7 +20,7 @@ public abstract class MuscleFunctionFixture
     /// </summary>
     /// <param name="query">The query parameters to filter and sort the MuscleFunction entities.</param>
     /// <returns>A list of MuscleFunction entities that match the query parameters.</returns>
-    public static List<MuscleFunction> GetQueryRequest(QueryRequest? query)
+    public static List<MuscleFunction> GetQueryRequest(QueryRequestDto? query)
     {
         return Fixtures.Query(Get(), query);
     }

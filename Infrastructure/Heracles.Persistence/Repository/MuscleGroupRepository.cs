@@ -19,7 +19,7 @@ public class MuscleGroupRepository : GenericRepository<MuscleGroup>, IMuscleGrou
     /// <returns></returns>
     public async Task<bool> IsNameUnique(string name)
     {
-        return !await _dbContext.MuscleGroups
+        return !await DbContext.MuscleGroups
             .AnyAsync(e => e.Name.ToLower() == name.ToLower());
     }
 }

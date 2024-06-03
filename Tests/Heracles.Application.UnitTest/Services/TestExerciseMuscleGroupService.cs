@@ -1,9 +1,9 @@
 using System.Text.Json;
 using Heracles.Application.Features.ExerciseMuscleGroups;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.ExerciseMuscleGroups.DTOs;
 using Heracles.Domain.ExerciseMuscleGroups.Models;
 using Heracles.TestUtilities.Fixtures;
@@ -43,7 +43,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     /// <param name="query">The query to be used for the test.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_ReturnsExerciseMuscleGroups(QueryRequest query)
+    public async Task GetAsync_ReturnsExerciseMuscleGroups(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = "Chest";
@@ -62,7 +62,7 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     /// <param name="query">The query to be used for the test.</param>
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetByExerciseIdAsync_ReturnsResult(QueryRequest query)
+    public async Task GetByExerciseIdAsync_ReturnsResult(QueryRequestDto query)
     {
         // Arrange
         var exerciseTypeId = 1;

@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Heracles.Application.Features.MuscleFunctions.Validators;
 using Heracles.Application.Helpers;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.Abstractions.Responses;
 using Heracles.Domain.MuscleFunctions.Interfaces;
 using Heracles.Domain.MuscleFunctions.Models;
@@ -28,7 +28,7 @@ public class MuscleFunctionService : IMuscleFunctionService
     /// </summary>
     /// <param name="query">The query used to filter and sort the muscle functions.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the domain response with the filtered and sorted muscle functions.</returns>
-    public async Task<DomainResponse<QueryResponse<MuscleFunction>>> GetAsync(QueryRequest query)
+    public async Task<DomainResponse<QueryResponseDto<MuscleFunction>>> GetAsync(QueryRequestDto query)
     {
         var filter = MuscleFunction.GetFilterExpression(query?.SearchTerm);
         var sortExpressions = MuscleFunction.GetSortExpression();

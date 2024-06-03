@@ -3,9 +3,9 @@ using FluentAssertions;
 using Heracles.Application.Features.UserExercises;
 using Heracles.Application.Features.Users;
 using Heracles.Application.UnitTest.Helpers.ExpectedResults;
+using Heracles.Domain.Abstractions.DTOs;
 using Heracles.Domain.Abstractions.Errors;
 using Heracles.Domain.Abstractions.Logging;
-using Heracles.Domain.Abstractions.Queries;
 using Heracles.Domain.UserExercises.Models;
 using Heracles.Domain.Users.Models;
 using Heracles.TestUtilities.Fixtures;
@@ -36,7 +36,7 @@ public class TestUserService : BaseUnitTest
     
     [Theory]
     [MemberData(nameof(QueryData))]
-    public async Task GetAsync_ReturnsUsers(QueryRequest query)
+    public async Task GetAsync_ReturnsUsers(QueryRequestDto query)
     {
         // Arrange
         SearchTerm = ValidAdminUserId;

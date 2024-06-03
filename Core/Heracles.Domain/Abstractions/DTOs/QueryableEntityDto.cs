@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
 
-namespace Heracles.Domain.Abstractions.Queries;
+namespace Heracles.Domain.Abstractions.DTOs;
 
-public class QuariableDto<T>
+public class QueryableEntityDto<T>
 {
     public Expression<Func<T, bool>>? Filter { get; set; }
     public Func<IQueryable<T>, IOrderedQueryable<T>>? Sorter { get; set; }

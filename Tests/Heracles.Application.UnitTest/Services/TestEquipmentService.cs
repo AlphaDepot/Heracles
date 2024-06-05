@@ -31,7 +31,7 @@ public class TestEquipmentService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test for the GetAsync method of the EquipmentService.
+    /// Test for the GetAllPagedAsync method of the EquipmentService.
     /// </summary>
     /// <param name="query">The query to filter and sort equipments.</param>
     [Theory]

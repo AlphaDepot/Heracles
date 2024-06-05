@@ -6,7 +6,7 @@ namespace Heracles.Domain.Abstractions.Interfaces;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
-    Task<QueryResponseDto<T>> GetAsync(QueryableEntityDto<T> query);
+    Task<QueryResponseDto<T>> GetAllPagedAsync(QueryableEntityDto<T> query);
     Task<T?> GetEntityByIdAsync(int id);
     Task<T?> GetEntityByIdAsync(int id, params string[]? includeProperties);
     Task<int> CreateEntityAsync(T entity);

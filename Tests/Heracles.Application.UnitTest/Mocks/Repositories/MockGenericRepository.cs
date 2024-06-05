@@ -21,7 +21,7 @@ public abstract class MockBaseRepository<T, TRepository> where T : BaseEntity wh
      private void Setup()
     {
         
-        MockRepo.Setup(r => r.GetAsync(It.IsAny<QueryableEntityDto<T>>()))
+        MockRepo.Setup(r => r.GetAllPagedAsync(It.IsAny<QueryableEntityDto<T>>()))
             .ReturnsAsync((QueryableEntityDto<T> queryableDto) =>
             {
                 var queryable = Entities.AsQueryable();

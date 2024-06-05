@@ -31,7 +31,7 @@ public class TestExerciseTypesService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test for the GetAsync method of the ExerciseTypeService.
+    ///     Test for the GetAllPagedAsync method of the ExerciseTypeService.
     /// </summary>
     /// <param name="query">The query to be used for the test.</param>
     [Theory]

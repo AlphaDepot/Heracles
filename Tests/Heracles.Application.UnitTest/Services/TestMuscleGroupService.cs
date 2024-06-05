@@ -30,7 +30,7 @@ public class TestMuscleGroupService : BaseUnitTest
     }
 
     /// <summary>
-    ///     Test case for the GetAsync method of the MuscleGroupService.
+    ///     Test case for the GetAllPagedAsync method of the MuscleGroupService.
     /// </summary>
     /// <param name="query">The query request.</param>
     [Theory]

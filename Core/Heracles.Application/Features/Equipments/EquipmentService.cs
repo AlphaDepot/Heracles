@@ -39,8 +39,8 @@ public class EquipmentService : IEquipmentService
         var sortExpressions = Equipment.GetSortExpression();
         
         var  queryHelper = new QueryHelper().CreateQueriable(query, sortExpressions, filter);
-        //var result =  await _repository.GetAsync(queryHelper.Filter, queryHelper.Sorter, query.PageSize, query.PageNumber);
-        var result = await _repository.GetAsync(queryHelper);
+        //var result =  await _repository.GetAllPagedAsync(queryHelper.Filter, queryHelper.Sorter, query.PageSize, query.PageNumber);
+        var result = await _repository.GetAllPagedAsync(queryHelper);
       
         return ServiceResponse.Success(result);
     }

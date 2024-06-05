@@ -61,7 +61,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         var  queryHelper = new QueryHelper().CreateQueriable(query, sortExpressions, filter);
 
         // Get the exercise muscle groups
-       var result = await _repository.GetAsync(queryHelper);
+       var result = await _repository.GetAllPagedAsync(queryHelper);
        
        return ServiceResponse.Success(result);
         

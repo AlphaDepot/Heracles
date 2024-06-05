@@ -39,7 +39,7 @@ public class TestUserExerciseService : BaseUnitTest
     }
 
     /// <summary>
-    /// Test case for GetAsync method with filter and sort parameters when user is admin.
+    /// Test case for GetAllPagedAsync method with filter and sort parameters when user is admin.
     /// </summary>
     ///  <param name="query">The query request to get user exercises.</param>
     [Theory]
@@ -57,7 +57,7 @@ public class TestUserExerciseService : BaseUnitTest
     }
 
     /// <summary>
-    ///  Test case for GetAsync method with filter and sort parameters when user is not admin.
+    ///  Test case for GetAllPagedAsync method with filter and sort parameters when user is not admin.
     /// </summary>
     /// <param name="query">The query request to get user exercises.</param>
     [Theory]

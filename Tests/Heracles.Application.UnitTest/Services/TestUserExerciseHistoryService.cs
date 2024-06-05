@@ -31,7 +31,7 @@ public class TestUserExerciseHistoryService : BaseUnitTest
     }
     
     /// <summary>
-    /// Test for the GetAsync method with filter and sort parameters.
+    /// Test for the GetAllPagedAsync method with filter and sort parameters.
     /// </summary>
     /// <param name="query">The query parameters for filtering and sorting.</param>
     [Theory]

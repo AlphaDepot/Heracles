@@ -46,7 +46,7 @@ public class WorkoutSessionService : IWorkoutSessionService
        var sortExpression = WorkoutSession.GetSortExpression();
        
        var queryHelper = new QueryHelper().CreateQueriable(query, sortExpression, filter);
-       var result = await _repository.GetAsync(queryHelper);
+       var result = await _repository.GetAllPagedAsync(queryHelper);
 
         return ServiceResponse.Success(result);
     }

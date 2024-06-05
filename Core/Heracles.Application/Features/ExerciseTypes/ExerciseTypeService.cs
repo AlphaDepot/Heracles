@@ -32,7 +32,7 @@ public class ExerciseTypeService : IExerciseTypeService
         var sortExpressions = ExerciseType.GetSortExpression();
 
         var queryHelper = new QueryHelper().CreateQueriable(query, sortExpressions, filter);
-        var result = await _repository.GetAsync(queryHelper);
+        var result = await _repository.GetAllPagedAsync(queryHelper);
        
         return ServiceResponse.Success(result);
     }

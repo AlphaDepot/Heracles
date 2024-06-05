@@ -44,7 +44,7 @@ public class UserService :IUserService
         var sortExpression = User.GetSortExpression();
         
         var queryHelper = new QueryHelper().CreateQueriable(query, sortExpression, filter);
-        var result = await  _userRepository.GetAsync(queryHelper);
+        var result = await  _userRepository.GetAllPagedAsync(queryHelper);
         
         return ServiceResponse.Success(result);
     }

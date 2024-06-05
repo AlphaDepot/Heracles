@@ -18,7 +18,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     }
     
     
-    public async Task<QueryResponseDto<T>> GetAsync(QueryableEntityDto<T> query)
+    public async Task<QueryResponseDto<T>> GetAllPagedAsync(QueryableEntityDto<T> query)
     {
         var queryable = QueryBuilder(query);
         

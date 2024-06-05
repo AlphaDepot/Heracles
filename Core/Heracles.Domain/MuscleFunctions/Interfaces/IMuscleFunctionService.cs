@@ -6,9 +6,9 @@ namespace Heracles.Domain.MuscleFunctions.Interfaces;
 
 public interface IMuscleFunctionService
 {
-    Task<DomainResponse<QueryResponseDto<MuscleFunction>>> GetAsync(QueryRequestDto query);
-    Task<DomainResponse<MuscleFunction>> GetByIdAsync(int id);
-    Task<DomainResponse<int>> CreateAsync(MuscleFunction entity);
-    Task<DomainResponse<bool>> UpdateAsync(MuscleFunction entity);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<QueryResponseDto<MuscleFunction>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<MuscleFunction>> GetByIdAsync(int id);
+    Task<ServiceResponse<int>> CreateAsync(MuscleFunction entity);
+    Task<ServiceResponse<bool>> UpdateAsync(MuscleFunction entity);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
 }

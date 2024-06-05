@@ -45,8 +45,8 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     ///  Get all exercise muscle groups with optional search term, sorting and pagination.
     /// </summary>
     /// <param name="query"> The QueryRequestDto object containing the search term, sort column and sort order.</param>
-    /// <returns> A DomainResponse object containing the QueryResponseDto object with the list of exercise muscle groups.</returns>
-    public async Task<DomainResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetAsync(QueryRequestDto? query = null)
+    /// <returns> A ServiceResponse object containing the QueryResponseDto object with the list of exercise muscle groups.</returns>
+    public async Task<ServiceResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetAsync(QueryRequestDto? query = null)
     {
         // Set the default query values if the query is null
         query ??= new QueryRequestDto();
@@ -63,7 +63,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         // Get the exercise muscle groups
        var result = await _repository.GetAsync(queryHelper);
        
-       return DomainResponse.Success(result);
+       return ServiceResponse.Success(result);
         
     }
     
@@ -73,7 +73,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     /// <param name="id"> The id of the exercise type.</param>
     /// <param name="query"> The QueryRequestDto object containing the search term, sort column and sort order.</param>
     /// <returns>  QueryResponseDto object containing the list of exercise muscle groups for the exercise type.</returns>
-    public async Task<DomainResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetByExerciseIdAsync(int id, QueryRequestDto? query = null)
+    public async Task<ServiceResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetByExerciseIdAsync(int id, QueryRequestDto? query = null)
     {
         // Set the default query values if the query is null
         query ??= new QueryRequestDto();
@@ -100,7 +100,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         
         var result = await _repository.GetByExerciseIdAsync(queryHelper);
         
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
         
     }
 
@@ -108,13 +108,13 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     /// Retrieves an ExerciseMuscleGroup by its ID.
     /// </summary>
     /// <param name="id">The ID of the ExerciseMuscleGroup to retrieve.</param>
-    /// <returns>A DomainResponse object containing the ExerciseMuscleGroup if successfully retrieved, or an error message if the ID is invalid or the ExerciseMuscleGroup is not found.</returns>
-    public async Task<DomainResponse<ExerciseMuscleGroup>> GetByIdAsync(int id)
+    /// <returns>A ServiceResponse object containing the ExerciseMuscleGroup if successfully retrieved, or an error message if the ID is invalid or the ExerciseMuscleGroup is not found.</returns>
+    public async Task<ServiceResponse<ExerciseMuscleGroup>> GetByIdAsync(int id)
     {
         if (id <= 0)
         {
             _logger.LogWarning(ServiceMessages.EntityIdInvalid<ExerciseMuscleGroup>());
-            return DomainResponse.Failure<ExerciseMuscleGroup>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest());
+            return ServiceResponse.Failure<ExerciseMuscleGroup>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest());
         }
             
         
@@ -122,11 +122,11 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         if (exerciseMuscleGroup == null)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<ExerciseMuscleGroup>(id));
-            return DomainResponse.Failure<ExerciseMuscleGroup>(EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id));
+            return ServiceResponse.Failure<ExerciseMuscleGroup>(EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id));
         }
             
         _logger.LogInformation(ServiceMessages.EntityRetrieved<ExerciseMuscleGroup>(exerciseMuscleGroup.Id));
-        return DomainResponse.Success(exerciseMuscleGroup);
+        return ServiceResponse.Success(exerciseMuscleGroup);
     }
 
 
@@ -134,8 +134,8 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     /// Creates a new exercise muscle group with the specified data.
     /// </summary>
     /// <param name="entity">The CreateExerciseMuscleGroupDto object containing the data for the new exercise muscle group.</param>
-    /// <returns>A DomainResponse object containing the result of the create operation.</returns>
-    public async Task<DomainResponse<int>> CreateAsync(CreateExerciseMuscleGroupDto entity)
+    /// <returns>A ServiceResponse object containing the result of the create operation.</returns>
+    public async Task<ServiceResponse<int>> CreateAsync(CreateExerciseMuscleGroupDto entity)
     {
         // Validate the entity
         var validator = new CreateExerciseMuscleGroupDtoValidator(
@@ -146,7 +146,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<ExerciseMuscleGroup>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<int>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<int>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest(validationResult.ToDictionary()));
         }
         
     
@@ -168,7 +168,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         var result = await _repository.CreateEntityAsync(exerciseMuscleGroup);
         _logger.LogInformation(ServiceMessages.EntityCreated<ExerciseMuscleGroup>(result));
         
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
 
     }
 
@@ -177,8 +177,8 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     /// Update an exercise muscle group with the provided information.
     /// </summary>
     /// <param name="entity">The UpdateExerciseMuscleGroupDto object containing the updated information for the exercise muscle group.</param>
-    /// <returns>A DomainResponse object indicating the success or failure of the update operation.</returns>
-    public async Task<DomainResponse<bool>> UpdateAsync(UpdateExerciseMuscleGroupDto entity)
+    /// <returns>A ServiceResponse object indicating the success or failure of the update operation.</returns>
+    public async Task<ServiceResponse<bool>> UpdateAsync(UpdateExerciseMuscleGroupDto entity)
     {
         // Validate the entity
         var validator = new UpdateExerciseMuscleGroupDtoValidator(_repository);
@@ -187,7 +187,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<ExerciseMuscleGroup>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest(validationResult.ToDictionary()));
         }
             
         
@@ -201,7 +201,7 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
         await _repository.UpdateEntityAsync(exerciseMuscleGroup);
         _logger.LogInformation(ServiceMessages.EntityUpdated<ExerciseMuscleGroup>(entity.Id));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
         
     }
 
@@ -209,27 +209,27 @@ public class ExerciseMuscleGroupService : IExerciseMuscleGroupService
     /// Deletes an exercise muscle group by ID.
     /// </summary>
     /// <param name="id">The ID of the exercise muscle group.</param>
-    /// <returns>A DomainResponse object indicating the result of the delete operation.</returns>
-    public async Task<DomainResponse<bool>> DeleteAsync(int id)
+    /// <returns>A ServiceResponse object indicating the result of the delete operation.</returns>
+    public async Task<ServiceResponse<bool>> DeleteAsync(int id)
     {
         if (id <= 0)
         {
             _logger.LogWarning(ServiceMessages.EntityIdInvalid<ExerciseMuscleGroup>());
-            return DomainResponse.Failure<bool>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest());
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<ExerciseMuscleGroup>.BadRequest());
         }
         
         var itExist = await _repository.ItExist(id);
         if (!itExist)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<ExerciseMuscleGroup>(id));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id));
         }
         
         
         await _repository.DeleteEntityAsync(id);
         _logger.LogInformation(ServiceMessages.EntityDeleted<ExerciseMuscleGroup>(id));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
     
     

@@ -66,7 +66,7 @@ public class TestEquipmentGroupService : BaseUnitTest
         var result = await _service.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
 
         {
             TestConsole.WriteLine($"Expected: {JsonSerializer.Serialize(expectedEquipmentGroup)}");
@@ -74,9 +74,9 @@ public class TestEquipmentGroupService : BaseUnitTest
             ExpectedGetByIdResult.Success(_logger, result, expectedEquipmentGroup!, id);
         }
             
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<EquipmentGroup>.NotFound(id), id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.BadRequest(_logger, result, EntityErrorMessage<EquipmentGroup>.BadRequest());
     }
 
@@ -96,10 +96,10 @@ public class TestEquipmentGroupService : BaseUnitTest
         var result = await _service.CreateAsync(equipmentGroup);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroup.Id,
                 result.Value);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -124,9 +124,9 @@ public class TestEquipmentGroupService : BaseUnitTest
         var result = await _service.UpdateAsync(equipmentGroup);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroup.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -147,12 +147,12 @@ public class TestEquipmentGroupService : BaseUnitTest
         var result = await _service.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, id);
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedDeleteResult.NotFound<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 EntityErrorMessage<EquipmentGroup>.NotFound(id), id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 EntityErrorMessage<EquipmentGroup>.BadRequest());
     }
@@ -175,9 +175,9 @@ public class TestEquipmentGroupService : BaseUnitTest
         var result = await _service.AddEquipmentAsync(entityDto);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
            ExpectedUpdateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroupId);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -200,9 +200,9 @@ public class TestEquipmentGroupService : BaseUnitTest
         var result = await _service.RemoveEquipmentAsync(entityDto);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<EquipmentGroupService, EquipmentGroup>(_logger, result, equipmentGroupId);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<EquipmentGroupService, EquipmentGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -217,11 +217,11 @@ public class TestEquipmentGroupService : BaseUnitTest
     {
         TheoryData<string?, string> theoryData = new()
         {
-            { "NOT A DUPLICATE", TestDomainResponse.Success }, // valid entity
-            { "Home Gym", TestDomainResponse.BadRequest }, // duplicate entity
-            { "", TestDomainResponse.BadRequest }, // invalid entity
-            { null, TestDomainResponse.BadRequest }, // invalid entity
-            { new string('a', 256), TestDomainResponse.BadRequest }, // invalid entity
+            { "NOT A DUPLICATE", TestServiceResponse.Success }, // valid entity
+            { "Home Gym", TestServiceResponse.BadRequest }, // duplicate entity
+            { "", TestServiceResponse.BadRequest }, // invalid entity
+            { null, TestServiceResponse.BadRequest }, // invalid entity
+            { new string('a', 256), TestServiceResponse.BadRequest }, // invalid entity
         };
         return theoryData;
     }
@@ -234,12 +234,12 @@ public class TestEquipmentGroupService : BaseUnitTest
     {
         return new TheoryData<int, string, string>()
         {
-            { 1, "NOT A DUPLICATE", TestDomainResponse.Success }, // valid entity
-            { 1, "Home Gym", TestDomainResponse.BadRequest }, // duplicate entity
-            { 1, "", TestDomainResponse.BadRequest }, // invalid entity
-            { 1, null, TestDomainResponse.BadRequest }, // invalid entity
-            { 1, new string('a', 256), TestDomainResponse.BadRequest }, // invalid entity
-            { 0, "Gym", TestDomainResponse.BadRequest }, // invalid id
+            { 1, "NOT A DUPLICATE", TestServiceResponse.Success }, // valid entity
+            { 1, "Home Gym", TestServiceResponse.BadRequest }, // duplicate entity
+            { 1, "", TestServiceResponse.BadRequest }, // invalid entity
+            { 1, null, TestServiceResponse.BadRequest }, // invalid entity
+            { 1, new string('a', 256), TestServiceResponse.BadRequest }, // invalid entity
+            { 0, "Gym", TestServiceResponse.BadRequest }, // invalid id
         };
     }
 
@@ -251,12 +251,12 @@ public class TestEquipmentGroupService : BaseUnitTest
     {
         return new TheoryData<int, int, string>()
         {
-            { 1, 1, TestDomainResponse.Success }, // valid entity
-            { 1, 1000000, TestDomainResponse.BadRequest }, // out of bound id
-            { 1000000, 1, TestDomainResponse.BadRequest }, // out of bound id
-            { 0, 1, TestDomainResponse.BadRequest }, // invalid id
-            { 1, 0, TestDomainResponse.BadRequest }, // invalid id
-            { 1, -1, TestDomainResponse.BadRequest }, // invalid id
+            { 1, 1, TestServiceResponse.Success }, // valid entity
+            { 1, 1000000, TestServiceResponse.BadRequest }, // out of bound id
+            { 1000000, 1, TestServiceResponse.BadRequest }, // out of bound id
+            { 0, 1, TestServiceResponse.BadRequest }, // invalid id
+            { 1, 0, TestServiceResponse.BadRequest }, // invalid id
+            { 1, -1, TestServiceResponse.BadRequest }, // invalid id
         };
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

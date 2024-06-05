@@ -7,7 +7,7 @@ public sealed record Error(string Code, string? Description = null, IDictionary<
     public static readonly Error None = new(string.Empty, string.Empty);
     public static readonly Error NullValue = new("Error.NullValue", "Null value was provided");
 
-    public static implicit operator DomainResponse(Error error) => DomainResponse.Failure(error);
+    public static implicit operator ServiceResponse(Error error) => ServiceResponse.Failure(error);
 
-    public DomainResponse ToResult() => DomainResponse.Failure(this);
+    public ServiceResponse ToResult() => ServiceResponse.Failure(this);
 }

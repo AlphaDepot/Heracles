@@ -66,11 +66,11 @@ public class TestExerciseTypesService : BaseUnitTest
 
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, exerciseType!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.BadRequest(_logger, result, EntityErrorMessage<ExerciseType>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<ExerciseType>.NotFound(id), id);
     }
 
@@ -95,10 +95,10 @@ public class TestExerciseTypesService : BaseUnitTest
         var result = await _service.CreateAsync(exerciseType);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<ExerciseTypeService, ExerciseType>(_logger, result, exerciseType.Id,
                 result.Value);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<ExerciseTypeService, ExerciseType>(_logger, result, result.Error.Errors!);
     }
 
@@ -125,9 +125,9 @@ public class TestExerciseTypesService : BaseUnitTest
         var result = await _service.UpdateAsync(exerciseType);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<ExerciseTypeService, ExerciseType>(_logger, result, exerciseType.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<ExerciseTypeService, ExerciseType>(_logger, result, result.Error.Errors!);
     }
 
@@ -146,12 +146,12 @@ public class TestExerciseTypesService : BaseUnitTest
         var result = await _service.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<ExerciseTypeService, ExerciseType>(_logger, result, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.BadRequest<ExerciseTypeService, ExerciseType>(_logger, result,
                 EntityErrorMessage<ExerciseType>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedDeleteResult.NotFound<ExerciseTypeService, ExerciseType>(_logger, result,
                 EntityErrorMessage<ExerciseType>.NotFound(id), id);
     }
@@ -165,13 +165,13 @@ public class TestExerciseTypesService : BaseUnitTest
     {
         return new TheoryData<string, string, string>
         {
-            { "New Exercise Type", "New Exercise Type Description", TestDomainResponse.Success },
-            { "Bench Press", "New Exercise Type Description", TestDomainResponse.BadRequest },
-            { null, null, TestDomainResponse.BadRequest },
-            { "name", null, TestDomainResponse.BadRequest },
-            { null, "description", TestDomainResponse.BadRequest },
-            { new string('a', 256), "description", TestDomainResponse.BadRequest },
-            { "name", new string('a', 1001), TestDomainResponse.BadRequest }
+            { "New Exercise Type", "New Exercise Type Description", TestServiceResponse.Success },
+            { "Bench Press", "New Exercise Type Description", TestServiceResponse.BadRequest },
+            { null, null, TestServiceResponse.BadRequest },
+            { "name", null, TestServiceResponse.BadRequest },
+            { null, "description", TestServiceResponse.BadRequest },
+            { new string('a', 256), "description", TestServiceResponse.BadRequest },
+            { "name", new string('a', 1001), TestServiceResponse.BadRequest }
         };
     }
 
@@ -182,13 +182,13 @@ public class TestExerciseTypesService : BaseUnitTest
     {
         return new TheoryData<int, string, string, string>
         {
-            { 1, "Updated Name", "Updated Description", TestDomainResponse.Success },
-            { 100, "name", "description", TestDomainResponse.BadRequest }, // id out of range
-            { 0, null, null, TestDomainResponse.BadRequest }, // all null
-            { 1, "name", null, TestDomainResponse.BadRequest }, // null description
-            { 1, null, "description", TestDomainResponse.BadRequest }, // null name
-            { 1, new string('a', 256), "description", TestDomainResponse.BadRequest }, // to long name
-            { 1, "name", new string('a', 1001), TestDomainResponse.BadRequest } // to long description
+            { 1, "Updated Name", "Updated Description", TestServiceResponse.Success },
+            { 100, "name", "description", TestServiceResponse.BadRequest }, // id out of range
+            { 0, null, null, TestServiceResponse.BadRequest }, // all null
+            { 1, "name", null, TestServiceResponse.BadRequest }, // null description
+            { 1, null, "description", TestServiceResponse.BadRequest }, // null name
+            { 1, new string('a', 256), "description", TestServiceResponse.BadRequest }, // to long name
+            { 1, "name", new string('a', 1001), TestServiceResponse.BadRequest } // to long description
         };
     }
 

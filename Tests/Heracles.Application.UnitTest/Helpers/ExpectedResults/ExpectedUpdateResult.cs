@@ -21,7 +21,7 @@ public static class ExpectedUpdateResult
     /// <param name="logger">The logger.</param>
     /// <param name="result">The update result.</param>
     /// <param name="id">The ID of the entity being updated.</param>
-    public static void Success<TService, TEntity>(Mock<IAppLogger<TService>> logger, DomainResponse<bool> result, int id) where TEntity : BaseEntity
+    public static void Success<TService, TEntity>(Mock<IAppLogger<TService>> logger, ServiceResponse<bool> result, int id) where TEntity : BaseEntity
     {
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
@@ -31,15 +31,15 @@ public static class ExpectedUpdateResult
 
 
     /// <summary>
-    /// Handles the updating of a bad request domainResponse.
+    /// Handles the updating of a bad request serviceResponse.
     /// </summary>
     /// <typeparam name="TService">The service type.</typeparam>
     /// <typeparam name="TEntity">The entity type.</typeparam>
     /// <param name="logger">The logger instance.</param>
-    /// <param name="result">The domainResponse result.</param>
+    /// <param name="result">The serviceResponse result.</param>
     /// <param name="errors">The dictionary of errors.</param>
-    /// <exception cref="InvalidOperationException">Thrown when the value of a failure domainResponse is accessed.</exception>
-    public static void BadRequest<TService, TEntity>(Mock<IAppLogger<TService>> logger, DomainResponse<bool> result, IDictionary<string, string[]> errors) where TEntity : BaseEntity
+    /// <exception cref="InvalidOperationException">Thrown when the value of a failure serviceResponse is accessed.</exception>
+    public static void BadRequest<TService, TEntity>(Mock<IAppLogger<TService>> logger, ServiceResponse<bool> result, IDictionary<string, string[]> errors) where TEntity : BaseEntity
     {
         result.IsFailure.Should().BeTrue();
         result.Error.Should().BeOfType<Error>();

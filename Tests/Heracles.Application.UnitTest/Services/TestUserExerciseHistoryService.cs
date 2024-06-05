@@ -63,9 +63,9 @@ public class TestUserExerciseHistoryService : BaseUnitTest
         var result = await _serviceWithAdminUser.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, history!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.ValidationFail(_logger, result, result.Error.Errors!);
 
     }
@@ -97,10 +97,10 @@ public class TestUserExerciseHistoryService : BaseUnitTest
         var result = await _serviceWithAdminUser.CreateAsync(history);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<UserExerciseHistoryService, UserExerciseHistory>(_logger, result, history.Id,
                 result.Value);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<UserExerciseHistoryService, UserExerciseHistory>(_logger, result,
                 result.Error.Errors!);
     }
@@ -129,11 +129,11 @@ public class TestUserExerciseHistoryService : BaseUnitTest
         var result = await _serviceWithAdminUser.UpdateAsync(newHistory);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<UserExerciseHistoryService, UserExerciseHistory>(_logger, result,
                 newHistory.Id);
         
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<UserExerciseHistoryService, UserExerciseHistory>(_logger, result,
                 result.Error.Errors!);
     }
@@ -154,9 +154,9 @@ public class TestUserExerciseHistoryService : BaseUnitTest
         var result = await _serviceWithAdminUser.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<UserExerciseHistoryService, UserExerciseHistory>(_logger, result, history!.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.ValidationFail<UserExerciseHistoryService, UserExerciseHistory>(_logger, result, result.Error.Errors!);
     }
 
@@ -173,14 +173,14 @@ public class TestUserExerciseHistoryService : BaseUnitTest
 
         return new TheoryData<string, int, int, int, DateTime, string>()
         {
-            { ValidAdminUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.Success }, // valid data
-            { ValidUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.Success }, // valid data
-            { ValidAdminUserId,  0, 5, 100, validDate, TestDomainResponse.BadRequest }, // invalid user exercise id
-            { ValidAdminUserId,  validUserExerciseId, -1, 100, validDate, TestDomainResponse.BadRequest }, // invalid repetition
-            { ValidAdminUserId, validUserExerciseId, 0, 100, validDate, TestDomainResponse.BadRequest }, // invalid repetition
-            { ValidAdminUserId,  validUserExerciseId, 5, -1, validDate, TestDomainResponse.BadRequest }, // invalid weight
-            { ValidAdminUserId,  validUserExerciseId, 5, 0, validDate, TestDomainResponse.BadRequest }, // invalid weight
-            { InvalidUserId, validUserExerciseId, 5, 100, validDate, TestDomainResponse.BadRequest } // invalid user id
+            { ValidAdminUserId, validUserExerciseId, 5, 100, validDate, TestServiceResponse.Success }, // valid data
+            { ValidUserId, validUserExerciseId, 5, 100, validDate, TestServiceResponse.Success }, // valid data
+            { ValidAdminUserId,  0, 5, 100, validDate, TestServiceResponse.BadRequest }, // invalid user exercise id
+            { ValidAdminUserId,  validUserExerciseId, -1, 100, validDate, TestServiceResponse.BadRequest }, // invalid repetition
+            { ValidAdminUserId, validUserExerciseId, 0, 100, validDate, TestServiceResponse.BadRequest }, // invalid repetition
+            { ValidAdminUserId,  validUserExerciseId, 5, -1, validDate, TestServiceResponse.BadRequest }, // invalid weight
+            { ValidAdminUserId,  validUserExerciseId, 5, 0, validDate, TestServiceResponse.BadRequest }, // invalid weight
+            { InvalidUserId, validUserExerciseId, 5, 100, validDate, TestServiceResponse.BadRequest } // invalid user id
         };
     }
 
@@ -193,16 +193,16 @@ public class TestUserExerciseHistoryService : BaseUnitTest
     {
         return new TheoryData<int, string, int, int, string>()
         {
-            { 1, ValidAdminUserId, 56, 150, TestDomainResponse.Success }, // valid data
-            { 1, ValidAdminUserId, 56, 150, TestDomainResponse.Success }, // valid data
-            { 0, ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }, // invalid id
-            { -1, ValidAdminUserId, 5, 100, TestDomainResponse.BadRequest }, // invalid id
-            { 1, ValidAdminUserId, -1, 100, TestDomainResponse.BadRequest }, // invalid repetition
-            { 1, ValidAdminUserId, 0, 100, TestDomainResponse.BadRequest }, // invalid repetition
-            { 1, ValidAdminUserId, 5, -1, TestDomainResponse.BadRequest }, // invalid weight
-            { 1, ValidAdminUserId, 5, 0, TestDomainResponse.BadRequest }, // invalid weight
-            { 1, null, 5, 100, TestDomainResponse.BadRequest }, // invalid user id
-            { 1, InvalidUserId, 5, 100, TestDomainResponse.BadRequest } // invalid user id
+            { 1, ValidAdminUserId, 56, 150, TestServiceResponse.Success }, // valid data
+            { 1, ValidAdminUserId, 56, 150, TestServiceResponse.Success }, // valid data
+            { 0, ValidAdminUserId, 5, 100, TestServiceResponse.BadRequest }, // invalid id
+            { -1, ValidAdminUserId, 5, 100, TestServiceResponse.BadRequest }, // invalid id
+            { 1, ValidAdminUserId, -1, 100, TestServiceResponse.BadRequest }, // invalid repetition
+            { 1, ValidAdminUserId, 0, 100, TestServiceResponse.BadRequest }, // invalid repetition
+            { 1, ValidAdminUserId, 5, -1, TestServiceResponse.BadRequest }, // invalid weight
+            { 1, ValidAdminUserId, 5, 0, TestServiceResponse.BadRequest }, // invalid weight
+            { 1, null, 5, 100, TestServiceResponse.BadRequest }, // invalid user id
+            { 1, InvalidUserId, 5, 100, TestServiceResponse.BadRequest } // invalid user id
         };
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

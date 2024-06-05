@@ -6,9 +6,9 @@ namespace Heracles.Domain.MuscleGroups.Interfaces;
 
 public interface IMuscleGroupService
 {
-    Task<DomainResponse<QueryResponseDto<MuscleGroup>>> GetAsync(QueryRequestDto query);
-    Task<DomainResponse<MuscleGroup>> GetByIdAsync(int id);
-    Task<DomainResponse<int>> CreateAsync(MuscleGroup entity);
-    Task<DomainResponse<bool>> UpdateAsync(MuscleGroup entity);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<QueryResponseDto<MuscleGroup>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<MuscleGroup>> GetByIdAsync(int id);
+    Task<ServiceResponse<int>> CreateAsync(MuscleGroup entity);
+    Task<ServiceResponse<bool>> UpdateAsync(MuscleGroup entity);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
 }

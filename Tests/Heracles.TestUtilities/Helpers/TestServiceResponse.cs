@@ -1,6 +1,6 @@
 namespace Heracles.TestUtilities.Helpers;
 
-public static class TestDomainResponse
+public static class TestServiceResponse
 {
     public const string Success = "Success";
     public const string NotFound = "NotFound";

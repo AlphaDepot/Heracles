@@ -92,9 +92,9 @@ public class TestUserExerciseService : BaseUnitTest
         var result = await _serviceWithAdminUser.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, userExercise!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.ValidationFail(_logger, result, result.Error.Errors!);
 
     }
@@ -125,9 +125,9 @@ public class TestUserExerciseService : BaseUnitTest
         var result = await _serviceWithAdminUser.CreateAsync(dto);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<UserExerciseService, UserExercise>(_logger, result, expectedId, result.Value);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<UserExerciseService, UserExercise>(_logger, result, result.Error.Errors!);
     }
 
@@ -185,9 +185,9 @@ public class TestUserExerciseService : BaseUnitTest
         var result = await _serviceWithAdminUser.UpdateAsync(dto);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<UserExerciseService, UserExercise>(_logger, result, userExercise.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<UserExerciseService, UserExercise>(_logger, result, result.Error.Errors!);
     }
 
@@ -207,9 +207,9 @@ public class TestUserExerciseService : BaseUnitTest
         var result = await _serviceWithAdminUser.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<UserExerciseService, UserExercise>(_logger, result, userExercise!.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.ValidationFail<UserExerciseService, UserExercise>(_logger, result, result.Error.Errors!);
     }
 
@@ -223,12 +223,12 @@ public class TestUserExerciseService : BaseUnitTest
     {
         return new TheoryData<string?, int, string>()
         {
-            {ValidAdminUserId, 1, TestDomainResponse.Success},
-            {null, 0, TestDomainResponse.BadRequest},
-            {null, 1, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, 0, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, 0, TestDomainResponse.BadRequest},
-            {InvalidUserId, 1, TestDomainResponse.BadRequest}
+            {ValidAdminUserId, 1, TestServiceResponse.Success},
+            {null, 0, TestServiceResponse.BadRequest},
+            {null, 1, TestServiceResponse.BadRequest},
+            {ValidAdminUserId, 0, TestServiceResponse.BadRequest},
+            {ValidAdminUserId, 0, TestServiceResponse.BadRequest},
+            {InvalidUserId, 1, TestServiceResponse.BadRequest}
         };
     }
 
@@ -242,14 +242,14 @@ public class TestUserExerciseService : BaseUnitTest
 
         return new TheoryData<UserExercise, int, string>
         {
-            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.Success },
-            { new UserExercise { Id = 0, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
-            { new UserExercise { Id = 1, UserId = null, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
-            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = -1, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
-            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = -1, Sets = 3, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
-            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = -1, Timed = true, BodyWeight = false }, 1, TestDomainResponse.BadRequest },
-            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestDomainResponse.BadRequest },
-            { new UserExercise { Id = 1, UserId = InvalidUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestDomainResponse.BadRequest }
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestServiceResponse.Success },
+            { new UserExercise { Id = 0, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestServiceResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = null, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestServiceResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = -1, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, 1, TestServiceResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = -1, Sets = 3, Timed = true, BodyWeight = false }, 1, TestServiceResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = -1, Timed = true, BodyWeight = false }, 1, TestServiceResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = ValidAdminUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestServiceResponse.BadRequest },
+            { new UserExercise { Id = 1, UserId = InvalidUserId, CurrentWeight = 100.0, PersonalRecord = 200.0, DurationInSeconds = 60, SortOrder = 1, Repetitions = 10, Sets = 3, Timed = true, BodyWeight = false }, -1, TestServiceResponse.BadRequest }
         };
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

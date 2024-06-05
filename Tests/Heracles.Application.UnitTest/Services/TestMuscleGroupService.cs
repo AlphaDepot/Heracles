@@ -64,11 +64,11 @@ public class TestMuscleGroupService : BaseUnitTest
         var result = await _service.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, muscleGroup!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.BadRequest(_logger, result, EntityErrorMessage<MuscleGroup>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<MuscleGroup>.NotFound(id), id);
     }
 
@@ -90,10 +90,10 @@ public class TestMuscleGroupService : BaseUnitTest
         // Act
         var result = await _service.CreateAsync(muscleGroup);
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<MuscleGroupService, MuscleGroup>(_logger, result, muscleGroup.Id,
                 muscleGroup.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<MuscleGroupService, MuscleGroup>(_logger, result, result.Error.Errors!);
     }
 
@@ -117,9 +117,9 @@ public class TestMuscleGroupService : BaseUnitTest
 
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<MuscleGroupService, MuscleGroup>(_logger, result, muscleGroup.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<MuscleGroupService, MuscleGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -140,12 +140,12 @@ public class TestMuscleGroupService : BaseUnitTest
         var result = await _service.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<MuscleGroupService, MuscleGroup>(_logger, result, muscleGroup!.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.BadRequest<MuscleGroupService, MuscleGroup>(_logger, result,
                 EntityErrorMessage<MuscleGroup>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedDeleteResult.NotFound<MuscleGroupService, MuscleGroup>(_logger, result,
                 EntityErrorMessage<MuscleGroup>.NotFound(id), id);
     }
@@ -159,11 +159,11 @@ public class TestMuscleGroupService : BaseUnitTest
     {
         return new TheoryData<string, string>
         {
-            { "Calfs", TestDomainResponse.Success }, // Valid MuscleGroup
-            { null, TestDomainResponse.BadRequest }, // Null name
-            { "a", TestDomainResponse.BadRequest }, // To Short name
-            { new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
-            { "Chest", TestDomainResponse.BadRequest } // Duplicate name
+            { "Calfs", TestServiceResponse.Success }, // Valid MuscleGroup
+            { null, TestServiceResponse.BadRequest }, // Null name
+            { "a", TestServiceResponse.BadRequest }, // To Short name
+            { new string('a', 101), TestServiceResponse.BadRequest }, // To Long name
+            { "Chest", TestServiceResponse.BadRequest } // Duplicate name
         };
     }
 
@@ -174,13 +174,13 @@ public class TestMuscleGroupService : BaseUnitTest
     {
         return new TheoryData<int, string, string>
         {
-            { 1, "Updated Name", TestDomainResponse.Success }, // Valid MuscleGroup
-            { 0, "Calf", TestDomainResponse.BadRequest }, // Null id
-            { 1, null, TestDomainResponse.BadRequest }, // Null name
-            { 1, "a", TestDomainResponse.BadRequest }, // To Short name
-            { 1, new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
-            { 1, "Chest", TestDomainResponse.BadRequest }, // Duplicate name
-            { 100, "Chest", TestDomainResponse.BadRequest } // Id out of range
+            { 1, "Updated Name", TestServiceResponse.Success }, // Valid MuscleGroup
+            { 0, "Calf", TestServiceResponse.BadRequest }, // Null id
+            { 1, null, TestServiceResponse.BadRequest }, // Null name
+            { 1, "a", TestServiceResponse.BadRequest }, // To Short name
+            { 1, new string('a', 101), TestServiceResponse.BadRequest }, // To Long name
+            { 1, "Chest", TestServiceResponse.BadRequest }, // Duplicate name
+            { 100, "Chest", TestServiceResponse.BadRequest } // Id out of range
         };
 
     }

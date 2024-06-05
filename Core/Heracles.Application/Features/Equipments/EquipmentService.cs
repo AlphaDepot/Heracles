@@ -32,7 +32,7 @@ public class EquipmentService : IEquipmentService
     /// </summary>
     /// <param name="query"> Query request </param>
     /// <returns> Query response </returns>
-    public async Task<DomainResponse<QueryResponseDto<Equipment>>> GetAsync(QueryRequestDto query)
+    public async Task<ServiceResponse<QueryResponseDto<Equipment>>> GetAsync(QueryRequestDto query)
     {
         
         var filter = Equipment.GetFilterExpression(query?.SearchTerm);
@@ -42,19 +42,19 @@ public class EquipmentService : IEquipmentService
         //var result =  await _repository.GetAsync(queryHelper.Filter, queryHelper.Sorter, query.PageSize, query.PageNumber);
         var result = await _repository.GetAsync(queryHelper);
       
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
     }
     /// <summary>
     ///  Get equipment by id
     /// </summary>
     /// <param name="id"> Equipment id </param>
     /// <returns> Equipment </returns>
-    public async Task<DomainResponse<Equipment>> GetByIdAsync(int id)
+    public async Task<ServiceResponse<Equipment>> GetByIdAsync(int id)
     {
         if (id <= 0)
         {
             _logger.LogWarning(ServiceMessages.EntityIdInvalid<Equipment>());
-            return DomainResponse.Failure<Equipment>(EntityErrorMessage<Equipment>.BadRequest());
+            return ServiceResponse.Failure<Equipment>(EntityErrorMessage<Equipment>.BadRequest());
         }
         
         var result = await _repository.GetEntityByIdAsync(id);
@@ -62,11 +62,11 @@ public class EquipmentService : IEquipmentService
         if (result == null)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<Equipment>(id));
-            return DomainResponse.Failure<Equipment>(EntityErrorMessage<Equipment>.NotFound(id));
+            return ServiceResponse.Failure<Equipment>(EntityErrorMessage<Equipment>.NotFound(id));
         }
         
         _logger.LogInformation(ServiceMessages.EntityRetrieved<Equipment>(id));
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
         
         
     }
@@ -76,7 +76,7 @@ public class EquipmentService : IEquipmentService
     /// </summary>
     /// <param name="entity"> Equipment </param>
     /// <returns> Id </returns>
-    public async Task<DomainResponse<int>> CreateAsync(Equipment entity)
+    public async Task<ServiceResponse<int>> CreateAsync(Equipment entity)
     {
         var validator = new CreateEquipmentValidator(_repository);
         var validationResult = await validator.ValidateAsync(entity);
@@ -84,13 +84,13 @@ public class EquipmentService : IEquipmentService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<Equipment>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<int>(EntityErrorMessage<Equipment>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<int>(EntityErrorMessage<Equipment>.BadRequest(validationResult.ToDictionary()));
         }
         
         var id = await _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<Equipment>(id));
         
-        return DomainResponse.Success(id);
+        return ServiceResponse.Success(id);
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class EquipmentService : IEquipmentService
     /// </summary>
     /// <param name="entity"> Equipment </param>
     /// <returns> Success </returns>
-    public async Task<DomainResponse<bool>> UpdateAsync(Equipment entity)
+    public async Task<ServiceResponse<bool>> UpdateAsync(Equipment entity)
     {
         var validator = new UpdateEquipmentValidator(_repository);
         var validationResult = await validator.ValidateAsync(entity);
@@ -106,13 +106,13 @@ public class EquipmentService : IEquipmentService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<Equipment>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<Equipment>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<Equipment>.BadRequest(validationResult.ToDictionary()));
         }
         
         await _repository.UpdateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityUpdated<Equipment>(entity.Id));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 
     /// <summary>
@@ -120,24 +120,24 @@ public class EquipmentService : IEquipmentService
     /// </summary>
     /// <param name="id"> Equipment id </param>
     /// <returns> Success or failure </returns>
-    public async  Task<DomainResponse<bool>> DeleteAsync(int id)
+    public async  Task<ServiceResponse<bool>> DeleteAsync(int id)
     {
         if (id <= 0)
         {
             _logger.LogWarning(ServiceMessages.EntityIdInvalid<Equipment>());
-            return DomainResponse.Failure<bool>(EntityErrorMessage<Equipment>.BadRequest());
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<Equipment>.BadRequest());
         }
         
         var exist = await _repository.ItExist(id);
         if (!exist)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<Equipment>(id));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<Equipment>.NotFound(id));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<Equipment>.NotFound(id));
         }
         
         await _repository.GetEntityByIdAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityDeleted<Equipment>(id));
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 }

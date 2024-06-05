@@ -40,7 +40,7 @@ public class WorkoutSessionService : IWorkoutSessionService
         _isAdmin = httpContextAccessor.HttpContext.User.IsInRole("Admin");
     }
 
-    public async Task<DomainResponse<QueryResponseDto<WorkoutSession>>> GetAsync(QueryRequestDto query)
+    public async Task<ServiceResponse<QueryResponseDto<WorkoutSession>>> GetAsync(QueryRequestDto query)
     {
        var filter = WorkoutSession.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
        var sortExpression = WorkoutSession.GetSortExpression();
@@ -48,10 +48,10 @@ public class WorkoutSessionService : IWorkoutSessionService
        var queryHelper = new QueryHelper().CreateQueriable(query, sortExpression, filter);
        var result = await _repository.GetAsync(queryHelper);
 
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
     }
     
-    public async Task<DomainResponse<WorkoutSession>> GetByIdAsync(int id)
+    public async Task<ServiceResponse<WorkoutSession>> GetByIdAsync(int id)
     {
        
         var validator = new GetWorkoutSessionByIdValidator(_repository, _userService, _userId);
@@ -60,16 +60,16 @@ public class WorkoutSessionService : IWorkoutSessionService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<WorkoutSession>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<WorkoutSession>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<WorkoutSession>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
         var result = await _repository.GetEntityByIdAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityRetrieved<WorkoutSession>(id));
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
     }
 
-    public async Task<DomainResponse<int>> CreateAsync(WorkoutSession entity)
+    public async Task<ServiceResponse<int>> CreateAsync(WorkoutSession entity)
     {
         var result = new CreateWorkoutSessionValidator(_repository, _userService, _userId);
         var validationResult = await result.ValidateAsync(entity);
@@ -77,16 +77,16 @@ public class WorkoutSessionService : IWorkoutSessionService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<WorkoutSession>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<int>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<int>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
         var id = await  _repository.CreateEntityAsync(entity);
         _logger.LogInformation(ServiceMessages.EntityCreated<WorkoutSession>(id));
-        return DomainResponse.Success(id);
+        return ServiceResponse.Success(id);
         
     }
 
-    public async Task<DomainResponse<bool>> UpdateAsync(WorkoutSession entity)
+    public async Task<ServiceResponse<bool>> UpdateAsync(WorkoutSession entity)
     {
         var result = new UpdateWorkoutSessionValidator(_repository, _userService, _userId);
         var validationResult = await result.ValidateAsync(entity);
@@ -94,7 +94,7 @@ public class WorkoutSessionService : IWorkoutSessionService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<WorkoutSession>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
         var workoutSession = await _repository.GetEntityByIdAsync(entity.Id);
@@ -108,12 +108,12 @@ public class WorkoutSessionService : IWorkoutSessionService
         
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<WorkoutSession>(entity.Id));
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
         
         
     }
 
-    public async Task<DomainResponse<bool>> DeleteAsync(int id)
+    public async Task<ServiceResponse<bool>> DeleteAsync(int id)
     {
        var validator = new DeleteWorkoutSessionValidator(_repository, _userService, _userId);
        var validationResult = await validator.ValidateAsync(id);
@@ -121,17 +121,17 @@ public class WorkoutSessionService : IWorkoutSessionService
        if (!validationResult.IsValid)
        {
            _logger.LogWarning(ServiceMessages.EntityValidationFailure<WorkoutSession>(validationResult.ToDictionary()));
-           return DomainResponse.Failure<bool>(
+           return ServiceResponse.Failure<bool>(
                EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
        }
        
        await _repository.DeleteEntityAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityDeleted<WorkoutSession>(id));
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 
-    public async Task<DomainResponse<bool>> AddUserExerciseAsync(WorkoutSessionExerciseDto entity)
+    public async Task<ServiceResponse<bool>> AddUserExerciseAsync(WorkoutSessionExerciseDto entity)
     {
         var validator = new WorkoutSessionExerciseValidator(_repository, _userExerciseRepository, _userService, _userId);
         var validationResult = await validator.ValidateAsync(entity);
@@ -139,7 +139,7 @@ public class WorkoutSessionService : IWorkoutSessionService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<WorkoutSession>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
         
         var workoutSession = await _repository.GetEntityByIdAsync(entity.WorkoutSessionId);
@@ -151,10 +151,10 @@ public class WorkoutSessionService : IWorkoutSessionService
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<WorkoutSession>(entity.WorkoutSessionId));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 
-    public async Task<DomainResponse<bool>> RemoveUserExerciseAsync(WorkoutSessionExerciseDto entity)
+    public async Task<ServiceResponse<bool>> RemoveUserExerciseAsync(WorkoutSessionExerciseDto entity)
     {
         
         var validator = new WorkoutSessionExerciseValidator(_repository, _userExerciseRepository, _userService, _userId);
@@ -163,7 +163,7 @@ public class WorkoutSessionService : IWorkoutSessionService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<WorkoutSession>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<WorkoutSession>.BadRequest(validationResult.ToDictionary()));
         }
 
         var workoutSession = await _repository.GetEntityByIdAsync(entity.WorkoutSessionId);
@@ -175,6 +175,6 @@ public class WorkoutSessionService : IWorkoutSessionService
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<WorkoutSession>(entity.WorkoutSessionId));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 }

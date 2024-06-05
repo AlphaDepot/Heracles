@@ -127,10 +127,10 @@ public class BaseUnitTest
     {
         return new TheoryData<int, string>
         {
-            { 0, TestDomainResponse.BadRequest }, // invalid id
-            { -1, TestDomainResponse.BadRequest }, // invalid id
-            { 1000000, TestDomainResponse.BadRequest }, // out of bound id
-            { 1, TestDomainResponse.Success } // valid id
+            { 0, TestServiceResponse.BadRequest }, // invalid id
+            { -1, TestServiceResponse.BadRequest }, // invalid id
+            { 1000000, TestServiceResponse.BadRequest }, // out of bound id
+            { 1, TestServiceResponse.Success } // valid id
         };
     }
 
@@ -143,10 +143,10 @@ public class BaseUnitTest
     {
         return new TheoryData<int, string>
         {
-            { 0, TestDomainResponse.BadRequest }, // invalid id
-            { -1, TestDomainResponse.BadRequest }, // invalid id
-            { 1000000, TestDomainResponse.NotFound }, // out of bound id
-            { 1, TestDomainResponse.Success } // valid id
+            { 0, TestServiceResponse.BadRequest }, // invalid id
+            { -1, TestServiceResponse.BadRequest }, // invalid id
+            { 1000000, TestServiceResponse.NotFound }, // out of bound id
+            { 1, TestServiceResponse.Success } // valid id
         };
     }
 
@@ -159,10 +159,10 @@ public class BaseUnitTest
     {
         return new TheoryData<int, string>
         {
-            { 0, TestDomainResponse.BadRequest }, // invalid id
-            { -1, TestDomainResponse.BadRequest }, // invalid id
-            { 1000000, TestDomainResponse.BadRequest }, // out of bound id
-            { 1, TestDomainResponse.Success } // valid id
+            { 0, TestServiceResponse.BadRequest }, // invalid id
+            { -1, TestServiceResponse.BadRequest }, // invalid id
+            { 1000000, TestServiceResponse.BadRequest }, // out of bound id
+            { 1, TestServiceResponse.Success } // valid id
         };
     }
 
@@ -175,10 +175,10 @@ public class BaseUnitTest
     {
         return new TheoryData<int, string>
         {
-            { 0, TestDomainResponse.BadRequest }, // invalid id
-            { -1, TestDomainResponse.BadRequest }, // invalid id
-            { 1000000, TestDomainResponse.NotFound }, // out of bound id
-            { 1, TestDomainResponse.Success } // valid id
+            { 0, TestServiceResponse.BadRequest }, // invalid id
+            { -1, TestServiceResponse.BadRequest }, // invalid id
+            { 1000000, TestServiceResponse.NotFound }, // out of bound id
+            { 1, TestServiceResponse.Success } // valid id
         };
     }
    

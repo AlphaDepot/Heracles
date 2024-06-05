@@ -7,12 +7,12 @@ namespace Heracles.Domain.ExerciseMuscleGroups.Interfaces;
 
 public interface IExerciseMuscleGroupService 
 {
-    Task<DomainResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetAsync(QueryRequestDto? query );
-    Task<DomainResponse<ExerciseMuscleGroup>> GetByIdAsync(int id);
-    Task<DomainResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetByExerciseIdAsync(int id, QueryRequestDto? query = null);
-    Task<DomainResponse<int>> CreateAsync(CreateExerciseMuscleGroupDto entity);
-    Task<DomainResponse<bool>> UpdateAsync(UpdateExerciseMuscleGroupDto entity);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetAsync(QueryRequestDto? query );
+    Task<ServiceResponse<ExerciseMuscleGroup>> GetByIdAsync(int id);
+    Task<ServiceResponse<QueryResponseDto<ExerciseMuscleGroup>>> GetByExerciseIdAsync(int id, QueryRequestDto? query = null);
+    Task<ServiceResponse<int>> CreateAsync(CreateExerciseMuscleGroupDto entity);
+    Task<ServiceResponse<bool>> UpdateAsync(UpdateExerciseMuscleGroupDto entity);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
 }
 
 

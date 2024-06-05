@@ -38,7 +38,7 @@ public class UserService :IUserService
     }
 
 
-    public async Task<DomainResponse<QueryResponseDto<User>>> GetAsync(QueryRequestDto query)
+    public async Task<ServiceResponse<QueryResponseDto<User>>> GetAsync(QueryRequestDto query)
     {
         var filter = User.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
         var sortExpression = User.GetSortExpression();
@@ -46,33 +46,33 @@ public class UserService :IUserService
         var queryHelper = new QueryHelper().CreateQueriable(query, sortExpression, filter);
         var result = await  _userRepository.GetAsync(queryHelper);
         
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
     }
 
 
-    public async Task<DomainResponse<User>> GetUserByUserIdAsync(string userId)
+    public async Task<ServiceResponse<User>> GetUserByUserIdAsync(string userId)
     {
         var userFromCache = GetUserFromCache(userId);
         if (userFromCache != null)
         {
-            return DomainResponse.Success(userFromCache);
+            return ServiceResponse.Success(userFromCache);
         }
         
         var user = await _userRepository.GetUserByUserIdAsync(userId);
         if (user == null)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<User>(userId));
-            return DomainResponse.Failure<User>(EntityErrorMessage<User>.NotFound(userId));
+            return ServiceResponse.Failure<User>(EntityErrorMessage<User>.NotFound(userId));
         }
         
         StoreUserInCache(user);
         
-        return DomainResponse.Success(user);
+        return ServiceResponse.Success(user);
        
     }
 
 
-    public async Task<DomainResponse<int>> CreateUserAsync(User newUser)
+    public async Task<ServiceResponse<int>> CreateUserAsync(User newUser)
     {
 
         var validator = new CreateUserValidator(_userRepository);
@@ -81,17 +81,17 @@ public class UserService :IUserService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<User>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<int>(EntityErrorMessage<User>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<int>(EntityErrorMessage<User>.BadRequest(validationResult.ToDictionary()));
         }
 
         var result = await _userRepository.CreateEntityAsync(newUser);
         _logger.LogInformation(ServiceMessages.EntityCreated<User>(result));
         
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
     }
 
 
-    public async  Task<DomainResponse<bool>> UpdateUserAsync(User updatedUser)
+    public async  Task<ServiceResponse<bool>> UpdateUserAsync(User updatedUser)
     {
         var validator = new UpdateUserValidator(_userRepository);
         var validationResult = await validator.ValidateAsync(updatedUser);
@@ -99,30 +99,30 @@ public class UserService :IUserService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<User>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<User>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<User>.BadRequest(validationResult.ToDictionary()));
         }
         
         var result = await _userRepository.UpdateEntityAsync(updatedUser);
         _logger.LogInformation(ServiceMessages.EntityUpdated<User>(result));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 
   
-    public async Task<DomainResponse<bool>> DeleteUserAsync(string userId)
+    public async Task<ServiceResponse<bool>> DeleteUserAsync(string userId)
     {
         var user = await _userRepository.GetUserByUserIdAsync(userId);
         
         if (user == null)
         {
             _logger.LogWarning(ServiceMessages.EntityNotFound<User>(userId));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<User>.NotFound(userId));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<User>.NotFound(userId));
         }
         
         var result = await _userRepository.DeleteUserAsync(user.Id, user.UserId);
         _logger.LogInformation(ServiceMessages.EntityDeleted<User>(result));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 
 

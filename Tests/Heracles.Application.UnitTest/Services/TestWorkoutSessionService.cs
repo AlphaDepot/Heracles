@@ -93,9 +93,9 @@ public class TestWorkoutSessionService : BaseUnitTest
         var result = await _serviceWithAdminUser.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, expectedWorkoutSession!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.ValidationFail(_logger, result, result.Error.Errors!);
     }
 
@@ -125,10 +125,10 @@ public class TestWorkoutSessionService : BaseUnitTest
         var result = await _serviceWithAdminUser.CreateAsync(workoutSession);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<WorkoutSessionService, WorkoutSession>(_logger, result, workoutSession.Id,
                 result.Value);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<WorkoutSessionService, WorkoutSession>(_logger, result, result.Error.Errors!);
         
     }
@@ -168,9 +168,9 @@ public class TestWorkoutSessionService : BaseUnitTest
         var result = await _serviceWithAdminUser.UpdateAsync(workoutSession);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<WorkoutSessionService, WorkoutSession>(_logger, result, workoutSession.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<WorkoutSessionService, WorkoutSession>(_logger, result,result.Error.Errors!);
 
     }
@@ -191,9 +191,9 @@ public class TestWorkoutSessionService : BaseUnitTest
         var result = await _serviceWithAdminUser.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<WorkoutSessionService, WorkoutSession>(_logger, result, expectedWorkoutSession!.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.ValidationFail<WorkoutSessionService, WorkoutSession>(_logger, result, result.Error.Errors!);
         
     }
@@ -241,9 +241,9 @@ public class TestWorkoutSessionService : BaseUnitTest
         var result = await _serviceWithAdminUser.AddUserExerciseAsync(workoutSessionExerciseDto);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<WorkoutSessionService, WorkoutSession>(_logger, result, workoutSessionId);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<WorkoutSessionService, WorkoutSession>(_logger, result,
                 result.Error.Errors!);
     }
@@ -290,9 +290,9 @@ public class TestWorkoutSessionService : BaseUnitTest
         var result = await _serviceWithAdminUser.RemoveUserExerciseAsync(workoutSessionExerciseDto);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<WorkoutSessionService, WorkoutSession>(_logger, result, workoutSessionId);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<WorkoutSessionService, WorkoutSession>(_logger, result,
                 result.Error.Errors!);
     }
@@ -308,17 +308,17 @@ public class TestWorkoutSessionService : BaseUnitTest
         
         return new TheoryData<string, string, DayOfWeek, int, string>
         {
-            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
-            { ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
-            { null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
-            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
-            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
-            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success },
-            { ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
-            { ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
-            { ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
-            { ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest },
-            { InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest }
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.Success },
+            { ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest },
+            { null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest },
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.Success },
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.Success },
+            { ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.Success },
+            { ValidAdminUserId, "", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest },
+            { ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest },
+            { ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestServiceResponse.BadRequest },
+            { ValidAdminUserId, null, DayOfWeek.Monday, 2, TestServiceResponse.BadRequest },
+            { InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest }
         };
         
     }
@@ -331,16 +331,16 @@ public class TestWorkoutSessionService : BaseUnitTest
     {
         return new TheoryData<int, string, string, DayOfWeek, int, string>
         {
-            {1, ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.Success},
-            {1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {0, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {-1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {1, ValidAdminUserId, "", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {1, ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {1, ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {1, ValidAdminUserId, null, DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {1, null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest},
-            {1, InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestDomainResponse.BadRequest}
+            {1, ValidAdminUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.Success},
+            {1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {0, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {-1, ValidAdminUserId, "Test Workout Session 1", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {1, ValidAdminUserId, "", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {1, ValidAdminUserId, "HE", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {1, ValidAdminUserId, new string('a', 256), DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {1, ValidAdminUserId, null, DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {1, null, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest},
+            {1, InvalidUserId, "NOT DUPLICATE", DayOfWeek.Monday, 2, TestServiceResponse.BadRequest}
         };
     }
         
@@ -352,11 +352,11 @@ public class TestWorkoutSessionService : BaseUnitTest
     public static TheoryData<string, int, int, string> AddUserExerciseData()
     {
         return new TheoryData<string, int, int, string> {
-            {ValidAdminUserId, 1, 1, TestDomainResponse.Success},
-            {ValidAdminUserId, 1, 0, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, 0, 1, TestDomainResponse.BadRequest},
-            {ValidAdminUserId, 0, 0, TestDomainResponse.BadRequest},
-            {InvalidUserId, 1, 1, TestDomainResponse.BadRequest}
+            {ValidAdminUserId, 1, 1, TestServiceResponse.Success},
+            {ValidAdminUserId, 1, 0, TestServiceResponse.BadRequest},
+            {ValidAdminUserId, 0, 1, TestServiceResponse.BadRequest},
+            {ValidAdminUserId, 0, 0, TestServiceResponse.BadRequest},
+            {InvalidUserId, 1, 1, TestServiceResponse.BadRequest}
         };
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

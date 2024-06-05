@@ -7,13 +7,13 @@ namespace Heracles.Domain.WorkoutSessions.Interfaces;
 
 public interface IWorkoutSessionService
 {
-    Task<DomainResponse<QueryResponseDto<WorkoutSession>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<QueryResponseDto<WorkoutSession>>> GetAsync(QueryRequestDto query);
     
-    Task<DomainResponse<WorkoutSession>> GetByIdAsync(int id);
-    Task<DomainResponse<int>> CreateAsync(WorkoutSession entity);
-    Task<DomainResponse<bool>> UpdateAsync(WorkoutSession entity);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<WorkoutSession>> GetByIdAsync(int id);
+    Task<ServiceResponse<int>> CreateAsync(WorkoutSession entity);
+    Task<ServiceResponse<bool>> UpdateAsync(WorkoutSession entity);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
     
-    Task<DomainResponse<bool>> AddUserExerciseAsync(WorkoutSessionExerciseDto entity);
-    Task<DomainResponse<bool>> RemoveUserExerciseAsync(WorkoutSessionExerciseDto entity);
+    Task<ServiceResponse<bool>> AddUserExerciseAsync(WorkoutSessionExerciseDto entity);
+    Task<ServiceResponse<bool>> RemoveUserExerciseAsync(WorkoutSessionExerciseDto entity);
 }

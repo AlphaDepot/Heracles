@@ -16,7 +16,7 @@ public static class ExpectedQueryResult
     /// <typeparam name="T">The type of the objects in the success result.</typeparam>
     /// <param name="result">The success result to check.</param>
     /// <param name="expected">The expected objects.</param>
-    public static void Success<T>(DomainResponse<QueryResponseDto<T>> result, IEnumerable<T> expected) where T : BaseEntity
+    public static void Success<T>(ServiceResponse<QueryResponseDto<T>> result, IEnumerable<T> expected) where T : BaseEntity
     {
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();

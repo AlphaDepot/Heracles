@@ -7,13 +7,13 @@ namespace Heracles.Domain.EquipmentGroups.Interfaces;
 
 public interface IEquipmentGroupService
 {
-    Task<DomainResponse<QueryResponseDto<EquipmentGroup>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<QueryResponseDto<EquipmentGroup>>> GetAsync(QueryRequestDto query);
     
-    Task<DomainResponse<EquipmentGroup>> GetByIdAsync(int id);
-    Task<DomainResponse<int>> CreateAsync(EquipmentGroup entity);
-    Task<DomainResponse<bool>> UpdateAsync(EquipmentGroup entity);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<EquipmentGroup>> GetByIdAsync(int id);
+    Task<ServiceResponse<int>> CreateAsync(EquipmentGroup entity);
+    Task<ServiceResponse<bool>> UpdateAsync(EquipmentGroup entity);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
     
-    Task<DomainResponse<bool>> AddEquipmentAsync(AddRemoveEquipmentGroupDto entityDto);
-    Task<DomainResponse<bool>> RemoveEquipmentAsync(AddRemoveEquipmentGroupDto entityDto);
+    Task<ServiceResponse<bool>> AddEquipmentAsync(AddRemoveEquipmentGroupDto entityDto);
+    Task<ServiceResponse<bool>> RemoveEquipmentAsync(AddRemoveEquipmentGroupDto entityDto);
 }

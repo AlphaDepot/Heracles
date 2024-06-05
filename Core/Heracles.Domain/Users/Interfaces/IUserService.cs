@@ -6,11 +6,11 @@ namespace Heracles.Domain.Users.Interfaces;
 
 public interface IUserService
 {
-    Task<DomainResponse<QueryResponseDto<User>>> GetAsync(QueryRequestDto query);
-    Task<DomainResponse<User>> GetUserByUserIdAsync(string userId);
-    Task<DomainResponse<int>> CreateUserAsync(User newUser);
-    Task<DomainResponse<bool>> UpdateUserAsync(User updatedUser);
-    Task<DomainResponse<bool>> DeleteUserAsync(string userId);
+    Task<ServiceResponse<QueryResponseDto<User>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<User>> GetUserByUserIdAsync(string userId);
+    Task<ServiceResponse<int>> CreateUserAsync(User newUser);
+    Task<ServiceResponse<bool>> UpdateUserAsync(User updatedUser);
+    Task<ServiceResponse<bool>> DeleteUserAsync(string userId);
     
     Task<bool> IsUserAuthorized(string userId, string currentUserId);
     Task<bool> DoesUserExist(string userId);

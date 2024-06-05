@@ -7,9 +7,9 @@ namespace Heracles.Domain.UserExercises.Interfaces;
 
 public interface IUserExerciseService
 {
-    Task<DomainResponse<QueryResponseDto<UserExercise>>> GetAsync(QueryRequestDto query);
-    Task<DomainResponse<UserExercise>> GetByIdAsync(int id);
-    Task<DomainResponse<int>> CreateAsync(CreateUserExerciseDto dto);
-    Task<DomainResponse<bool>> UpdateAsync(UpdateUserExerciseDto dto);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<QueryResponseDto<UserExercise>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<UserExercise>> GetByIdAsync(int id);
+    Task<ServiceResponse<int>> CreateAsync(CreateUserExerciseDto dto);
+    Task<ServiceResponse<bool>> UpdateAsync(UpdateUserExerciseDto dto);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
 }

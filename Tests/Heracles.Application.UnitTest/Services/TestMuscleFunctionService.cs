@@ -63,11 +63,11 @@ public class TestMuscleFunctionService : BaseUnitTest
         var result = await _service.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, muscleFunction!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.BadRequest(_logger, result, EntityErrorMessage<MuscleFunction>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<MuscleFunction>.NotFound(id), id);
     }
 
@@ -90,10 +90,10 @@ public class TestMuscleFunctionService : BaseUnitTest
         var result = await _service.CreateAsync(muscleFunction);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<MuscleFunctionService, MuscleFunction>(_logger, result, muscleFunction.Id,
                 muscleFunction.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<MuscleFunctionService, MuscleFunction>(_logger, result,
                 result.Error.Errors!);
     }
@@ -117,9 +117,9 @@ public class TestMuscleFunctionService : BaseUnitTest
         var result = await _service.UpdateAsync(muscleFunction);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<MuscleFunctionService, MuscleFunction>(_logger, result, muscleFunction.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<MuscleFunctionService, MuscleFunction>(_logger, result,
                 result.Error.Errors!);
     }
@@ -140,12 +140,12 @@ public class TestMuscleFunctionService : BaseUnitTest
         var result = await _service.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<MuscleFunctionService, MuscleFunction>(_logger, result, muscleFunction!.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.BadRequest<MuscleFunctionService, MuscleFunction>(_logger, result,
                 EntityErrorMessage<MuscleFunction>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedDeleteResult.NotFound<MuscleFunctionService, MuscleFunction>(_logger, result,
                 EntityErrorMessage<MuscleFunction>.NotFound(id), id);
     }
@@ -159,11 +159,11 @@ public class TestMuscleFunctionService : BaseUnitTest
     {
         return new TheoryData<string, string>
         {
-            { NotADuplicateName, TestDomainResponse.Success }, // Valid name
-            { null, TestDomainResponse.BadRequest }, // Null name
-            { "a", TestDomainResponse.BadRequest }, // To Short name
-            { new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
-            { "Stabilizer", TestDomainResponse.BadRequest } // Duplicate name 
+            { NotADuplicateName, TestServiceResponse.Success }, // Valid name
+            { null, TestServiceResponse.BadRequest }, // Null name
+            { "a", TestServiceResponse.BadRequest }, // To Short name
+            { new string('a', 101), TestServiceResponse.BadRequest }, // To Long name
+            { "Stabilizer", TestServiceResponse.BadRequest } // Duplicate name 
         };
     }
 
@@ -174,13 +174,13 @@ public class TestMuscleFunctionService : BaseUnitTest
     {
         return new TheoryData<int, string, string>
         {
-            { 1, NotADuplicateName, TestDomainResponse.Success }, // Valid MuscleFunction
-            { 0, NotADuplicateName, TestDomainResponse.BadRequest }, // Null id
-            { 1, null, TestDomainResponse.BadRequest }, // Null name
-            { 1, "a", TestDomainResponse.BadRequest }, // To Short name
-            { 1, new string('a', 101), TestDomainResponse.BadRequest }, // To Long name
-            { 1, "Stabilizer", TestDomainResponse.BadRequest }, // Duplicate name 
-            { 100, "Synergist", TestDomainResponse.BadRequest } // Id out of range
+            { 1, NotADuplicateName, TestServiceResponse.Success }, // Valid MuscleFunction
+            { 0, NotADuplicateName, TestServiceResponse.BadRequest }, // Null id
+            { 1, null, TestServiceResponse.BadRequest }, // Null name
+            { 1, "a", TestServiceResponse.BadRequest }, // To Short name
+            { 1, new string('a', 101), TestServiceResponse.BadRequest }, // To Long name
+            { 1, "Stabilizer", TestServiceResponse.BadRequest }, // Duplicate name 
+            { 100, "Synergist", TestServiceResponse.BadRequest } // Id out of range
         };
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

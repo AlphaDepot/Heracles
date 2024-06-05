@@ -94,11 +94,11 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
         var result = await _service.GetByIdAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedGetByIdResult.Success(_logger, result, exerciseMuscleGroups!, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedGetByIdResult.BadRequest(_logger, result, EntityErrorMessage<ExerciseMuscleGroup>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedGetByIdResult.NotFound(_logger, result, EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id), id);
     }
 
@@ -117,10 +117,10 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
         var result = await _service.CreateAsync(entity);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedCreateResult.Success<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result, result.Value,
                 result.Value);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedCreateResult.BadRequest<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -141,9 +141,9 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
         var result = await _service.UpdateAsync(entity);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedUpdateResult.Success<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result, entity.Id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedUpdateResult.BadRequest<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result,
                 result.Error.Errors!);
     }
@@ -164,12 +164,12 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
         var result = await _service.DeleteAsync(id);
 
         // Assert
-        if (expected == TestDomainResponse.Success)
+        if (expected == TestServiceResponse.Success)
             ExpectedDeleteResult.Success<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result, id);
-        else if (expected == TestDomainResponse.BadRequest)
+        else if (expected == TestServiceResponse.BadRequest)
             ExpectedDeleteResult.BadRequest<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result,
                 EntityErrorMessage<ExerciseMuscleGroup>.BadRequest());
-        else if (expected == TestDomainResponse.NotFound)
+        else if (expected == TestServiceResponse.NotFound)
             ExpectedDeleteResult.NotFound<ExerciseMuscleGroupService, ExerciseMuscleGroup>(_logger, result,
                 EntityErrorMessage<ExerciseMuscleGroup>.NotFound(id), id);
     }
@@ -186,11 +186,11 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     {
         return new TheoryData<CreateExerciseMuscleGroupDto, string>
         {
-            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 2, MuscleFunctionId = 3, FunctionPercentage = 50 }, TestDomainResponse.Success },
-            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 0, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
-            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 0, MuscleFunctionId = 1, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
-            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 0, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
-            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 0 }, TestDomainResponse.BadRequest }
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 2, MuscleFunctionId = 3, FunctionPercentage = 50 }, TestServiceResponse.Success },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 0, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 50 }, TestServiceResponse.BadRequest },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 0, MuscleFunctionId = 1, FunctionPercentage = 50 }, TestServiceResponse.BadRequest },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 0, FunctionPercentage = 50 }, TestServiceResponse.BadRequest },
+            { new CreateExerciseMuscleGroupDto { ExerciseTypeId = 1, MuscleGroupId = 1, MuscleFunctionId = 1, FunctionPercentage = 0 }, TestServiceResponse.BadRequest }
         };
     }
     
@@ -203,9 +203,9 @@ public class TestExerciseMuscleGroupService : BaseUnitTest
     {
         return new TheoryData<UpdateExerciseMuscleGroupDto, string>
         {
-            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 50 }, TestDomainResponse.Success },
-            { new UpdateExerciseMuscleGroupDto { Id = 0, FunctionPercentage = 50 }, TestDomainResponse.BadRequest },
-            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 0 }, TestDomainResponse.BadRequest }
+            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 50 }, TestServiceResponse.Success },
+            { new UpdateExerciseMuscleGroupDto { Id = 0, FunctionPercentage = 50 }, TestServiceResponse.BadRequest },
+            { new UpdateExerciseMuscleGroupDto { Id = 1, FunctionPercentage = 0 }, TestServiceResponse.BadRequest }
         };
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.

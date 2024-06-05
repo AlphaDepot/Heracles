@@ -52,7 +52,7 @@ public class UserExerciseService : IUserExerciseService
     /// </summary>
     /// <param name="query">The query request.</param>
     /// <returns>A task representing the asynchronous operation that returns a domain response containing the query response with the filtered and sorted user exercises.</returns>
-    public async Task<DomainResponse<QueryResponseDto<UserExercise>>> GetAsync(QueryRequestDto query)
+    public async Task<ServiceResponse<QueryResponseDto<UserExercise>>> GetAsync(QueryRequestDto query)
     {
         var filter = UserExercise.GetFilterExpression(query.SearchTerm, _userId!, _isAdmin);
         var sortExpression = UserExercise.GetSortExpression();
@@ -61,7 +61,7 @@ public class UserExerciseService : IUserExerciseService
         var result = await _repository.GetAsync(queryHelper);
         
        
-        return DomainResponse.Success(result);
+        return ServiceResponse.Success(result);
 
     }
 
@@ -70,7 +70,7 @@ public class UserExerciseService : IUserExerciseService
     /// </summary>
     /// <param name="id">The ID of the user exercise to retrieve.</param>
     /// <returns>A task representing the asynchronous operation that returns a domain response containing the retrieved user exercise.</returns>
-    public async Task<DomainResponse<UserExercise>> GetByIdAsync(int id)
+    public async Task<ServiceResponse<UserExercise>> GetByIdAsync(int id)
     {
         var validator = new GetUserExerciseByIdValidator(_repository, _userService, _userId);
         var validationResult = await validator.ValidateAsync(id);
@@ -78,13 +78,13 @@ public class UserExerciseService : IUserExerciseService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<UserExercise>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<UserExercise>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<UserExercise>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
         var userExercise = await _repository.GetEntityByIdAsync(id);
         // return the user exercise
         _logger.LogInformation(ServiceMessages.EntityRetrieved<UserExercise>(userExercise.Id));
-        return DomainResponse.Success(userExercise);
+        return ServiceResponse.Success(userExercise);
         
     }
 
@@ -93,7 +93,7 @@ public class UserExerciseService : IUserExerciseService
     /// </summary>
     /// <param name="dto">The data transfer object containing the user exercise details.</param>
     /// <returns>A task representing the asynchronous operation that returns a domain response containing the identifier of the created user exercise.</returns>
-    public async Task<DomainResponse<int>> CreateAsync(CreateUserExerciseDto dto)
+    public async Task<ServiceResponse<int>> CreateAsync(CreateUserExerciseDto dto)
     {
         var validator = new CreateUserExerciseValidator(_exerciseRepository, _userService, _userId);
         var validationResult = await validator.ValidateAsync(dto);
@@ -101,7 +101,7 @@ public class UserExerciseService : IUserExerciseService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<UserExercise>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<int>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<int>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
         int version = 1;
@@ -125,7 +125,7 @@ public class UserExerciseService : IUserExerciseService
         var userExerciseId = await _repository.CreateEntityAsync(userExercise);
         
         _logger.LogInformation(ServiceMessages.EntityCreated<UserExercise>(userExercise.Id));
-        return DomainResponse.Success(userExerciseId);
+        return ServiceResponse.Success(userExerciseId);
         
     }
 
@@ -134,7 +134,7 @@ public class UserExerciseService : IUserExerciseService
     /// </summary>
     /// <param name="dto">The DTO containing the updated user exercise data.</param>
     /// <returns>A task representing the asynchronous operation that returns a domain response indicating the success or failure of the update.</returns>
-    public async Task<DomainResponse<bool>> UpdateAsync(UpdateUserExerciseDto dto)
+    public async Task<ServiceResponse<bool>> UpdateAsync(UpdateUserExerciseDto dto)
     {
         var validator = new UpdateUserExerciseValidator(_repository, _equipmentGroupRepository, _userService, _userId);
         var validationResult = await validator.ValidateAsync(dto);
@@ -142,7 +142,7 @@ public class UserExerciseService : IUserExerciseService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<UserExercise>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
         var userExercise = await _repository.GetEntityByIdAsync(dto.Id);
@@ -167,7 +167,7 @@ public class UserExerciseService : IUserExerciseService
         
         _logger.LogInformation(ServiceMessages.EntityUpdated<UserExercise>(userExercise.Id));
         
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public class UserExerciseService : IUserExerciseService
     /// </summary>
     /// <param name="id">The ID of the user exercise to delete.</param>
     /// <returns>A task representing the asynchronous operation that returns a domain response indicating the success or failure of the delete operation.</returns>
-    public async Task<DomainResponse<bool>> DeleteAsync(int id)
+    public async Task<ServiceResponse<bool>> DeleteAsync(int id)
     {
         var validator = new DeleteUserExerciseValidator(_repository, _userService, _userId);
         var validationResult = await validator.ValidateAsync(id);
@@ -183,13 +183,13 @@ public class UserExerciseService : IUserExerciseService
         if (!validationResult.IsValid)
         {
             _logger.LogWarning(ServiceMessages.EntityValidationFailure<UserExercise>(validationResult.ToDictionary()));
-            return DomainResponse.Failure<bool>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
+            return ServiceResponse.Failure<bool>(EntityErrorMessage<UserExercise>.BadRequest(validationResult.ToDictionary()));
         }
         
         await _repository.DeleteEntityAsync(id);
         
         _logger.LogInformation(ServiceMessages.EntityDeleted<UserExercise>(id));
-        return DomainResponse.Success(true);
+        return ServiceResponse.Success(true);
         
     }
 }

@@ -6,11 +6,11 @@ namespace Heracles.Domain.Equipments.Interfaces;
 
 public interface IEquipmentService
 {
-    Task<DomainResponse<QueryResponseDto<Equipment>>> GetAsync(QueryRequestDto query);
+    Task<ServiceResponse<QueryResponseDto<Equipment>>> GetAsync(QueryRequestDto query);
     
-    Task<DomainResponse<Equipment>> GetByIdAsync(int id);
-    Task<DomainResponse<int>> CreateAsync(Equipment entity);
-    Task<DomainResponse<bool>> UpdateAsync(Equipment entity);
-    Task<DomainResponse<bool>> DeleteAsync(int id);
+    Task<ServiceResponse<Equipment>> GetByIdAsync(int id);
+    Task<ServiceResponse<int>> CreateAsync(Equipment entity);
+    Task<ServiceResponse<bool>> UpdateAsync(Equipment entity);
+    Task<ServiceResponse<bool>> DeleteAsync(int id);
     
 }

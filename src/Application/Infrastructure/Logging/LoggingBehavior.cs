@@ -34,7 +34,6 @@ public class LoggingBehavior<TRequest, TResponse>
 
 		if (result is ValidationResult { Errors: not null } validationResult)
 		{
-
 			_logger.LogWarning(
 				"Validation errors occurred for request {@RequestName} at {@DateTimeUtc}. Error details: {@Errors}",
 				typeof(TRequest).Name, DateTime.UtcNow, validationResult.Errors);
@@ -52,7 +51,7 @@ public class LoggingBehavior<TRequest, TResponse>
 			case true:
 				_logger.LogError(
 					"An error occurred while handling the request {@RequestName} at {@DateTimeUtc}. Error details: {@Response}",
-					typeof(TRequest).Name, DateTime.UtcNow, result.Error ?? new Error( "An error occurred"));
+					typeof(TRequest).Name, DateTime.UtcNow, result.Error ?? new Error("An error occurred"));
 				return result;
 			default:
 				_logger.LogInformation("Handled {@RequestName} successfully on {@DateTimeUtc}",

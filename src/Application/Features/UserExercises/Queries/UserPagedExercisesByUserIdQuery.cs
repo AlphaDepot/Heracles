@@ -41,7 +41,7 @@ public class UserPagedExercisesByUserIdQueryHandler(AppDbContext dbContext, IHtt
 
 		var queryable = QueryableBuilder(request.Query, authenticatedUser);
 		var userExercises = await queryable.ToListAsync(cancellationToken);
-		var total = await dbContext.UserExercises.CountAsync(x => x.UserId ==authenticatedUser, cancellationToken);
+		var total = await dbContext.UserExercises.CountAsync(x => x.UserId == authenticatedUser, cancellationToken);
 
 		return Result.Success(new PagedResponse<UserExercise>
 		{

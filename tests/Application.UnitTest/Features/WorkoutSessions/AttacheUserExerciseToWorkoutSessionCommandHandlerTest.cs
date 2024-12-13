@@ -57,7 +57,7 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 	{
 		// Arrange
 		var request = new AttachUserExerciseToWorkoutSessionRequest(1000, _userExercises.First().Id);
-		var command = new AttachUserExerciseToWorkoutSessionCommand( request);
+		var command = new AttachUserExerciseToWorkoutSessionCommand(request);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
@@ -76,7 +76,7 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 	{
 		// Arrange
 		var request = new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, 1000);
-		var command = new AttachUserExerciseToWorkoutSessionCommand( request);
+		var command = new AttachUserExerciseToWorkoutSessionCommand(request);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
@@ -94,9 +94,10 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		AttacheUserExerciseToWorkoutSessionCommandHandler_ShouldReturnErrorResult_WhenUserExerciseAlreadyAttached()
 	{
 		// Arrange
-		var request = new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
+		var request =
+			new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
 		var command =
-			new AttachUserExerciseToWorkoutSessionCommand( request);
+			new AttachUserExerciseToWorkoutSessionCommand(request);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
@@ -118,9 +119,11 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		{
 			HttpContextAccessor.HttpContext.User = new ClaimsPrincipal();
 		}
-		var request = new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
+
+		var request =
+			new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
 		var command =
-			new AttachUserExerciseToWorkoutSessionCommand( request);
+			new AttachUserExerciseToWorkoutSessionCommand(request);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
@@ -142,8 +145,10 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		{
 			HttpContextAccessor.HttpContext.User = _users.Last().ToClaimsPrincipal();
 		}
-		var request = new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
-		var command = new AttachUserExerciseToWorkoutSessionCommand( request);
+
+		var request =
+			new AttachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
+		var command = new AttachUserExerciseToWorkoutSessionCommand(request);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);

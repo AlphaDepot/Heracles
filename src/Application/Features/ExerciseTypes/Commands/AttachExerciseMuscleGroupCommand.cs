@@ -8,7 +8,7 @@ using MediatR;
 namespace Application.Features.ExerciseTypes.Commands;
 
 /// <summary>
-///   Removes a <see cref="ExerciseMuscleGroup" /> from an <see cref="ExerciseType" />.
+///     Removes a <see cref="ExerciseMuscleGroup" /> from an <see cref="ExerciseType" />.
 /// </summary>
 /// <param name="ExerciseTypeId"> The Id of the <see cref="ExerciseType" />.</param>
 /// <param name="MuscleGroupId"> The Id of the <see cref="ExerciseMuscleGroup" />.</param>
@@ -21,7 +21,7 @@ public record AttachExerciseMuscleGroupRequest(int ExerciseTypeId, int MuscleGro
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseMuscleGroup">The <see cref="AttachExerciseMuscleGroupRequest" />.</param>
-public record AttachExerciseMuscleGroupCommand(AttachExerciseMuscleGroupRequest  ExerciseMuscleGroup)
+public record AttachExerciseMuscleGroupCommand(AttachExerciseMuscleGroupRequest ExerciseMuscleGroup)
 	: IRequest<Result<bool>>;
 
 /// <summary>
@@ -43,7 +43,8 @@ public class AddExerciseMuscleGroupCommandValidator : AbstractValidator<AttachEx
 public class AttachExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<AttachExerciseMuscleGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(AttachExerciseMuscleGroupCommand request, CancellationToken cancellationToken)
+	public async Task<Result<bool>> Handle(AttachExerciseMuscleGroupCommand request,
+		CancellationToken cancellationToken)
 	{
 		var (validation, exerciseType, muscleGroup) = await BusinessValidation(request);
 		if (validation.IsFailure || exerciseType == null || muscleGroup == null)

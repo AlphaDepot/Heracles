@@ -9,9 +9,6 @@ namespace Application.UnitTest.Features.Equipments;
 [TestFixture(Category = "Equipments")]
 public class GetEquipmentByIdQueryHandlerTest : HandlerBaseUnitTest
 {
-	private readonly List<Equipment> _equipments = EquipmentData.Equipments();
-	private GetEquipmentByIdQueryHandler _handler;
-
 	[SetUp]
 	public void SetUp()
 	{
@@ -21,7 +18,8 @@ public class GetEquipmentByIdQueryHandlerTest : HandlerBaseUnitTest
 		_handler = new GetEquipmentByIdQueryHandler(DbContext);
 	}
 
-
+	private readonly List<Equipment> _equipments = EquipmentData.Equipments();
+	private GetEquipmentByIdQueryHandler _handler;
 
 
 	[Test]

@@ -1,14 +1,9 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Logging;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation.Results;
+using MediatR;
+using Moq;
 using ValidationResult = Application.Common.Responses.ValidationResult;
 
 namespace Application.UnitTest.Infrastructure;
@@ -16,10 +11,6 @@ namespace Application.UnitTest.Infrastructure;
 [TestFixture]
 public class LoggingBehaviorTests
 {
-	private Mock<IAppLogger<SampleRequest>> _loggerMock;
-	private LoggingBehavior<SampleRequest, Result> _loggingBehavior;
-	private Mock<RequestHandlerDelegate<Result>> _nextMock;
-
 	[SetUp]
 	public void SetUp()
 	{
@@ -27,6 +18,10 @@ public class LoggingBehaviorTests
 		_loggingBehavior = new LoggingBehavior<SampleRequest, Result>(_loggerMock.Object);
 		_nextMock = new Mock<RequestHandlerDelegate<Result>>();
 	}
+
+	private Mock<IAppLogger<SampleRequest>> _loggerMock;
+	private LoggingBehavior<SampleRequest, Result> _loggingBehavior;
+	private Mock<RequestHandlerDelegate<Result>> _nextMock;
 
 	[Test]
 	public async Task Handle_LogsRequestAndResponse()
@@ -51,10 +46,11 @@ public class LoggingBehaviorTests
 		var request = new SampleRequest();
 		var validationErrors = new List<ValidationFailure>
 		{
-			new ValidationFailure("PropertyName", "Validation error")
+			new("PropertyName", "Validation error")
 		};
 
-		var validationResult = Result.Failure(new Error(string.Join(", ", validationErrors.Select(e => e.ErrorMessage)), 400));
+		var validationResult =
+			Result.Failure(new Error(string.Join(", ", validationErrors.Select(e => e.ErrorMessage)), 400));
 		_nextMock.Setup(next => next()).ReturnsAsync(validationResult);
 
 		// Act
@@ -104,10 +100,11 @@ public class LoggingBehaviorTests
 		var request = new SampleRequest();
 		var validationErrors = new List<ValidationFailure>
 		{
-			new ValidationFailure("PropertyName", "Validation error")
+			new("PropertyName", "Validation error")
 		};
 
-		var validationResult = ValidationResult.WithErrors(new[] { new Error(string.Join(", ", validationErrors.Select(e => e.ErrorMessage)), 400) });
+		var validationResult = ValidationResult.WithErrors(new[]
+			{ new Error(string.Join(", ", validationErrors.Select(e => e.ErrorMessage)), 400) });
 		_nextMock.Setup(next => next()).ReturnsAsync(validationResult);
 
 		// Act
@@ -119,6 +116,7 @@ public class LoggingBehaviorTests
 			typeof(SampleRequest).Name, It.IsAny<DateTime>(), validationResult.Errors), Times.Once);
 		Assert.That(actualResult, Is.EqualTo(validationResult));
 	}
+
 	public class SampleRequest : IRequest<Result>
 	{
 	}

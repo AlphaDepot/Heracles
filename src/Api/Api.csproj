@@ -13,8 +13,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Identity.Web" />
-    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" />
+    <PackageReference Include="Microsoft.Identity.Web"/>
+    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi"/>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"/>
     <PackageReference Include="Serilog.Enrichers.Environment"/>
     <PackageReference Include="Serilog.Sinks.Grafana.Loki"/>

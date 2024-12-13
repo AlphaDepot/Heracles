@@ -86,6 +86,13 @@ public static class ErrorTypes
 	public static Error ConcurrencyError =>
 		new(ErrorCodes.ConcurrencyError, StatusCodes.Status409Conflict, ErrorMessages.ConcurrencyError);
 
+
+	/// <summary>
+	///     Returns a generic database error.
+	/// </summary>
+	public static Error DatabaseError =>
+		new(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, ErrorMessages.DatabaseError);
+
 	/// <summary>
 	///     Returns a not found error with the entity name provided.
 	///     Helps it differentiate the entity that is being validated when more than one entity is being validated.
@@ -133,20 +140,15 @@ public static class ErrorTypes
 			$"{entityName} {ErrorMessages.DuplicateEntry} {(parentEntityName != null ? $"for {parentEntityName}" : string.Empty)}");
 	}
 
-
 	/// <summary>
-	///   Returns a generic database error.
-	/// </summary>
-	public static Error DatabaseError =>
-		new Error(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, ErrorMessages.DatabaseError);
-
-	/// <summary>
-	///  Returns a database error with a message.
+	///     Returns a database error with a message.
 	/// </summary>
 	/// <param name="message"> The message to be returned with the error. </param>
 	/// <returns> A database error with the provided message. </returns>
-	public static Error DatabaseErrorWithMessage(string message) =>
-		new Error(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, message);
+	public static Error DatabaseErrorWithMessage(string message)
+	{
+		return new Error(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, message);
+	}
 }
 
 /// <summary>

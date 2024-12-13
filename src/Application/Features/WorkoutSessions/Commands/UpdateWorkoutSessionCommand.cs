@@ -48,7 +48,8 @@ public class UpdateWorkoutSessionCommandValidator : AbstractValidator<UpdateWork
 			.Length(3, 255).WithMessage("Name must be between 3 and 255 characters");
 		RuleFor(x => x.WorkoutSession.DayOfWeek)
 			.NotEmpty().WithMessage("DayOfWeek is required")
-			.Must(dayName => dayName != null && DayOfWeekBuilder.GetDayOfWeek(dayName) != null).WithMessage("DayOfWeek is invalid");
+			.Must(dayName => dayName != null && DayOfWeekBuilder.GetDayOfWeek(dayName) != null)
+			.WithMessage("DayOfWeek is invalid");
 		RuleFor(x => x.WorkoutSession.UserId)
 			.NotEmpty().WithMessage("UserId is required")
 			.Length(36).WithMessage("UserId must be 36 characters");
@@ -78,9 +79,10 @@ public class UpdateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 		dbContext.Entry(workoutSession).CurrentValues.SetValues(updatedWorkoutSession);
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
-		return  result > 0
+		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Workout Session {workoutSession.Id}"));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Workout Session {workoutSession.Id}"));
 	}
 
 	private async Task<(Result<bool>, WorkoutSession?)> BusinessValidation(UpdateWorkoutSessionCommand request,

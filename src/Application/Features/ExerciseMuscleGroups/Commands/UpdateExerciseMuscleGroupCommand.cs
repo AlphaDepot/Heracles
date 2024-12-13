@@ -72,7 +72,9 @@ public class UpdateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Exercise Muscle Group {exerciseMuscleGroup.Id}"));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage(
+					$"Failed to update Exercise Muscle Group {exerciseMuscleGroup.Id}"));
 	}
 
 	private async Task<(Result<bool>, ExerciseMuscleGroup?)> BusinessValidation(

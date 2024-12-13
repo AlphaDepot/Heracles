@@ -93,7 +93,8 @@ public class ErrorCodesTest
 	}
 
 	[Test]
-	public void DatabaseWithErrorMessageErrorType_ShouldHaveCorrectProperties() {
+	public void DatabaseWithErrorMessageErrorType_ShouldHaveCorrectProperties()
+	{
 		var errorMessage = "Test error message";
 		var error = ErrorTypes.DatabaseErrorWithMessage(errorMessage);
 

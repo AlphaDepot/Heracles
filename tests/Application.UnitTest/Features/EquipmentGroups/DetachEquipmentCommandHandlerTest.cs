@@ -29,8 +29,8 @@ public class DetachEquipmentCommandHandlerTest : HandlerBaseUnitTest
 	{
 		// Arrange
 
-	   var detachRequest = new DetachEquipmentRequest(_equipmentGroups.First().Id,
-		   _equipmentGroups.First().Equipments!.First().Id);
+		var detachRequest = new DetachEquipmentRequest(_equipmentGroups.First().Id,
+			_equipmentGroups.First().Equipments!.First().Id);
 		var command = new DetachEquipmentCommand(detachRequest);
 
 		// Act

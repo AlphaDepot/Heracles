@@ -68,7 +68,8 @@ public class DetachExerciseMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		DetachExerciseMuscleGroupCommandHandler_ShouldReturnInvalidRequestErrorResult_WhenExerciseMuscleGroupNotAttached()
 	{
 		// Arrange
-		var request = new DetachExerciseMuscleGroupRequest(_exerciseTypes.First().Id, _exerciseTypes[2].MuscleGroups!.First().Id);
+		var request =
+			new DetachExerciseMuscleGroupRequest(_exerciseTypes.First().Id, _exerciseTypes[2].MuscleGroups!.First().Id);
 		var detachRequest =
 			new DetachExerciseMuscleGroupCommand(request);
 

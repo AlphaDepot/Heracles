@@ -37,7 +37,8 @@ public class RemoveExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		return Result.Success(true);
 	}
 
-	private async Task<(Result<bool>, ExerciseMuscleGroup?)> BusinessValidation(RemoveExerciseMuscleGroupCommand request)
+	private async Task<(Result<bool>, ExerciseMuscleGroup?)> BusinessValidation(
+		RemoveExerciseMuscleGroupCommand request)
 	{
 		if (!request.IsAdmin)
 		{

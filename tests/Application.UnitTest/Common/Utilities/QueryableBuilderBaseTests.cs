@@ -1,34 +1,18 @@
-using System.Linq;
+using Application.Common.Interfaces;
 using Application.Common.Requests;
 using Application.Common.Utilities;
-using NUnit.Framework;
-using System.Collections.Generic;
-using Application.Common.Interfaces;
 
 namespace Application.UnitTest.Common.Utilities;
 
 public class QueryableBuilderBaseTests
 {
-	private class TestEntity : IEntity
-	{
-		public int Id { get; set; }
-		public DateTime CreatedAt { get; set; }
-		public DateTime UpdatedAt { get; set; }
-		public string? Concurrency { get; set; }
-	}
-
-	private class TestQueryableBuilder : QueryableBuilderBase<TestEntity>
-	{
-		// No need to override methods if testing base implementation
-	}
-
 	private IQueryable<TestEntity> GetTestEntities()
 	{
 		return new List<TestEntity>
 		{
-			new TestEntity { UpdatedAt = new DateTime(2023, 1, 1) },
-			new TestEntity { UpdatedAt = new DateTime(2023, 2, 1) },
-			new TestEntity { UpdatedAt = new DateTime(2023, 3, 1) }
+			new() { UpdatedAt = new DateTime(2023, 1, 1) },
+			new() { UpdatedAt = new DateTime(2023, 2, 1) },
+			new() { UpdatedAt = new DateTime(2023, 3, 1) }
 		}.AsQueryable();
 	}
 
@@ -37,7 +21,7 @@ public class QueryableBuilderBaseTests
 	{
 		// Arrange
 		var builder = new TestQueryableBuilder();
-		var query = new QueryRequest { };
+		var query = new QueryRequest();
 		var entities = GetTestEntities();
 
 		// Act
@@ -93,4 +77,16 @@ public class QueryableBuilderBaseTests
 		Assert.That(result.First().UpdatedAt, Is.EqualTo(new DateTime(2023, 1, 1)));
 	}
 
+	private class TestEntity : IEntity
+	{
+		public int Id { get; set; }
+		public DateTime CreatedAt { get; set; }
+		public DateTime UpdatedAt { get; set; }
+		public string? Concurrency { get; set; }
+	}
+
+	private class TestQueryableBuilder : QueryableBuilderBase<TestEntity>
+	{
+		// No need to override methods if testing base implementation
+	}
 }

@@ -17,7 +17,7 @@ public record DetachEquipmentRequest(int EquipmentGroupId, int EquipmentId);
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
 /// </remarks>
 /// <param name="EquipmentRequest">The <see cref="DetachEquipmentRequest" /> to detach.</param>
-///  <returns>A <see cref="Result{T}" /> with a boolean value indicating success.</returns>
+/// <returns>A <see cref="Result{T}" /> with a boolean value indicating success.</returns>
 public record DetachEquipmentCommand(DetachEquipmentRequest EquipmentRequest)
 	: IRequest<Result<bool>>;
 

@@ -35,7 +35,8 @@ public class DetachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 	public async Task DetachUserExerciseToWorkoutSessionCommandHandler_ShouldReturnSuccessResult()
 	{
 		// Arrange
-		var request = new DetachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
+		var request =
+			new DetachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
 		var command =
 			new DetachUserExerciseToWorkoutSessionCommand(request);
 
@@ -118,7 +119,9 @@ public class DetachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		{
 			HttpContextAccessor.HttpContext.User = new ClaimsPrincipal();
 		}
-		var request = new DetachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
+
+		var request =
+			new DetachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
 		var command =
 			new DetachUserExerciseToWorkoutSessionCommand(request);
 
@@ -143,7 +146,9 @@ public class DetachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		{
 			HttpContextAccessor.HttpContext.User = _users.Last().ToClaimsPrincipal();
 		}
-		var request = new DetachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
+
+		var request =
+			new DetachUserExerciseToWorkoutSessionRequest(_workoutSessions.First().Id, _userExercises.First().Id);
 		var command =
 			new DetachUserExerciseToWorkoutSessionCommand(request);
 

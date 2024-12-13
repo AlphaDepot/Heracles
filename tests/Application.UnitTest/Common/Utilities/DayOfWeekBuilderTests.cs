@@ -4,7 +4,6 @@ namespace Application.UnitTest.Common.Utilities;
 
 public class DayOfWeekBuilderTests
 {
-
 	[Test]
 	public void GetDayOfWeek_ShouldReturnCorrectDayOfWeekForAllValidDays()
 	{
@@ -41,5 +40,4 @@ public class DayOfWeekBuilderTests
 		Assert.That(resultForNull, Is.Null);
 		Assert.That(resultForEmpty, Is.Null);
 	}
-
 }

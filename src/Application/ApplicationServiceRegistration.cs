@@ -3,7 +3,6 @@ using Application.Infrastructure.Data.SeedData;
 using Application.Infrastructure.Exceptions;
 using Application.Infrastructure.Logging;
 using Application.Infrastructure.Validation;
-using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

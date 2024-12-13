@@ -37,7 +37,8 @@ public class RemoveWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"The WorkoutSession with id {request.Id} could not be removed."));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"The WorkoutSession with id {request.Id} could not be removed."));
 	}
 
 	private async Task<(Result<bool>, WorkoutSession?)> BusinessValidation(RemoveWorkoutSessionCommand request,

@@ -11,10 +11,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.WorkoutSessions.Commands;
 
 /// <summary>
-///   Request to attach a <see cref="UserExercise" /> to a <see cref="WorkoutSession" />.
+///     Request to attach a <see cref="UserExercise" /> to a <see cref="WorkoutSession" />.
 /// </summary>
 /// <param name="UserExerciseId"> The id of the <see cref="UserExercise" /> to attach to the <see cref="WorkoutSession" />.</param>
-/// <param name="WorkoutSessionId"> The id of the <see cref="WorkoutSession" /> to attach the <see cref="UserExercise" /> to.</param>
+/// <param name="WorkoutSessionId">
+///     The id of the <see cref="WorkoutSession" /> to attach the <see cref="UserExercise" />
+///     to.
+/// </param>
 public record AttachUserExerciseToWorkoutSessionRequest(int UserExerciseId, int WorkoutSessionId);
 
 /// <summary>
@@ -90,7 +93,8 @@ public class AttachUserExerciseToWorkoutSessionCommandHandler(
 		// check workout session
 		var workoutSession = await dbContext.WorkoutSessions
 			.Include(workoutSession => workoutSession.UserExercises)
-			.FirstOrDefaultAsync(workoutSession => workoutSession.Id == request.WorkoutSessionRequest.WorkoutSessionId, cancellationToken);
+			.FirstOrDefaultAsync(workoutSession => workoutSession.Id == request.WorkoutSessionRequest.WorkoutSessionId,
+				cancellationToken);
 		if (workoutSession == null)
 		{
 			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Workout Session not found")), null, null);

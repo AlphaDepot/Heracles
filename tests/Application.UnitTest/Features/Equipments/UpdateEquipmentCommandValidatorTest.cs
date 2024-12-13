@@ -40,7 +40,8 @@ public class UpdateEquipmentCommandValidatorTest : FluentValidationBaseUnitTest
 	public void UpdateEquipmentCommandValidator_ShouldHaveError_WhenInputIsInvalid(int id, string? type,
 		string? concurrency, double weight, double resistance, string testForPropertyName)
 	{
-		var command = new UpdateEquipmentCommand(new UpdateEquipmentRequest(id, type!, concurrency, weight, resistance));
+		var command =
+			new UpdateEquipmentCommand(new UpdateEquipmentRequest(id, type!, concurrency, weight, resistance));
 		var result = _validator.TestValidate(command);
 
 		switch (testForPropertyName)

@@ -40,7 +40,6 @@ public class UserPagedExercisesByUserIdQueryHandlerTest : HandlerBaseUnitTest
 	}
 
 
-
 	[Test]
 	public async Task UserPagedExercisesByUserIdQueryHandler_ReturnUnauthorizedError_WhenUserIdIsNotInContext()
 	{
@@ -100,7 +99,8 @@ public class UserPagedExercisesByUserIdQueryHandlerTest : HandlerBaseUnitTest
 	{
 		// Arrange
 		var sortedUserExercise = _userExercises.OrderByDescending(x => x.Repetitions).ToList();
-		var query = new UserPagedExercisesByUserIdQuery(new QueryRequest { SortBy = "Repetitions", SortOrder = "desc" });
+		var query = new UserPagedExercisesByUserIdQuery(new QueryRequest
+			{ SortBy = "Repetitions", SortOrder = "desc" });
 
 		// Act
 		var result = await _handler.Handle(query, CancellationToken.None);

@@ -41,7 +41,7 @@ public class EquipmentGroupsController(IMediator mediator) : ControllerBase
 	// PUT api/<EquipmentGroupsController>/5
 	[Authorize(Roles = "Admin")]
 	[HttpPut("{id}")]
-	public async Task<IResult> Put( [FromBody] UpdateEquipmentGroupRequest updateEquipmentGroup)
+	public async Task<IResult> Put([FromBody] UpdateEquipmentGroupRequest updateEquipmentGroup)
 	{
 		var result = await mediator.Send(new UpdateEquipmentGroupCommand(updateEquipmentGroup));
 		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
@@ -54,7 +54,7 @@ public class EquipmentGroupsController(IMediator mediator) : ControllerBase
 	public async Task<IResult> AddEquipment([FromBody] AttachEquipmentRequest request)
 	{
 		var result = await mediator.Send(new AttachEquipmentCommand(request));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 
 	// PATCH api/<EquipmentGroupsController>/5/remove
@@ -63,7 +63,7 @@ public class EquipmentGroupsController(IMediator mediator) : ControllerBase
 	public async Task<IResult> RemoveEquipment([FromBody] DetachEquipmentRequest request)
 	{
 		var result = await mediator.Send(new DetachEquipmentCommand(request));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 
 
@@ -75,5 +75,4 @@ public class EquipmentGroupsController(IMediator mediator) : ControllerBase
 		var result = await mediator.Send(new RemoveEquipmentGroupCommand(id));
 		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
-
 }

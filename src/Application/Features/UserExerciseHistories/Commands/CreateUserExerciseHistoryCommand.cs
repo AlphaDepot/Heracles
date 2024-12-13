@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.UserExerciseHistories.Commands;
 
 /// <summary>
-///   Represents the request to create a new <see cref="UserExerciseHistory" />.
+///     Represents the request to create a new <see cref="UserExerciseHistory" />.
 /// </summary>
 /// <param name="UserExerciseId"> The <see cref="UserExerciseHistory.UserExerciseId" /> to create.</param>
 /// <param name="Repetition">  The <see cref="UserExerciseHistory.Repetition" /> to create.</param>
@@ -20,16 +20,17 @@ namespace Application.Features.UserExerciseHistories.Commands;
 public record CreateUserExerciseHistoryRequest(int UserExerciseId, double Weight, int Repetition, string UserId);
 
 /// <summary>
-///  Creates a new <see cref="UserExerciseHistory" />.
+///     Creates a new <see cref="UserExerciseHistory" />.
 /// </summary>
 /// <param name="UserExerciseHistory"> The <see cref="CreateUserExerciseHistoryRequest" /> to create.</param>
 /// <param name="IsAdmin"> The <see cref="CreateUserExerciseHistoryRequest" /> to create.</param>
-public record CreateUserExerciseHistoryCommand(CreateUserExerciseHistoryRequest UserExerciseHistory, bool IsAdmin = true)
+public record CreateUserExerciseHistoryCommand(
+	CreateUserExerciseHistoryRequest UserExerciseHistory,
+	bool IsAdmin = true)
 	: IRequest<Result<int>>;
 
-
 /// <summary>
-///   Validates the <see cref="CreateUserExerciseHistoryCommand" />.
+///     Validates the <see cref="CreateUserExerciseHistoryCommand" />.
 /// </summary>
 public class CreateUserExerciseHistoryValidator : AbstractValidator<CreateUserExerciseHistoryCommand>
 {
@@ -41,16 +42,16 @@ public class CreateUserExerciseHistoryValidator : AbstractValidator<CreateUserEx
 		RuleFor(x => x.UserExerciseHistory.UserId)
 			.NotEmpty().WithMessage("UserId is required")
 			.Length(36).WithMessage("UserId must be 36 characters");
-
 	}
 }
 
 /// <summary>
-///  Handles the <see cref="CreateUserExerciseHistoryCommand" />.
+///     Handles the <see cref="CreateUserExerciseHistoryCommand" />.
 /// </summary>
 /// <param name="dbContext"> The <see cref="AppDbContext" />.</param>
 /// <param name="contextAccessor"> The <see cref="IHttpContextAccessor" />.</param>
-public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor) : IRequestHandler<CreateUserExerciseHistoryCommand, Result<int>>
+public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
+	: IRequestHandler<CreateUserExerciseHistoryCommand, Result<int>>
 {
 	public async Task<Result<int>> Handle(CreateUserExerciseHistoryCommand request, CancellationToken cancellationToken)
 	{
@@ -67,9 +68,9 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		return Result.Success(userExerciseHistory.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateUserExerciseHistoryCommand request, CancellationToken  cancellationToken)
+	private async Task<Result<int>> BusinessValidation(CreateUserExerciseHistoryCommand request,
+		CancellationToken cancellationToken)
 	{
-
 		// Check if the user exists
 		var existingUser = await dbContext.Users
 			.AnyAsync(x => x.UserId == request.UserExerciseHistory.UserId, cancellationToken);
@@ -94,6 +95,5 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		}
 
 		return Result.Success(0);
-
 	}
 }

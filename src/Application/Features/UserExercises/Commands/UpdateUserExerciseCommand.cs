@@ -73,7 +73,10 @@ public class UpdateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 		dbContext.Entry(userExercise).CurrentValues.SetValues(updatedUserExercise);
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
-		return  result > 0 ? Result.Success(true) : Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Error updating user exercise with id {request.UserExercise.Id}"));
+		return result > 0
+			? Result.Success(true)
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"Error updating user exercise with id {request.UserExercise.Id}"));
 	}
 
 	private async Task<(Result<bool>, UserExercise?)> BusinessValidation(UpdateUserExerciseCommand request,

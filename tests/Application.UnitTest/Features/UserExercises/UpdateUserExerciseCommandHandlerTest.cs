@@ -21,7 +21,7 @@ public class UpdateUserExerciseCommandHandlerTest : HandlerBaseUnitTest
 		_updateRequest = new UpdateUserExerciseRequest
 		{
 			Id = _userExercises.First().Id,
-			Concurrency = _userExercises.First().Concurrency ??  Guid.NewGuid().ToString(),
+			Concurrency = _userExercises.First().Concurrency ?? Guid.NewGuid().ToString(),
 			StaticResistance = 1,
 			PercentageResistance = 1,
 			CurrentWeight = 1,

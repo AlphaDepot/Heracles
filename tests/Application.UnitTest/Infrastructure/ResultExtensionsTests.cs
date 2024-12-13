@@ -1,4 +1,5 @@
-
+using Application.Common.Errors;
+using Application.Common.Responses;
 using Application.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,15 +8,17 @@ namespace Application.UnitTest.Infrastructure;
 
 public class ResultExtensionsTests
 {
-
 	[Test]
 	public void ToProblemDetails_WhenResultIsSuccessful_ThrowsInvalidOperationException()
 	{
 		// Arrange
-		var result = Application.Common.Responses.Result.Success();
+		var result = Result.Success();
 
 		// Act
-		void Act() => result.ToProblemDetails();
+		void Act()
+		{
+			result.ToProblemDetails();
+		}
 
 		// Assert
 		Assert.Throws<InvalidOperationException>(Act);
@@ -26,8 +29,8 @@ public class ResultExtensionsTests
 	public async Task ToProblemDetails_WhenResultHasErrors_ReturnsProblemDetails()
 	{
 		// Arrange
-		var error = Application.Common.Errors.Error.NullValue;
-		var result = Application.Common.Responses.Result.Failure(error);
+		var error = Error.NullValue;
+		var result = Result.Failure(error);
 		var httpContext = new DefaultHttpContext();
 		var responseStream = new MemoryStream();
 		httpContext.Response.Body = responseStream;
@@ -48,5 +51,4 @@ public class ResultExtensionsTests
 		Assert.That(responseBody, Is.Not.Empty);
 		Assert.That(httpContext.Response.StatusCode, Is.EqualTo(result.StatusCode));
 	}
-
 }

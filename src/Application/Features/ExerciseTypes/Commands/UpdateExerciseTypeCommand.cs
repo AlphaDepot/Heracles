@@ -84,7 +84,8 @@ public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Exercise Type {exerciseType.Id}"));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Exercise Type {exerciseType.Id}"));
 	}
 
 	private async Task<(Result<bool>, ExerciseType?)> BusinessValidation(UpdateExerciseTypeCommand request)
@@ -94,7 +95,8 @@ public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
 		}
 
-		var existingExerciseType = await dbContext.ExerciseTypes.FirstOrDefaultAsync(x => x.Id == request.ExerciseType.Id);
+		var existingExerciseType =
+			await dbContext.ExerciseTypes.FirstOrDefaultAsync(x => x.Id == request.ExerciseType.Id);
 		if (existingExerciseType == null)
 		{
 			return (Result.Failure<bool>(ErrorTypes.NotFound), null);

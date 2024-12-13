@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.ExerciseTypes.Commands;
 
 /// <summary>
-///   Removes a <see cref="ExerciseMuscleGroup" /> from an <see cref="ExerciseType" />.
+///     Removes a <see cref="ExerciseMuscleGroup" /> from an <see cref="ExerciseType" />.
 /// </summary>
 /// <param name="ExerciseTypeId"> The Id of the <see cref="ExerciseType" />.</param>
 /// <param name="MuscleGroupId"> The Id of the <see cref="ExerciseMuscleGroup" />.</param>

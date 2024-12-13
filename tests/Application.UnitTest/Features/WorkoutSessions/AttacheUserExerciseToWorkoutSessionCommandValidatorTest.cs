@@ -44,7 +44,6 @@ public class AttachUserExerciseToWorkoutSessionCommandValidatorTest : FluentVali
 			case "WorkoutSessionId":
 				result.ShouldHaveValidationErrorFor(x => x.WorkoutSessionRequest.WorkoutSessionId);
 				break;
-
 		}
 	}
 }

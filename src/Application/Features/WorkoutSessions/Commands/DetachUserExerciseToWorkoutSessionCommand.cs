@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.WorkoutSessions.Commands;
 
 /// <summary>
-///   Request to detach a <see cref="UserExercise" /> from a <see cref="WorkoutSession" />.
+///     Request to detach a <see cref="UserExercise" /> from a <see cref="WorkoutSession" />.
 /// </summary>
 /// <param name="WorkoutSessionId"> The id of the <see cref="WorkoutSession" />.</param>
 /// <param name="UserExerciseId"> The id of the <see cref="UserExercise" />.</param>
@@ -24,7 +24,7 @@ public record DetachUserExerciseToWorkoutSessionRequest(int WorkoutSessionId, in
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
 /// </remarks>
 /// <param name="WorkoutSessionRequest"> The <see cref="DetachUserExerciseToWorkoutSessionRequest" />.</param>
-///  <inheritdoc cref="IRequestHandler{TRequest,TResponse}" />
+/// <inheritdoc cref="IRequestHandler{TRequest,TResponse}" />
 public record DetachUserExerciseToWorkoutSessionCommand(DetachUserExerciseToWorkoutSessionRequest WorkoutSessionRequest)
 	: IRequest<Result<bool>>;
 
@@ -68,7 +68,8 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($" Failed to detach User Exercise {userExercise.Id}"));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($" Failed to detach User Exercise {userExercise.Id}"));
 	}
 
 	private async Task<(Result<bool>, UserExercise?, WorkoutSession?)> BusinessValidation(
@@ -92,7 +93,8 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 		// check workout session
 		var workoutSession = await dbContext.WorkoutSessions
 			.Include(workoutSession => workoutSession.UserExercises)
-			.FirstOrDefaultAsync(workoutSession => workoutSession.Id == request.WorkoutSessionRequest.WorkoutSessionId, cancellationToken);
+			.FirstOrDefaultAsync(workoutSession => workoutSession.Id == request.WorkoutSessionRequest.WorkoutSessionId,
+				cancellationToken);
 
 		if (workoutSession == null)
 		{

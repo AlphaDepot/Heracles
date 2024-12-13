@@ -1,20 +1,15 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
-using Application.Features.ExerciseTypes;
 using Application.Features.UserExerciseHistories.Commands;
 using Application.Features.UserExercises;
 using Application.Features.Users;
 using Application.UnitTest.TestData;
 
 namespace Application.UnitTest.Features.UserExerciseHistories;
+
 [TestFixture(Category = "UserExerciseHistory")]
-public class CreateUserExerciseHistoryCommandHandlerTest: HandlerBaseUnitTest
+public class CreateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 {
-	private readonly List<User> _users = UserData.Users();
-	private readonly List<UserExercise> _userExercises = UserExerciseData.UserExercises();
-	private CreateUserExerciseHistoryCommandHandler _handler;
-
-
 	[SetUp]
 	public void SetUp()
 	{
@@ -23,6 +18,10 @@ public class CreateUserExerciseHistoryCommandHandlerTest: HandlerBaseUnitTest
 		DbContext.SaveChanges();
 		_handler = new CreateUserExerciseHistoryCommandHandler(DbContext, HttpContextAccessor);
 	}
+
+	private readonly List<User> _users = UserData.Users();
+	private readonly List<UserExercise> _userExercises = UserExerciseData.UserExercises();
+	private CreateUserExerciseHistoryCommandHandler _handler;
 
 	[Test]
 	public async Task CreateUserExerciseHistoryCommandHandler_ShouldReturnIntId()
@@ -50,14 +49,14 @@ public class CreateUserExerciseHistoryCommandHandlerTest: HandlerBaseUnitTest
 			Assert.That(userExerciseHistory.Weight, Is.EqualTo(request.Weight));
 			Assert.That(userExerciseHistory.Repetition, Is.EqualTo(request.Repetition));
 		});
-
 	}
 
 	[Test]
 	public async Task CreateUserExerciseHistoryCommandHandler_ShouldReturnError_WhenUserIdIsInvalid()
 	{
 		// Arrange
-		var request = new CreateUserExerciseHistoryRequest(_userExercises.First().Id, 10, 10, "12345678-1234-1234-1234-123456789012");
+		var request = new CreateUserExerciseHistoryRequest(_userExercises.First().Id, 10, 10,
+			"12345678-1234-1234-1234-123456789012");
 		var command = new CreateUserExerciseHistoryCommand(request);
 
 		// Act
@@ -94,7 +93,8 @@ public class CreateUserExerciseHistoryCommandHandlerTest: HandlerBaseUnitTest
 	}
 
 	[Test]
-	public async Task CreateUserExerciseHistoryCommandHandler_ShouldReturnError__WhenUserIdIsDifferentFromCurrentUserId()
+	public async Task
+		CreateUserExerciseHistoryCommandHandler_ShouldReturnError__WhenUserIdIsDifferentFromCurrentUserId()
 	{
 		// Arrange
 		var request = new CreateUserExerciseHistoryRequest(_userExercises.First().Id, 10, 10, _users[1].UserId);
@@ -112,6 +112,4 @@ public class CreateUserExerciseHistoryCommandHandlerTest: HandlerBaseUnitTest
 			Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
 		});
 	}
-
-
 }

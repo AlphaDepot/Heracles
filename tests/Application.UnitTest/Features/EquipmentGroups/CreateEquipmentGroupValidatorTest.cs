@@ -28,7 +28,6 @@ public class CreateEquipmentGroupValidatorTest : FluentValidationBaseUnitTest
 	public void CreateEquipmentGroupValidator_ShouldHaveError_WhenInputIsInvalid(string? name,
 		string testForPropertyName)
 	{
-
 		var command = new CreateEquipmentGroupCommand(new CreateEquipmentGroupRequest(name!));
 		var result = _validator.TestValidate(command);
 

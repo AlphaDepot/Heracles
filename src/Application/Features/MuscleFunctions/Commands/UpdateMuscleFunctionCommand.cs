@@ -67,7 +67,8 @@ public class UpdateMuscleFunctionCommandHandler(AppDbContext dbContext)
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Muscle Function {muscleFunction.Id}"));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Muscle Function {muscleFunction.Id}"));
 	}
 
 	private async Task<(Result<bool>, MuscleFunction?)> BusinessValidation(UpdateMuscleFunctionCommand request)

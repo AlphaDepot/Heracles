@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Application.Common.Errors;
 
 namespace Application.Common.Responses;

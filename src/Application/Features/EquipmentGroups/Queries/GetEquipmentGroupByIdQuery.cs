@@ -20,7 +20,8 @@ public record GetEquipmentGroupByIdQuery(int Id) : IRequest<Result<EquipmentGrou
 ///     Handles the <see cref="GetEquipmentGroupByIdQuery" />.
 /// </summary>
 /// <param name="dbContext">The <see cref="AppDbContext" />.</param>
-public class GetEquipmentGroupByIdQueryHandler(AppDbContext dbContext) : IRequestHandler<GetEquipmentGroupByIdQuery, Result<EquipmentGroup>>
+public class GetEquipmentGroupByIdQueryHandler(AppDbContext dbContext)
+	: IRequestHandler<GetEquipmentGroupByIdQuery, Result<EquipmentGroup>>
 {
 	public async Task<Result<EquipmentGroup>> Handle(GetEquipmentGroupByIdQuery request,
 		CancellationToken cancellationToken)

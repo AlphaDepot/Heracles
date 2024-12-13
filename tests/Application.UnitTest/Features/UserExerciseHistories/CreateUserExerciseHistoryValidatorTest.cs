@@ -1,17 +1,18 @@
-using Application.Features.UserExerciseHistories;
 using Application.Features.UserExerciseHistories.Commands;
 using FluentValidation.TestHelper;
 
 namespace Application.UnitTest.Features.UserExerciseHistories;
+
 [TestFixture(Category = "FluentValidation")]
 public class CreateUserExerciseHistoryTest : FluentValidationBaseUnitTest
 {
-	private CreateUserExerciseHistoryValidator _validator;
 	[SetUp]
 	public void Setup()
 	{
 		_validator = new CreateUserExerciseHistoryValidator();
 	}
+
+	private CreateUserExerciseHistoryValidator _validator;
 
 	[Test]
 	public void CreateUserExerciseHistoryValidator_ShouldNotHaveError_WhenInputIsValid()
@@ -24,13 +25,14 @@ public class CreateUserExerciseHistoryTest : FluentValidationBaseUnitTest
 		result.ShouldNotHaveValidationErrorFor(x => x.UserExerciseHistory.Repetition);
 	}
 
-	[TestCase  (0, 10, 10,  StringStaticGuid, "UserExerciseId")]
-	[TestCase  (1, -1, 10, StringStaticGuid, "Weight")]
-	[TestCase  (1, 10, -1, StringStaticGuid, "Repetition")]
-	[TestCase  (1, 10, 10, "", "UserId")]
-	[TestCase  (1, 10, 10, null, "UserId")]
-	[TestCase  (1, 10, 10, StringWith51Characters, "UserId")]
-	public void CreateUserExerciseHistoryValidator_ShouldHaveError_WhenInputIsInvalid(int userExerciseId, double weight, int repetition, string? userId, string testForPropertyName)
+	[TestCase(0, 10, 10, StringStaticGuid, "UserExerciseId")]
+	[TestCase(1, -1, 10, StringStaticGuid, "Weight")]
+	[TestCase(1, 10, -1, StringStaticGuid, "Repetition")]
+	[TestCase(1, 10, 10, "", "UserId")]
+	[TestCase(1, 10, 10, null, "UserId")]
+	[TestCase(1, 10, 10, StringWith51Characters, "UserId")]
+	public void CreateUserExerciseHistoryValidator_ShouldHaveError_WhenInputIsInvalid(int userExerciseId, double weight,
+		int repetition, string? userId, string testForPropertyName)
 	{
 		var userExerciseHistory = new CreateUserExerciseHistoryRequest(userExerciseId, weight, repetition, userId!);
 		var command = new CreateUserExerciseHistoryCommand(userExerciseHistory);
@@ -52,5 +54,4 @@ public class CreateUserExerciseHistoryTest : FluentValidationBaseUnitTest
 				break;
 		}
 	}
-
 }

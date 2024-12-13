@@ -1,5 +1,4 @@
 using Application.Common.Requests;
-using Application.Features.MuscleFunctions;
 using Application.Features.MuscleFunctions.Commands;
 using Application.Features.MuscleFunctions.Queries;
 using Application.Infrastructure.Extensions;
@@ -14,15 +13,12 @@ namespace Api.Controllers;
 [ApiController]
 public class MuscleFunctionsController(IMediator mediator) : ControllerBase
 {
-
-
-
 	// GET: api/<MuscleFunctionsController>
 	[HttpGet]
 	public async Task<IResult> Get([FromQuery] QueryRequest query)
 	{
-		var result = await  mediator.Send(new GetPagedMuscleFunctionsQuery(query));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		var result = await mediator.Send(new GetPagedMuscleFunctionsQuery(query));
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 
 
@@ -30,8 +26,8 @@ public class MuscleFunctionsController(IMediator mediator) : ControllerBase
 	[HttpGet("{id}")]
 	public async Task<IResult> Get(int id)
 	{
-		var result = await  mediator.Send(new GetMuscleFunctionByIdQuery(id));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		var result = await mediator.Send(new GetMuscleFunctionByIdQuery(id));
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 
 	// POST api/<MuscleFunctionsController>
@@ -39,8 +35,8 @@ public class MuscleFunctionsController(IMediator mediator) : ControllerBase
 	[HttpPost]
 	public async Task<IResult> Post([FromBody] CreateMuscleFunctionRequest request)
 	{
-		var result = await  mediator.Send(new CreateMuscleFunctionCommand(request));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		var result = await mediator.Send(new CreateMuscleFunctionCommand(request));
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 
 	// PUT api/<MuscleFunctionsController>/5
@@ -49,7 +45,7 @@ public class MuscleFunctionsController(IMediator mediator) : ControllerBase
 	public async Task<IResult> Put([FromBody] UpdateMuscleFunctionRequest request)
 	{
 		var result = await mediator.Send(new UpdateMuscleFunctionCommand(request));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 
 	// DELETE api/<MuscleFunctionsController>/5
@@ -57,7 +53,7 @@ public class MuscleFunctionsController(IMediator mediator) : ControllerBase
 	[HttpDelete("{id}")]
 	public async Task<IResult> Delete([FromRoute] int id)
 	{
-		var result = await  mediator.Send(new RemoveMuscleFunctionCommand(id));
-		return result.IsSuccess ? Results.Ok( result.Value) : result.ToProblemDetails();
+		var result = await mediator.Send(new RemoveMuscleFunctionCommand(id));
+		return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
 	}
 }

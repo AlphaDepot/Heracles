@@ -10,11 +10,10 @@ namespace Application.UnitTest;
 /// </summary>
 public class HandlerBaseUnitTest
 {
+	protected readonly IHttpContextAccessor HttpContextAccessor = new HttpContextAccessor();
 	private DbContextOptions<AppDbContext> _dbOptions;
 
 	protected AppDbContext DbContext;
-
-	protected readonly IHttpContextAccessor HttpContextAccessor = new HttpContextAccessor();
 
 	[SetUp]
 	public void Setup()

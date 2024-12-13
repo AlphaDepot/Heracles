@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.UserExerciseHistories.Commands;
 
 /// <summary>
-///   Represents the request to update a <see cref="UserExerciseHistory" />.
+///     Represents the request to update a <see cref="UserExerciseHistory" />.
 /// </summary>
 public class UpdateUserExerciseHistoryRequest
 {
@@ -22,18 +22,17 @@ public class UpdateUserExerciseHistoryRequest
 	public string UserId { get; set; } = null!;
 	public double Weight { get; set; }
 	public int Repetition { get; set; }
-
-
 }
 
 /// <summary>
-///   Updates a <see cref="UserExerciseHistory" />.
+///     Updates a <see cref="UserExerciseHistory" />.
 /// </summary>
 /// <param name="UserExerciseHistory"> The <see cref="UpdateUserExerciseHistoryRequest" /> to update.</param>
-public record UpdateUserExerciseHistoryCommand(UpdateUserExerciseHistoryRequest UserExerciseHistory) : IRequest<Result<bool>>;
+public record UpdateUserExerciseHistoryCommand(UpdateUserExerciseHistoryRequest UserExerciseHistory)
+	: IRequest<Result<bool>>;
 
 /// <summary>
-///  Validates the <see cref="UpdateUserExerciseHistoryCommand" />.
+///     Validates the <see cref="UpdateUserExerciseHistoryCommand" />.
 /// </summary>
 public class UpdateUserExerciseHistoryCommandValidator : AbstractValidator<UpdateUserExerciseHistoryCommand>
 {
@@ -54,22 +53,20 @@ public class UpdateUserExerciseHistoryCommandValidator : AbstractValidator<Updat
 		RuleFor(x => x.UserExerciseHistory.UserId)
 			.NotEmpty().WithMessage("UserId is required")
 			.Length(36).WithMessage("UserId must be 36 characters");
-
 	}
 }
 
-
 /// <summary>
-///   Handles the <see cref="UpdateUserExerciseHistoryCommand" />.
+///     Handles the <see cref="UpdateUserExerciseHistoryCommand" />.
 /// </summary>
 /// <param name="dbContext"> The <see cref="AppDbContext" />.</param>
 /// <param name="contextAccessor"> The <see cref="IHttpContextAccessor" />.</param>
 public class UpdateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UpdateUserExerciseHistoryCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateUserExerciseHistoryCommand request, CancellationToken cancellationToken)
+	public async Task<Result<bool>> Handle(UpdateUserExerciseHistoryCommand request,
+		CancellationToken cancellationToken)
 	{
-
 		var (validationResult, userExerciseHistory) = await BusinessValidation(request, cancellationToken);
 		if (validationResult.IsFailure)
 		{
@@ -82,11 +79,15 @@ public class UpdateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
-		return  result > 0 ? Result.Success(true) : Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Error updating user exercise history with id {request.UserExerciseHistory.Id}"));
-
+		return result > 0
+			? Result.Success(true)
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage(
+					$"Error updating user exercise history with id {request.UserExerciseHistory.Id}"));
 	}
 
-	private async Task<(Result<bool>, UserExerciseHistory?)> BusinessValidation(UpdateUserExerciseHistoryCommand request,
+	private async Task<(Result<bool>, UserExerciseHistory?)> BusinessValidation(
+		UpdateUserExerciseHistoryCommand request,
 		CancellationToken cancellationToken)
 	{
 		// check if the user exists
@@ -97,7 +98,6 @@ public class UpdateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		{
 			return (Result.Failure<bool>(ErrorTypes.NotFoundWithEntityName(nameof(User))), null);
 		}
-
 
 
 		// check if the user exercise exists
@@ -119,7 +119,7 @@ public class UpdateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 
 		// check if the user is authorized to update the user exercise history
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-		if (userExerciseHistory.UserId != userId || userExercise.UserId != userId  )
+		if (userExerciseHistory.UserId != userId || userExercise.UserId != userId)
 		{
 			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
 		}
@@ -131,7 +131,5 @@ public class UpdateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		}
 
 		return (Result.Success(true), userExerciseHistory);
-
 	}
 }
-

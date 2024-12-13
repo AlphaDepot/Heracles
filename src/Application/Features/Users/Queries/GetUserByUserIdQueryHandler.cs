@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using System.Text.Json;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;

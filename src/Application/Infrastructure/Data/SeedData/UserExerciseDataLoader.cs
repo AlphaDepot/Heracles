@@ -1,6 +1,5 @@
 using Application.Features.UserExerciseHistories;
 using Application.Features.UserExercises;
-using Application.Features.Users;
 using Application.Features.WorkoutSessions;
 
 namespace Application.Infrastructure.Data.SeedData;
@@ -281,6 +280,4 @@ public abstract class UserExerciseDataLoader
 			}
 		];
 	}
-
-
 }

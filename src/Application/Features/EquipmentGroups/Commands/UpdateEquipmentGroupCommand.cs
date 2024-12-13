@@ -67,7 +67,8 @@ public class UpdateEquipmentGroupCommandHandler(AppDbContext dbContext)
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Equipment Group {equipmentGroup.Id}"));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Equipment Group {equipmentGroup.Id}"));
 	}
 
 	private async Task<(Result<bool>, EquipmentGroup?)> BusinessValidation(UpdateEquipmentGroupCommand request)

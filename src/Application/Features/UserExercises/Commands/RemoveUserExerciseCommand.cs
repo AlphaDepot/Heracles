@@ -37,7 +37,8 @@ public class RemoveUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 
 		return result > 0
 			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"The UserExercise  with id {request.Id} could not be removed."));
+			: Result.Failure<bool>(
+				ErrorTypes.DatabaseErrorWithMessage($"The UserExercise  with id {request.Id} could not be removed."));
 	}
 
 	private async Task<(Result<bool>, UserExercise?)> BusinessValidation(RemoveUserExerciseCommand request)

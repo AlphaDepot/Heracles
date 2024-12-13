@@ -8,12 +8,11 @@ using MediatR;
 namespace Application.Features.EquipmentGroups.Commands;
 
 /// <summary>
-///   Represents the request to attach an <see cref="Equipment" /> to an <see cref="EquipmentGroup" />.
+///     Represents the request to attach an <see cref="Equipment" /> to an <see cref="EquipmentGroup" />.
 /// </summary>
 /// <param name="EquipmentGroupId"></param>
 /// <param name="EquipmentId"></param>
 public record AttachEquipmentRequest(int EquipmentGroupId, int EquipmentId);
-
 
 /// <summary>
 ///     Attaches an <see cref="Equipment" /> to an <see cref="EquipmentGroup" />.

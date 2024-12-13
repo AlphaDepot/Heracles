@@ -44,7 +44,6 @@ public class DetachUserExerciseToWorkoutSessionCommandValidatorTest : FluentVali
 			case "UserExerciseId":
 				result.ShouldHaveValidationErrorFor(x => x.WorkoutSessionRequest.UserExerciseId);
 				break;
-
 		}
 	}
 }

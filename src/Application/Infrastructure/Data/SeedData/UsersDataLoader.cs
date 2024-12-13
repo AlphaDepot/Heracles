@@ -4,8 +4,6 @@ namespace Application.Infrastructure.Data.SeedData;
 
 public abstract class UsersDataLoader
 {
-
-
 	public static void Initialize(AppDbContext context)
 	{
 		// !!! ORDER OF SEED DATA IS IMPORTANT!!! #1#
@@ -15,7 +13,7 @@ public abstract class UsersDataLoader
 	}
 
 	/// <summary>
-	///   TestData users into the database.
+	///     TestData users into the database.
 	/// </summary>
 	/// <param name="context"> The database context to seed the users into.</param>
 	private static void SeedUsers(AppDbContext context)

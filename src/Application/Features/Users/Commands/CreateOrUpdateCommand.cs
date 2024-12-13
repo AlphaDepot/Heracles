@@ -21,7 +21,7 @@ public record CreateOrUpdateRequest(string UserId, string Email, bool IsAdmin);
 ///     Creates or updates a <see cref="User" />
 /// </summary>
 /// <param name="UserRequest">The <see cref="CreateOrUpdateRequest" /> to create or update.</param>
-///  <returns> The <see cref="Result" /> created or updated.</returns>
+/// <returns> The <see cref="Result" /> created or updated.</returns>
 public record CreateOrUpdateCommand(CreateOrUpdateRequest UserRequest) : IRequest<Result<bool>>;
 
 /// <summary>

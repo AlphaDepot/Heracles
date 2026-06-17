@@ -1,8 +1,9 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
+using FluentResults;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Equipments.Commands;
@@ -48,7 +49,7 @@ public class CreateEquipmentCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<int>> Handle(CreateEquipmentCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -57,23 +58,23 @@ public class CreateEquipmentCommandHandler(AppDbContext dbContext)
 		await dbContext.Equipments.AddAsync(equipment, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(equipment.Id);
+		return Result.Ok(equipment.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateEquipmentCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		var existingEquipment = await dbContext.Equipments
 			.AnyAsync(x => x.Type == request.Equipment.Type);
 		if (existingEquipment)
 		{
-			return Result.Failure<int>(ErrorTypes.NamingConflict);
+			return Result.Fail<int>(ErrorTypes.NamingConflict);
 		}
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

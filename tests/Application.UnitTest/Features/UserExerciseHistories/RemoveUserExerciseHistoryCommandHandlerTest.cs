@@ -1,4 +1,4 @@
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.UserExerciseHistories;
 using Application.Features.UserExerciseHistories.Commands;
@@ -56,7 +56,7 @@ public class RemoveUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFound));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -72,6 +72,6 @@ public class RemoveUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

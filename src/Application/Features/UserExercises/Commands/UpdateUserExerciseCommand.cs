@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,7 +64,7 @@ public class UpdateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 	public async ValueTask<Result<bool>> Handle(UpdateUserExerciseCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, userExercise) = await BusinessValidation(request, cancellationToken);
-		if (validationResult.IsFailure || userExercise == null)
+		if (validationResult.IsFailed || userExercise == null)
 		{
 			return validationResult;
 		}
@@ -74,8 +74,8 @@ public class UpdateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Error updating user exercise with id {request.UserExercise.Id}"));
 	}
 
@@ -87,21 +87,21 @@ public class UpdateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 			.FirstOrDefaultAsync(u => u.Id == request.UserExercise.Id, cancellationToken);
 		if (userExercise == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		// check if the user is authorized to update the user exercise
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (userExercise.UserId != userId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		if (userExercise.Concurrency != request.UserExercise.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
-		return (Result.Success(true), userExercise);
+		return (Result.Ok(true), userExercise);
 	}
 }

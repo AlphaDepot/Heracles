@@ -1,7 +1,8 @@
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using FluentResults;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseMuscleGroups.Queries;
@@ -13,7 +14,7 @@ namespace Application.Features.ExerciseMuscleGroups.Queries;
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Query">The  <see cref="QueryRequest" /> to use to filter the results.</param>
-/// <returns>A <see cref="Result{PagedResponse}" />.</returns>
+/// <returns>A <see cref="Result" />.</returns>
 public record GetPagedExerciseMuscleGroupQuery(QueryRequest Query)
 	: IRequest<Result<PagedResponse<ExerciseMuscleGroup>>>;
 
@@ -31,7 +32,7 @@ public class GetPagedExerciseMuscleGroupQueryHandler(AppDbContext dbContext)
 		var result = await queryable.ToListAsync(cancellationToken);
 		var total = await dbContext.ExerciseMuscleGroups.CountAsync(cancellationToken);
 
-		return Result.Success(new PagedResponse<ExerciseMuscleGroup>
+		return Result.Ok(new PagedResponse<ExerciseMuscleGroup>
 		{
 			Data = result,
 			PageNumber = request.Query.PageNumber,

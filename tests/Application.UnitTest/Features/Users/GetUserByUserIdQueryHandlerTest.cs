@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.Users;
 using Application.Features.Users.Queries;
@@ -50,13 +50,12 @@ public class GetUserByUserIdQueryHandlerTest : HandlerBaseUnitTest
 		// new handler since the user is not admin
 		var result = await _handler.Handle(query, CancellationToken.None);
 
-		Console.WriteLine(JsonSerializer.Serialize(result.Error));
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<User>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFound));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -78,8 +77,8 @@ public class GetUserByUserIdQueryHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<User>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

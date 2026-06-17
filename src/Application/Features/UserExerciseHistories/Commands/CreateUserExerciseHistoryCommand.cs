@@ -5,7 +5,7 @@ using Application.Features.UserExercises;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,7 +56,7 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 	public async ValueTask<Result<int>> Handle(CreateUserExerciseHistoryCommand request, CancellationToken cancellationToken)
 	{
 		var businessValidation = await BusinessValidation(request, cancellationToken);
-		if (businessValidation.IsFailure)
+		if (businessValidation.IsFailed)
 		{
 			return businessValidation;
 		}
@@ -65,7 +65,7 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		await dbContext.UserExerciseHistories.AddAsync(userExerciseHistory, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(userExerciseHistory.Id);
+		return Result.Ok(userExerciseHistory.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateUserExerciseHistoryCommand request,
@@ -76,14 +76,14 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 			.AnyAsync(x => x.UserId == request.UserExerciseHistory.UserId, cancellationToken);
 		if (!existingUser)
 		{
-			return Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(User)));
+			return Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(User)));
 		}
 
 		// check if the userid  is the same as the context userid
 		var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (userId != request.UserExerciseHistory.UserId)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		// check if the user exercise exists
@@ -91,9 +91,9 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 			.AnyAsync(x => x.Id == request.UserExerciseHistory.UserExerciseId, cancellationToken);
 		if (!existingUserExercise)
 		{
-			return Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(UserExercise)));
+			return Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(UserExercise)));
 		}
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

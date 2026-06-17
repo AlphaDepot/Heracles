@@ -1,8 +1,7 @@
 using Application.Common.Errors;
-using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Commands;
@@ -71,7 +70,7 @@ public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(UpdateExerciseTypeCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, exerciseType) = await BusinessValidation(request);
-		if (validation.IsFailure || exerciseType == null)
+		if (validation.IsFailed || exerciseType == null)
 		{
 			return validation;
 		}
@@ -83,8 +82,8 @@ public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Exercise Type {exerciseType.Id}"));
 	}
 
@@ -92,19 +91,19 @@ public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var existingExerciseType =
 			await dbContext.ExerciseTypes.FirstOrDefaultAsync(x => x.Id == request.ExerciseType.Id);
 		if (existingExerciseType == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		if (existingExerciseType.Concurrency != request.ExerciseType.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
 		var nameAlreadyExists = await dbContext.ExerciseTypes.AnyAsync(x =>
@@ -113,7 +112,7 @@ public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 
 		if (nameAlreadyExists)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NamingConflict), null);
+			return (Result.Fail<bool>(ErrorTypes.NamingConflict), null);
 		}
 
 		return (true, existingExerciseType);

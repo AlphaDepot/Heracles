@@ -1,8 +1,10 @@
-using Application.Common.Errors;
+using System.Text.Json;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.EquipmentGroups;
 using Application.Features.EquipmentGroups.Commands;
 using Application.UnitTest.TestData;
+using FluentResults;
 
 namespace Application.UnitTest.Features.EquipmentGroups;
 
@@ -53,9 +55,12 @@ public class AttachEquipmentCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error.Type, Is.EqualTo(ErrorCodes.NotFound));
+		Assert.That(result.IsFailed, Is.True);
+
+		var error = result.Errors.First();
+
+		Assert.That(error, Is.Not.Null);
+		Assert.That(error.Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -71,8 +76,13 @@ public class AttachEquipmentCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error.Type, Is.EqualTo(ErrorCodes.NotFound));
+		Assert.That(result.IsFailed, Is.True);
+
+		var error = result.Errors.First();
+
+
+		//Console.WriteLine(JsonSerializer.Serialize(result));
+		Assert.That(error, Is.Not.Null);
+		Assert.That(error.Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 }

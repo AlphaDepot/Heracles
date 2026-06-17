@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +19,7 @@ public class UserExerciseHistoryByIdQueryHandler(AppDbContext dbContext, IHttpCo
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (string.IsNullOrEmpty(authenticatedUser))
 		{
-			return Result.Failure<UserExerciseHistory>(ErrorTypes.Unauthorized);
+			return Result.Fail<UserExerciseHistory>(ErrorTypes.Unauthorized);
 		}
 
 		var isAdmin = contextAccessor.HttpContext?.User.IsInRole("Admin") ?? false;
@@ -30,14 +30,14 @@ public class UserExerciseHistoryByIdQueryHandler(AppDbContext dbContext, IHttpCo
 
 		if (history == null)
 		{
-			return Result.Failure<UserExerciseHistory>(ErrorTypes.NotFound);
+			return Result.Fail<UserExerciseHistory>(ErrorTypes.NotFound);
 		}
 
 		if (history.UserId != authenticatedUser && !isAdmin)
 		{
-			return Result.Failure<UserExerciseHistory>(ErrorTypes.Unauthorized);
+			return Result.Fail<UserExerciseHistory>(ErrorTypes.Unauthorized);
 		}
 
-		return Result.Success(history);
+		return Result.Ok(history);
 	}
 }

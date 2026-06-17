@@ -1,4 +1,4 @@
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.MuscleGroups;
 using Application.Features.MuscleGroups.Commands;
@@ -63,7 +63,7 @@ public class UpdateMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 
 	[Test]
@@ -79,9 +79,9 @@ public class UpdateMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFound));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -98,9 +98,9 @@ public class UpdateMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.ConcurrencyError));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.ConcurrencyError));
 	}
 
 	[Test]
@@ -118,8 +118,8 @@ public class UpdateMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NamingConflict));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NamingConflict));
 	}
 }

@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Queries;
@@ -30,7 +30,7 @@ public class GetMuscleFunctionByIdQueryHandler(AppDbContext dbContext)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		return muscleFunction == null
-			? Result.Failure<MuscleFunction>(ErrorTypes.NotFound)
-			: Result.Success(muscleFunction);
+			? Result.Fail<MuscleFunction>(ErrorTypes.NotFound)
+			: Result.Ok(muscleFunction);
 	}
 }

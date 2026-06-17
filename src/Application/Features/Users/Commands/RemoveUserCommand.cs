@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 
 namespace Application.Features.Users.Commands;
 
@@ -24,7 +24,7 @@ public class RemoveUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 	public async ValueTask<Result<bool>> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, user) = await BusinessValidation(request);
-		if (validationResult.IsFailure || user == null)
+		if (validationResult.IsFailed || user == null)
 		{
 			return validationResult;
 		}
@@ -32,22 +32,22 @@ public class RemoveUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 		dbContext.Users.Remove(user);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, User?)> BusinessValidation(RemoveUserCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var user = await dbContext.Users.FindAsync(request.Id);
 		if (user == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
-		return (Result.Success(true), user);
+		return (Result.Ok(true), user);
 	}
 }

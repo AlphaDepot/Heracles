@@ -1,8 +1,9 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
+using FluentResults;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Commands;
@@ -55,7 +56,7 @@ public class UpdateEquipmentGroupCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(UpdateEquipmentGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, equipmentGroup) = await BusinessValidation(request);
-		if (validation.IsFailure || equipmentGroup == null)
+		if (validation.IsFailed || equipmentGroup == null)
 		{
 			return validation;
 		}
@@ -66,8 +67,8 @@ public class UpdateEquipmentGroupCommandHandler(AppDbContext dbContext)
 
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Equipment Group {equipmentGroup.Id}"));
 	}
 
@@ -75,18 +76,18 @@ public class UpdateEquipmentGroupCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var existingEquipmentGroup = await dbContext.EquipmentGroups.FindAsync(request.EquipmentGroup.Id);
 		if (existingEquipmentGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		if (existingEquipmentGroup.Concurrency != request.EquipmentGroup.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
 		var nameAlreadyExists = await dbContext.EquipmentGroups.AnyAsync(x =>
@@ -95,7 +96,7 @@ public class UpdateEquipmentGroupCommandHandler(AppDbContext dbContext)
 
 		if (nameAlreadyExists)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NamingConflict), null);
+			return (Result.Fail<bool>(ErrorTypes.NamingConflict), null);
 		}
 
 		return (true, existingEquipmentGroup);

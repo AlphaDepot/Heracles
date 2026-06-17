@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +35,6 @@ public class WorkoutSessionsByUserIdQueryHandler(AppDbContext dbContext, IHttpCo
 			.OrderBy(x => x.DayOfWeek)
 			.ThenBy(x => x.SortOrder).ToListAsync(cancellationToken);
 
-		return Result.Success(sessions);
+		return Result.Ok(sessions);
 	}
 }

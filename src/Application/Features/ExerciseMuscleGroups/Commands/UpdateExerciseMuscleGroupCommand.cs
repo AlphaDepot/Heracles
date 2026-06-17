@@ -1,8 +1,9 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
+using FluentResults;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 
 namespace Application.Features.ExerciseMuscleGroups.Commands;
 
@@ -60,7 +61,7 @@ public class UpdateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		CancellationToken cancellationToken)
 	{
 		var (validation, exerciseMuscleGroup) = await BusinessValidation(request);
-		if (validation.IsFailure || exerciseMuscleGroup == null)
+		if (validation.IsFailed || exerciseMuscleGroup == null)
 		{
 			return validation;
 		}
@@ -71,8 +72,8 @@ public class UpdateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage(
 					$"Failed to update Exercise Muscle Group {exerciseMuscleGroup.Id}"));
 	}
@@ -82,21 +83,21 @@ public class UpdateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var existingExerciseMuscleGroup =
 			await dbContext.ExerciseMuscleGroups.FindAsync(request.ExerciseMuscleGroup.Id);
 		if (existingExerciseMuscleGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		if (existingExerciseMuscleGroup.Concurrency != request.ExerciseMuscleGroup.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
-		return (Result.Success(true), existingExerciseMuscleGroup);
+		return (Result.Ok(true), existingExerciseMuscleGroup);
 	}
 }

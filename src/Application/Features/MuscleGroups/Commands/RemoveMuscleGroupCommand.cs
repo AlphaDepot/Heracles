@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 
 namespace Application.Features.MuscleGroups.Commands;
 
@@ -25,7 +25,7 @@ public class RemoveMuscleGroupCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(RemoveMuscleGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, muscleGroup) = await BusinessValidation(request);
-		if (validationResult.IsFailure || muscleGroup == null)
+		if (validationResult.IsFailed || muscleGroup == null)
 		{
 			return validationResult;
 		}
@@ -33,22 +33,22 @@ public class RemoveMuscleGroupCommandHandler(AppDbContext dbContext)
 		dbContext.MuscleGroups.Remove(muscleGroup);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, MuscleGroup?)> BusinessValidation(RemoveMuscleGroupCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var muscleGroup = await dbContext.MuscleGroups.FindAsync(request.Id);
 		if (muscleGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
-		return (Result.Success(true), muscleGroup);
+		return (Result.Ok(true), muscleGroup);
 	}
 }

@@ -1,4 +1,4 @@
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.UserExercises;
 using Application.Features.UserExercises.Commands;
@@ -73,7 +73,7 @@ public class UpdateUserExerciseCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFound));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -90,7 +90,7 @@ public class UpdateUserExerciseCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 
 	[Test]
@@ -106,6 +106,6 @@ public class UpdateUserExerciseCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.ConcurrencyError));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.ConcurrencyError));
 	}
 }

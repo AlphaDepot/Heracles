@@ -1,4 +1,4 @@
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.Users;
 using Application.Features.Users.Commands;
@@ -86,6 +86,6 @@ public class CreateOrUpdateCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

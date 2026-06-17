@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleGroups.Commands;
@@ -47,7 +47,7 @@ public class CreateMuscleGroupCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<int>> Handle(CreateMuscleGroupCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -56,23 +56,23 @@ public class CreateMuscleGroupCommandHandler(AppDbContext dbContext)
 		await dbContext.MuscleGroups.AddAsync(muscleGroup, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(muscleGroup.Id);
+		return Result.Ok(muscleGroup.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateMuscleGroupCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		var existingMuscleGroup = await dbContext.MuscleGroups
 			.AnyAsync(x => x.Name == request.MuscleGroup.Name);
 		if (existingMuscleGroup)
 		{
-			return Result.Failure<int>(ErrorTypes.NamingConflict);
+			return Result.Fail<int>(ErrorTypes.NamingConflict);
 		}
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

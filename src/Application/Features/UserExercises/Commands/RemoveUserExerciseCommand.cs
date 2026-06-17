@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.UserExercises.Commands;
@@ -27,7 +27,7 @@ public class RemoveUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 	public async ValueTask<Result<bool>> Handle(RemoveUserExerciseCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, userExercise) = await BusinessValidation(request);
-		if (validationResult.IsFailure || userExercise == null)
+		if (validationResult.IsFailed || userExercise == null)
 		{
 			return validationResult;
 		}
@@ -36,8 +36,8 @@ public class RemoveUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"The UserExercise  with id {request.Id} could not be removed."));
 	}
 
@@ -46,15 +46,15 @@ public class RemoveUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 		var userExercise = await dbContext.UserExercises.FindAsync(request.Id);
 		if (userExercise == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (userId != userExercise.UserId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
-		return (Result.Success(true), userExercise);
+		return (Result.Ok(true), userExercise);
 	}
 }

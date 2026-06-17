@@ -1,3 +1,4 @@
+using FluentResults;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Common.Errors;
@@ -13,16 +14,16 @@ public static class ErrorTypes
 	///     Returns a null value error.
 	///     Used when a null value is found. Not to be confused with NotFound.
 	/// </summary>
-	public static Error NullValue =>
-		new(ErrorCodes.NullValue, StatusCodes.Status400BadRequest, ErrorMessages.NullValue);
+	public static AppError NullValue =>
+		AppError.Create(ErrorCodes.NullValue, StatusCodes.Status400BadRequest, ErrorMessages.NullValue);
 
 	/// <summary>
 	///     Returns a not found error.
 	///     Used when an entity is not found.
 	///     Mostly used when an entity with the provided id is not found.
 	/// </summary>
-	public static Error NotFound =>
-		new(ErrorCodes.NotFound, StatusCodes.Status404NotFound, ErrorMessages.NotFound);
+	public static AppError NotFound =>
+		AppError.Create(ErrorCodes.NotFound, StatusCodes.Status404NotFound, ErrorMessages.NotFound);
 
 
 	/// <summary>
@@ -30,45 +31,45 @@ public static class ErrorTypes
 	///     Used when a naming conflict occurs.
 	///     // Mostly used when an entity with the same name property already exists.
 	/// </summary>
-	public static Error NamingConflict =>
-		new(ErrorCodes.NamingConflict, StatusCodes.Status400BadRequest, ErrorMessages.NamingConflict);
+	public static AppError NamingConflict =>
+		AppError.Create(ErrorCodes.NamingConflict, StatusCodes.Status400BadRequest, ErrorMessages.NamingConflict);
 
 	/// <summary>
 	///     Returns an invalid request error.
 	///     This is the most generic error and is used when a request is invalid.
 	///     And no other error message has been created for the given scenario
 	/// </summary>
-	public static Error BadRequest =>
-		new(ErrorCodes.BadRequest, StatusCodes.Status400BadRequest, ErrorMessages.InvalidRequest);
+	public static AppError BadRequest =>
+		AppError.Create(ErrorCodes.BadRequest, StatusCodes.Status400BadRequest, ErrorMessages.InvalidRequest);
 
 	/// <summary>
 	///     Returns a duplicate entry error.
 	///     This is used when a duplicate entry is found and no entity name is provided.
 	/// </summary>
-	public static Error DuplicateEntry =>
-		new(ErrorCodes.DuplicateEntry, StatusCodes.Status409Conflict, ErrorMessages.DuplicateEntry);
+	public static AppError DuplicateEntry =>
+		AppError.Create(ErrorCodes.DuplicateEntry, StatusCodes.Status409Conflict, ErrorMessages.DuplicateEntry);
 
 	// Users errors
 	/// <summary>
 	///     Returns an incomplete user claims error.
 	///     This is used when a user's claims are incomplete or missing any required claims.
 	/// </summary>
-	public static Error IncompleteUserClaims =>
-		new(ErrorCodes.IncompleteUserClaims, StatusCodes.Status400BadRequest, ErrorMessages.IncompleteUserClaims);
+	public static AppError IncompleteUserClaims =>
+		AppError.Create(ErrorCodes.IncompleteUserClaims, StatusCodes.Status400BadRequest, ErrorMessages.IncompleteUserClaims);
 
 	/// <summary>
 	///     Returns an unauthorized error.
 	/// </summary>
-	public static Error Unauthorized =>
-		new(ErrorCodes.Unauthorized, StatusCodes.Status401Unauthorized, ErrorMessages.Unauthorized);
+	public static AppError Unauthorized =>
+		AppError.Create(ErrorCodes.Unauthorized, StatusCodes.Status401Unauthorized, ErrorMessages.Unauthorized);
 
 	// Validation errors
 	/// <summary>
 	///     Used when a validation error occurs.
 	///     Mostly used with fluent validation.
 	/// </summary>
-	public static Error Validation =>
-		new(ErrorCodes.Validation, StatusCodes.Status400BadRequest, ErrorMessages.Validation);
+	public static AppError Validation =>
+		AppError.Create(ErrorCodes.Validation, StatusCodes.Status400BadRequest, ErrorMessages.Validation);
 
 	// Type errors
 	/// <summary>
@@ -76,22 +77,22 @@ public static class ErrorTypes
 	///     Created to be used when an error type is not found.
 	///     Design to be used for the Result class error property validation.
 	/// </summary>
-	public static Error InvalidErrorType =>
-		new(ErrorCodes.InvalidErrorType, StatusCodes.Status400BadRequest, ErrorMessages.InvalidErrorType);
+	public static AppError InvalidAppErrorType =>
+		AppError.Create(ErrorCodes.InvalidErrorType, StatusCodes.Status400BadRequest, ErrorMessages.InvalidErrorType);
 
 	/// <summary>
 	///     Used when a concurrency error occurs.
 	///     Mostly used when an entity is being updated and the concurrency token does not match the current value.
 	/// </summary>
-	public static Error ConcurrencyError =>
-		new(ErrorCodes.ConcurrencyError, StatusCodes.Status409Conflict, ErrorMessages.ConcurrencyError);
+	public static AppError ConcurrencyAppError =>
+		AppError.Create(ErrorCodes.ConcurrencyError, StatusCodes.Status409Conflict, ErrorMessages.ConcurrencyError);
 
 
 	/// <summary>
 	///     Returns a generic database error.
 	/// </summary>
-	public static Error DatabaseError =>
-		new(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, ErrorMessages.DatabaseError);
+	public static AppError DatabaseAppError =>
+		AppError.Create(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, ErrorMessages.DatabaseError);
 
 	/// <summary>
 	///     Returns a not found error with the entity name provided.
@@ -99,9 +100,9 @@ public static class ErrorTypes
 	/// </summary>
 	/// <param name="entityName"> The name of the entity. </param>
 	/// <returns></returns>
-	public static Error NotFoundWithEntityName(string entityName)
+	public static AppError NotFoundWithEntityName(string entityName)
 	{
-		return new Error(ErrorCodes.NotFound, StatusCodes.Status404NotFound, $"{entityName} {ErrorMessages.NotFound}");
+		return AppError.Create(ErrorCodes.NotFound, StatusCodes.Status404NotFound, $"{entityName} {ErrorMessages.NotFound}");
 	}
 
 
@@ -111,9 +112,9 @@ public static class ErrorTypes
 	/// </summary>
 	/// <param name="message"> The message to be returned with the error. </param>
 	/// <returns> A not found error with the provided message. </returns>
-	public static Error NotFoundWithMessage(string message)
+	public static AppError NotFoundWithMessage(string message)
 	{
-		return new Error(ErrorCodes.NotFound, StatusCodes.Status404NotFound, message);
+		return  AppError.Create(ErrorCodes.NotFound, StatusCodes.Status404NotFound, message);
 	}
 
 	/// <summary>
@@ -121,10 +122,10 @@ public static class ErrorTypes
 	/// </summary>
 	/// <param name="message"> The message to be returned with the error. </param>
 	/// <returns> An invalid request error with the provided message. </returns>
-	public static Error
+	public static AppError
 		BadRequestWithMessage(string message)
 	{
-		return new Error(ErrorCodes.BadRequest, StatusCodes.Status400BadRequest, message);
+		return  AppError.Create(ErrorCodes.BadRequest, StatusCodes.Status400BadRequest, message);
 	}
 
 	/// <summary>
@@ -134,9 +135,9 @@ public static class ErrorTypes
 	/// <param name="entityName"> The name of the entity. </param>
 	/// <param name="parentEntityName"> The name of the parent entity aka the entity this will belong to. </param>
 	/// <returns> A duplicate entry error with the entity name and parent entity name if provided. </returns>
-	public static Error DuplicateEntryWithEntityNames(string entityName, string? parentEntityName = null)
+	public static AppError DuplicateEntryWithEntityNames(string entityName, string? parentEntityName = null)
 	{
-		return new Error(ErrorCodes.DuplicateEntry, StatusCodes.Status409Conflict,
+		return AppError.Create(ErrorCodes.DuplicateEntry, StatusCodes.Status409Conflict,
 			$"{entityName} {ErrorMessages.DuplicateEntry} {(parentEntityName != null ? $"for {parentEntityName}" : string.Empty)}");
 	}
 
@@ -145,9 +146,9 @@ public static class ErrorTypes
 	/// </summary>
 	/// <param name="message"> The message to be returned with the error. </param>
 	/// <returns> A database error with the provided message. </returns>
-	public static Error DatabaseErrorWithMessage(string message)
+	public static AppError DatabaseErrorWithMessage(string message)
 	{
-		return new Error(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, message);
+		return AppError.Create(ErrorCodes.DatabaseError, StatusCodes.Status500InternalServerError, message);
 	}
 }
 

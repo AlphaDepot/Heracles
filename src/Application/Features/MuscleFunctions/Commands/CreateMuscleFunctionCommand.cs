@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Commands;
@@ -47,7 +47,7 @@ public class CreateMuscleFunctionCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<int>> Handle(CreateMuscleFunctionCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -56,23 +56,23 @@ public class CreateMuscleFunctionCommandHandler(AppDbContext dbContext)
 		await dbContext.MuscleFunctions.AddAsync(muscleFunction, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(muscleFunction.Id);
+		return Result.Ok(muscleFunction.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateMuscleFunctionCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		var existingMuscleFunction = await dbContext.MuscleFunctions
 			.AnyAsync(x => x.Name == request.MuscleFunction.Name);
 		if (existingMuscleFunction)
 		{
-			return Result.Failure<int>(ErrorTypes.NamingConflict);
+			return Result.Fail<int>(ErrorTypes.NamingConflict);
 		}
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

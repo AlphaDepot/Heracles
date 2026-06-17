@@ -5,7 +5,7 @@ using Application.Common.Utilities;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,7 +70,7 @@ public class UpdateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 	public async ValueTask<Result<bool>> Handle(UpdateWorkoutSessionCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, workoutSession) = await BusinessValidation(request, cancellationToken);
-		if (validationResult.IsFailure || workoutSession == null)
+		if (validationResult.IsFailed || workoutSession == null)
 		{
 			return validationResult;
 		}
@@ -80,8 +80,8 @@ public class UpdateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Workout Session {workoutSession.Id}"));
 	}
 
@@ -94,7 +94,7 @@ public class UpdateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 
 		if (existingWorkoutSession == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithEntityName(nameof(WorkoutSession))), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithEntityName(nameof(WorkoutSession))), null);
 		}
 
 
@@ -103,23 +103,23 @@ public class UpdateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 			.AnyAsync(x => x.UserId == request.WorkoutSession.UserId, cancellationToken);
 		if (!existingUser)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithEntityName(nameof(User))), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithEntityName(nameof(User))), null);
 		}
 
 		// check if the userid is the same as the context userid
 		var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (userId != request.WorkoutSession.UserId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		// check if concurrency is valid
 		if (request.WorkoutSession.Concurrency != existingWorkoutSession.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
 
-		return (Result.Success(true), existingWorkoutSession);
+		return (Result.Ok(true), existingWorkoutSession);
 	}
 }

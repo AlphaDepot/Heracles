@@ -1,7 +1,6 @@
 using Application.Common.Errors;
-using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Queries;
@@ -34,7 +33,7 @@ public class GetExerciseTypeByIdQueryHandler(AppDbContext dbContext)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		return exerciseType == null
-			? Result.Failure<ExerciseType>(ErrorTypes.NotFound)
-			: Result.Success(exerciseType);
+			? Result.Fail<ExerciseType>(ErrorTypes.NotFound)
+			: Result.Ok(exerciseType);
 	}
 }

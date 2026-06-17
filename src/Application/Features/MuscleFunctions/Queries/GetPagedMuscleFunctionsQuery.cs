@@ -1,7 +1,7 @@
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Queries;
@@ -30,7 +30,7 @@ public class GetPagedMuscleFunctionsQueryHandler(AppDbContext dbContext)
 		var result = await queryable.ToListAsync(cancellationToken);
 		var total = await dbContext.MuscleFunctions.CountAsync(cancellationToken);
 
-		return Result.Success(new PagedResponse<MuscleFunction>
+		return Result.Ok(new PagedResponse<MuscleFunction>
 		{
 			Data = result,
 			PageNumber = request.Query.PageNumber,

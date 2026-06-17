@@ -1,4 +1,4 @@
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.UserExerciseHistories.Commands;
 using Application.Features.UserExercises;
@@ -34,8 +34,6 @@ public class CreateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		var result = await _handler.Handle(command, CancellationToken.None);
 		var userExerciseHistory = await DbContext.UserExerciseHistories.FindAsync(result.Value);
 
-		Console.WriteLine(result.Error);
-
 		// Assert
 
 		Assert.Multiple(() =>
@@ -67,8 +65,8 @@ public class CreateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<int>>());
-			Assert.That(result.IsFailure, Is.True);
-			Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFoundWithEntityName(nameof(User))));
+			Assert.That(result.IsFailed, Is.True);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 		});
 	}
 
@@ -87,8 +85,8 @@ public class CreateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<int>>());
-			Assert.That(result.IsFailure, Is.True);
-			Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFoundWithEntityName(nameof(UserExercise))));
+			Assert.That(result.IsFailed, Is.True);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 		});
 	}
 
@@ -108,8 +106,8 @@ public class CreateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<int>>());
-			Assert.That(result.IsFailure, Is.True);
-			Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+			Assert.That(result.IsFailed, Is.True);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 		});
 	}
 }

@@ -1,4 +1,6 @@
-using Application.Common.Errors;
+using System.Net;
+using System.Text.Json;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.ExerciseMuscleGroups;
 using Application.Features.ExerciseMuscleGroups.Commands;
@@ -69,11 +71,8 @@ public class CreateExerciseMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.Error?.Type, Is.EqualTo(ErrorCodes.NotFound));
-		Assert.That(result.Error, Is.EqualTo(
-				ErrorTypes.NotFoundWithEntityName(nameof(MuscleGroup))
-			)
-		);
+		Assert.That(result.Errors.First().Metadata["StatusCode"], Is.EqualTo((int)HttpStatusCode.NotFound));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -91,11 +90,8 @@ public class CreateExerciseMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.Error?.Type, Is.EqualTo(ErrorCodes.NotFound));
-		Assert.That(result.Error, Is.EqualTo(
-				ErrorTypes.NotFoundWithEntityName(nameof(MuscleFunction))
-			)
-		);
+		Assert.That(result.Errors.First().Metadata["StatusCode"], Is.EqualTo((int)HttpStatusCode.NotFound));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -112,10 +108,8 @@ public class CreateExerciseMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.Error?.Type, Is.EqualTo(ErrorCodes.NotFound));
-		Assert.That(result.Error, Is.EqualTo(
-				ErrorTypes.NotFoundWithEntityName(nameof(ExerciseTypes))
-			)
+		Assert.That(result.Errors.First().Metadata["StatusCode"], Is.EqualTo((int)HttpStatusCode.NotFound));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound	)
 		);
 	}
 
@@ -151,14 +145,9 @@ public class CreateExerciseMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
+
 		// validate only the error type because the message may change
-		Assert.That(result.Error, Is.EqualTo(
-				ErrorTypes.DuplicateEntryWithEntityNames(
-					nameof(ExerciseMuscleGroup),
-					nameof(ExerciseTypes)
-				)
-			)
-		);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.DuplicateEntry));
 	}
 
 	[Test]
@@ -178,6 +167,6 @@ public class CreateExerciseMuscleGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

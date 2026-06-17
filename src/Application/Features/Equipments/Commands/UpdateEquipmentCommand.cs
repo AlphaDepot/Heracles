@@ -1,8 +1,9 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
+using FluentResults;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Equipments.Commands;
@@ -56,7 +57,7 @@ public class UpdateEquipmentCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(UpdateEquipmentCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, equipment) = await BusinessValidation(request);
-		if (validation.IsFailure || equipment == null)
+		if (validation.IsFailed || equipment == null)
 		{
 			return validation;
 		}
@@ -67,26 +68,26 @@ public class UpdateEquipmentCommandHandler(AppDbContext dbContext)
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Equipment {equipment.Id}"));
+			? Result.Ok(true)
+			: Result.Fail<bool>(ErrorTypes.DatabaseErrorWithMessage($"Failed to update Equipment {equipment.Id}"));
 	}
 
 	private async Task<(Result<bool>, Equipment?)> BusinessValidation(UpdateEquipmentCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var existingEquipment = await dbContext.Equipments.FindAsync(request.Equipment.Id);
 		if (existingEquipment == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		if (existingEquipment.Concurrency != request.Equipment.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
 		var nameAlreadyExists = await dbContext.Equipments.AnyAsync(x =>
@@ -95,7 +96,7 @@ public class UpdateEquipmentCommandHandler(AppDbContext dbContext)
 
 		if (nameAlreadyExists)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NamingConflict), null);
+			return (Result.Fail<bool>(ErrorTypes.NamingConflict), null);
 		}
 
 		return (true, existingEquipment);

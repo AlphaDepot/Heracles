@@ -1,7 +1,8 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using FluentResults;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Queries;
@@ -13,7 +14,7 @@ namespace Application.Features.EquipmentGroups.Queries;
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="EquipmentGroup" /> to retrieve.</param>
-/// <returns>A <see cref="Result{EquipmentGroup}" />.</returns>
+/// <returns>A <see cref="Result" />.</returns>
 public record GetEquipmentGroupByIdQuery(int Id) : IRequest<Result<EquipmentGroup>>;
 
 /// <summary>
@@ -30,7 +31,7 @@ public class GetEquipmentGroupByIdQueryHandler(AppDbContext dbContext)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		return equipmentGroup == null
-			? Result.Failure<EquipmentGroup>(ErrorTypes.NotFound)
-			: Result.Success(equipmentGroup);
+			? Result.Fail<EquipmentGroup>(ErrorTypes.NotFound)
+			: Result.Ok(equipmentGroup);
 	}
 }

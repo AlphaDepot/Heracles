@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 
 namespace Application.Features.MuscleFunctions.Commands;
 
@@ -25,7 +25,7 @@ public class RemoveMuscleFunctionCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(RemoveMuscleFunctionCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, muscleFunction) = await BusinessValidation(request);
-		if (validationResult.IsFailure || muscleFunction == null)
+		if (validationResult.IsFailed || muscleFunction == null)
 		{
 			return validationResult;
 		}
@@ -33,22 +33,22 @@ public class RemoveMuscleFunctionCommandHandler(AppDbContext dbContext)
 		dbContext.MuscleFunctions.Remove(muscleFunction);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, MuscleFunction?)> BusinessValidation(RemoveMuscleFunctionCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var muscleFunction = await dbContext.MuscleFunctions.FindAsync(request.Id);
 		if (muscleFunction == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
-		return (Result.Success(true), muscleFunction);
+		return (Result.Ok(true), muscleFunction);
 	}
 }

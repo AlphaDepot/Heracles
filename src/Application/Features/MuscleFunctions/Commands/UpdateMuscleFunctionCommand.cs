@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Commands;
@@ -55,7 +55,7 @@ public class UpdateMuscleFunctionCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(UpdateMuscleFunctionCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, muscleFunction) = await BusinessValidation(request);
-		if (validation.IsFailure || muscleFunction == null)
+		if (validation.IsFailed || muscleFunction == null)
 		{
 			return validation;
 		}
@@ -66,8 +66,8 @@ public class UpdateMuscleFunctionCommandHandler(AppDbContext dbContext)
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Muscle Function {muscleFunction.Id}"));
 	}
 
@@ -75,18 +75,18 @@ public class UpdateMuscleFunctionCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var existingMuscleFunction = await dbContext.MuscleFunctions.FindAsync(request.MuscleFunction.Id);
 		if (existingMuscleFunction == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		if (existingMuscleFunction.Concurrency != request.MuscleFunction.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
 		var nameAlreadyExists = await dbContext.MuscleFunctions.AnyAsync(x =>
@@ -94,9 +94,9 @@ public class UpdateMuscleFunctionCommandHandler(AppDbContext dbContext)
 			x.Id != request.MuscleFunction.Id);
 		if (nameAlreadyExists)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NamingConflict), null);
+			return (Result.Fail<bool>(ErrorTypes.NamingConflict), null);
 		}
 
-		return (Result.Success(true), existingMuscleFunction);
+		return (Result.Ok(true), existingMuscleFunction);
 	}
 }

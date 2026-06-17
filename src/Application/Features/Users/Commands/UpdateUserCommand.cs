@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands;
@@ -39,7 +39,7 @@ public class UpdateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 	public async ValueTask<Result<int>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, currentUser) = await BusinessValidation(request);
-		if (validationResult.IsFailure || currentUser == null)
+		if (validationResult.IsFailed || currentUser == null)
 		{
 			return validationResult;
 		}
@@ -48,20 +48,20 @@ public class UpdateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 		currentUser.IsAdmin = request.UserRequest.IsAdmin;
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(currentUser.Id);
+		return Result.Ok(currentUser.Id);
 	}
 
 	private async Task<(Result<int>, User?)> BusinessValidation(UpdateUserCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<int>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<int>(ErrorTypes.Unauthorized), null);
 		}
 
 		var currentUser = await dbContext.Users
 			.SingleOrDefaultAsync(u => u.UserId == request.UserRequest.UserId);
 		return currentUser == null
-			? (Result.Failure<int>(ErrorTypes.NotFound), null)
-			: (Result.Success(0), currentUser);
+			? (Result.Fail<int>(ErrorTypes.NotFound), null)
+			: (Result.Ok(0), currentUser);
 	}
 }

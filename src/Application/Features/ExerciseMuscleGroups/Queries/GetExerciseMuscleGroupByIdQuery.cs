@@ -1,7 +1,8 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using FluentResults;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseMuscleGroups.Queries;
@@ -13,7 +14,7 @@ namespace Application.Features.ExerciseMuscleGroups.Queries;
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="ExerciseMuscleGroup" /> group to retrieve.</param>
-/// <returns>A <see cref="Result{ExerciseMuscleGroup}" />.</returns>
+/// <returns>A <see cref="Result" />.</returns>
 public record GetExerciseMuscleGroupByIdQuery(int Id) : IRequest<Result<ExerciseMuscleGroup>>;
 
 /// <summary>
@@ -32,7 +33,7 @@ public class GetExerciseMuscleGroupByIdQueryHandler(AppDbContext dbContext)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		return exerciseMuscleGroup == null
-			? Result.Failure<ExerciseMuscleGroup>(ErrorTypes.NotFound)
-			: Result.Success(exerciseMuscleGroup);
+			? Result.Fail<ExerciseMuscleGroup>(ErrorTypes.NotFound)
+			: Result.Ok(exerciseMuscleGroup);
 	}
 }

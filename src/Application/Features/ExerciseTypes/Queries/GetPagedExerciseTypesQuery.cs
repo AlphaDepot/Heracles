@@ -1,7 +1,7 @@
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Queries;
@@ -30,7 +30,7 @@ public class GetPagedExerciseTypesQueryHandler(AppDbContext dbContext)
 		var result = await queryable.ToListAsync(cancellationToken);
 		var total = await dbContext.ExerciseTypes.CountAsync(cancellationToken);
 
-		return Result.Success(new PagedResponse<ExerciseType>
+		return Result.Ok(new PagedResponse<ExerciseType>
 		{
 			Data = result,
 			PageNumber = request.Query.PageNumber,

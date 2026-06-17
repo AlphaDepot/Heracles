@@ -1,8 +1,7 @@
 using Application.Common.Errors;
-using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Commands;
@@ -50,7 +49,7 @@ public class CreateExerciseTypeCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<int>> Handle(CreateExerciseTypeCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -60,22 +59,22 @@ public class CreateExerciseTypeCommandHandler(AppDbContext dbContext)
 		await dbContext.ExerciseTypes.AddAsync(exerciseType, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(exerciseType.Id);
+		return Result.Ok(exerciseType.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateExerciseTypeCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		var existingExerciseType = await dbContext.ExerciseTypes.AnyAsync(x => x.Name == request.ExerciseType.Name);
 		if (existingExerciseType)
 		{
-			return Result.Failure<int>(ErrorTypes.NamingConflict);
+			return Result.Fail<int>(ErrorTypes.NamingConflict);
 		}
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

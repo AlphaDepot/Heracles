@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.Users;
 using Application.Features.WorkoutSessions;
@@ -59,9 +59,9 @@ public class CreateWorkoutSessionCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.DuplicateEntryWithEntityNames(nameof(WorkoutSession))));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.DuplicateEntry));
 	}
 
 	[Test]
@@ -83,9 +83,9 @@ public class CreateWorkoutSessionCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 
 	[Test]
@@ -101,8 +101,8 @@ public class CreateWorkoutSessionCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFoundWithEntityName(nameof(User))));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 }

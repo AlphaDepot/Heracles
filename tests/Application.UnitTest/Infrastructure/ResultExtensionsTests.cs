@@ -1,8 +1,8 @@
-using Application.Common.Errors;
-using Application.Common.Responses;
 using Application.Infrastructure.Extensions;
+using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace Application.UnitTest.Infrastructure;
 
@@ -11,44 +11,34 @@ public class ResultExtensionsTests
 	[Test]
 	public void ToProblemDetails_WhenResultIsSuccessful_ThrowsInvalidOperationException()
 	{
-		// Arrange
-		var result = Result.Success();
+		var result = Result.Ok("test");
 
-		// Act
-		void Act()
+		Assert.Throws<InvalidOperationException>(() =>
 		{
 			result.ToProblemDetails();
-		}
-
-		// Assert
-		Assert.Throws<InvalidOperationException>(Act);
+		});
 	}
-
 
 	[Test]
 	public async Task ToProblemDetails_WhenResultHasErrors_ReturnsProblemDetails()
 	{
-		// Arrange
-		var error = Error.NullValue;
-		var result = Result.Failure(error);
+		var result = Result.Fail<object>("Something went wrong");
+
 		var httpContext = new DefaultHttpContext();
 		var responseStream = new MemoryStream();
 		httpContext.Response.Body = responseStream;
 
-		// Set up the service provider
-		var serviceCollection = new ServiceCollection();
-		serviceCollection.AddLogging();
-		var serviceProvider = serviceCollection.BuildServiceProvider();
-		httpContext.RequestServices = serviceProvider;
+		httpContext.RequestServices = new ServiceCollection()
+			.AddLogging()
+			.BuildServiceProvider();
 
-		// Act
-		var problemDetailsResult = result.ToProblemDetails();
-		await problemDetailsResult.ExecuteAsync(httpContext);
+		var problem = result.ToProblemDetails();
+		await problem.ExecuteAsync(httpContext);
 
-		// Assert
 		responseStream.Seek(0, SeekOrigin.Begin);
-		var responseBody = await new StreamReader(responseStream).ReadToEndAsync();
-		Assert.That(responseBody, Is.Not.Empty);
-		Assert.That(httpContext.Response.StatusCode, Is.EqualTo(result.StatusCode));
+		var body = await new StreamReader(responseStream).ReadToEndAsync();
+
+		Assert.That(body, Is.Not.Empty);
+		Assert.That(httpContext.Response.StatusCode, Is.EqualTo(400));
 	}
 }

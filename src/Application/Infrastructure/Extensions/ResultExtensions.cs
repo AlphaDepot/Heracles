@@ -1,25 +1,33 @@
-using Application.Common.Responses;
+using FluentResults;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Infrastructure.Extensions;
 
 public static class ResultExtensions
 {
-	public static IResult ToProblemDetails(this Result result)
+	// Handles Result<T>
+	public static IResult ToProblemDetails<T>(this Result<T> result)
 	{
 		if (result.IsSuccess)
 		{
 			throw new InvalidOperationException("Can't convert successful serviceResponse to problem.");
 		}
 
-		var extensions = result.Errors == null
-			? new Dictionary<string, object?> { { "errors", new[] { result.Error } } }
-			: new Dictionary<string, object?> { { "errors", result.Errors } };
+		var errors = result.Errors
+			.Select(e => new
+			{
+				e.Message,
+				Metadata = e.Metadata
+			})
+			.ToArray();
 
 		return Results.Problem(
-			statusCode: result.StatusCode,
-			title: "One or more validation errors occurred!.",
-			type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-			extensions: extensions);
+			statusCode: 400,
+			title: "One or more errors occurred.",
+			type: "https://tools.ietf.org/html/rfc7231#section/6.5.1",
+			extensions: new Dictionary<string, object?>
+			{
+				{ "errors", errors }
+			});
 	}
 }

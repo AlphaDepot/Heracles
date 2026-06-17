@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Features.Equipments;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,14 +32,14 @@ public class UserExercisesByIdQueryHandler(AppDbContext dbContext, IHttpContextA
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (authenticatedUser == null)
 		{
-			return Result.Failure<UserExercise>(ErrorTypes.Unauthorized);
+			return Result.Fail<UserExercise>(ErrorTypes.Unauthorized);
 		}
 
 		var userExercise = await GetUserExerciseByIdAndUserId(request.Id, authenticatedUser, cancellationToken);
 
 		return userExercise == null
-			? Result.Failure<UserExercise>(ErrorTypes.NotFound)
-			: Result.Success(userExercise);
+			? Result.Fail<UserExercise>(ErrorTypes.NotFound)
+			: Result.Ok(userExercise);
 	}
 
 	private async Task<UserExercise?> GetUserExerciseByIdAndUserId(int id, string userId,

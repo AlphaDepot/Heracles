@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.UserExerciseHistories.Commands;
@@ -25,7 +25,7 @@ public class RemoveUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		CancellationToken cancellationToken)
 	{
 		var (validationResult, userExerciseHistory) = await BusinessValidation(request);
-		if (validationResult.IsFailure || userExerciseHistory == null)
+		if (validationResult.IsFailed || userExerciseHistory == null)
 		{
 			return validationResult;
 		}
@@ -34,8 +34,8 @@ public class RemoveUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Failed to remove UserExerciseHistory with Id: {request.Id}"));
 	}
 
@@ -45,15 +45,15 @@ public class RemoveUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		var userExerciseHistory = await dbContext.UserExerciseHistories.FindAsync(request.Id);
 		if (userExerciseHistory == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (userId != userExerciseHistory.UserId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
-		return (Result.Success(true), userExerciseHistory);
+		return (Result.Ok(true), userExerciseHistory);
 	}
 }

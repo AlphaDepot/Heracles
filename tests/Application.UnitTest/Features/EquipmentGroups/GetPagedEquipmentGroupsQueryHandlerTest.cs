@@ -3,6 +3,7 @@ using Application.Common.Responses;
 using Application.Features.EquipmentGroups;
 using Application.Features.EquipmentGroups.Queries;
 using Application.UnitTest.TestData;
+using FluentResults;
 
 namespace Application.UnitTest.Features.EquipmentGroups;
 

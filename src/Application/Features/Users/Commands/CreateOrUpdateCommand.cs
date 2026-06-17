@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,7 +57,7 @@ public class CreateOrUpdateCommandHandler(AppDbContext dbContext, IHttpContextAc
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (userId != request.UserRequest.UserId)
 		{
-			return Result.Failure<bool>(ErrorTypes.Unauthorized);
+			return Result.Fail<bool>(ErrorTypes.Unauthorized);
 		}
 
 		var existingUser = await dbContext.Users
@@ -85,6 +85,6 @@ public class CreateOrUpdateCommandHandler(AppDbContext dbContext, IHttpContextAc
 
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 }

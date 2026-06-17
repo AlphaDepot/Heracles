@@ -3,6 +3,7 @@ using Application.Common.Responses;
 using Application.Features.ExerciseMuscleGroups;
 using Application.Features.ExerciseMuscleGroups.Queries;
 using Application.UnitTest.TestData;
+using FluentResults;
 
 namespace Application.UnitTest.Features.ExerciseMuscleGroups;
 

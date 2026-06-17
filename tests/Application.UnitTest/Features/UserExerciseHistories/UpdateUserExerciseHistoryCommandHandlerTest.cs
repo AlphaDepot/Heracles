@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.UserExerciseHistories;
 using Application.Features.UserExerciseHistories.Commands;
@@ -96,9 +96,8 @@ public class UpdateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<bool>>());
-			Assert.That(result.Value, Is.False);
-			Assert.That(result.Error, Is.Not.Null);
-			Assert.That(result.Error, Is.InstanceOf<Error>());
+			Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 		});
 	}
 
@@ -125,9 +124,8 @@ public class UpdateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<bool>>());
-			Assert.That(result.Value, Is.False);
-			Assert.That(result.Error, Is.Not.Null);
-			Assert.That(result.Error, Is.InstanceOf<Error>());
+			Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 		});
 	}
 
@@ -154,9 +152,8 @@ public class UpdateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<bool>>());
-			Assert.That(result.Value, Is.False);
-			Assert.That(result.Error, Is.Not.Null);
-			Assert.That(result.Error, Is.InstanceOf<Error>());
+			Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.ConcurrencyError));
 		});
 	}
 
@@ -183,10 +180,8 @@ public class UpdateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<bool>>());
-			Assert.That(result.Value, Is.False);
-			Assert.That(result.Error, Is.Not.Null);
-			Assert.That(result.Error, Is.InstanceOf<Error>());
-			Assert.That(result.Error, Is.EqualTo(ErrorTypes.NotFoundWithEntityName(nameof(UserExerciseHistory))));
+			Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 		});
 	}
 
@@ -220,10 +215,8 @@ public class UpdateUserExerciseHistoryCommandHandlerTest : HandlerBaseUnitTest
 		{
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result, Is.InstanceOf<Result<bool>>());
-			Assert.That(result.Value, Is.False);
-			Assert.That(result.Error, Is.Not.Null);
-			Assert.That(result.Error, Is.InstanceOf<Error>());
-			Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+			Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+			Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 		});
 	}
 }

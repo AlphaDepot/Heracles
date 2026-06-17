@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands;
@@ -51,7 +51,7 @@ public class CreateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 	public async ValueTask<Result<int>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -60,18 +60,18 @@ public class CreateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 		dbContext.Users.Add(user);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(user.Id);
+		return Result.Ok(user.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateUserCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		var existingUser = await dbContext.Users.AnyAsync(x => x.UserId == request.UserRequest.UserId);
 
-		return existingUser ? Result.Failure<int>(ErrorTypes.NamingConflict) : Result.Success(0);
+		return existingUser ? Result.Fail<int>(ErrorTypes.NamingConflict) : Result.Ok(0);
 	}
 }

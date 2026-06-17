@@ -5,7 +5,7 @@ using Application.Features.ExerciseTypes;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +66,7 @@ public class CreateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 	public async ValueTask<Result<int>> Handle(CreateUserExerciseCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -80,7 +80,7 @@ public class CreateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 		await dbContext.UserExercises.AddAsync(userExercise, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(userExercise.Id);
+		return Result.Ok(userExercise.Id);
 	}
 
 	private async Task<int> GetExistingUserExerciseById(CreateUserExerciseCommand request)
@@ -100,13 +100,13 @@ public class CreateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 			.AnyAsync(x => x.UserId == request.UserExercise.UserId);
 		if (!existingUser)
 		{
-			return Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(User)));
+			return Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(User)));
 		}
 
 		// check if the user is the same as the current user
 		if (request.UserExercise.UserId != contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier))
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		// check if the exercise type exists
@@ -115,9 +115,9 @@ public class CreateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 
 		if (!existingExerciseType)
 		{
-			return Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(ExerciseType)));
+			return Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(ExerciseType)));
 		}
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

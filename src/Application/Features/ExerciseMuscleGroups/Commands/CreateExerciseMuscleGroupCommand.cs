@@ -3,8 +3,9 @@ using Application.Common.Responses;
 using Application.Features.MuscleFunctions;
 using Application.Features.MuscleGroups;
 using Application.Infrastructure.Data;
+using FluentResults;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseMuscleGroups.Commands;
@@ -79,7 +80,7 @@ public class CreateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<int>> Handle(CreateExerciseMuscleGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, muscleGroup, muscleFunction) = await BusinessValidation(request);
-		if (validationResult.IsFailure)
+		if (validationResult.IsFailed)
 		{
 			return validationResult;
 		}
@@ -89,7 +90,7 @@ public class CreateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		await dbContext.ExerciseMuscleGroups.AddAsync(exerciseMuscleGroup, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(exerciseMuscleGroup.Id);
+		return Result.Ok(exerciseMuscleGroup.Id);
 	}
 
 	private async Task<(Result<int>, MuscleGroup?, MuscleFunction?)> BusinessValidation(
@@ -97,28 +98,28 @@ public class CreateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<int>(ErrorTypes.Unauthorized), null, null);
+			return (Result.Fail<int>(ErrorTypes.Unauthorized), null, null);
 		}
 
 		// Check if the muscle group and function exist
 		var muscleGroup = await dbContext.MuscleGroups.FindAsync(request.ExerciseMuscleGroup.MuscleId);
 		if (muscleGroup == null)
 		{
-			return (Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(MuscleGroup))), null, null);
+			return (Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(MuscleGroup))), null, null);
 		}
 
 		// Check if the muscle function exists
 		var muscleFunction = await dbContext.MuscleFunctions.FindAsync(request.ExerciseMuscleGroup.FunctionId);
 		if (muscleFunction == null)
 		{
-			return (Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(MuscleFunction))), null, null);
+			return (Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(MuscleFunction))), null, null);
 		}
 
 		// Check if the exercise type exists
 		var existingExercise = await dbContext.ExerciseTypes.FindAsync(request.ExerciseMuscleGroup.ExerciseTypeId);
 		if (existingExercise == null)
 		{
-			return (Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(ExerciseTypes))), null, null);
+			return (Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(ExerciseTypes))), null, null);
 		}
 
 		// Check if the combination of exercise ID, muscle group ID, and muscle function ID is unique
@@ -130,11 +131,11 @@ public class CreateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		if (existingExerciseMuscleGroup)
 		{
 			return (
-				Result.Failure<int>(
+				Result.Fail<int>(
 					ErrorTypes.DuplicateEntryWithEntityNames(nameof(ExerciseMuscleGroup), nameof(ExerciseTypes))), null,
 				null);
 		}
 
-		return (Result.Success(0), muscleGroup, muscleFunction);
+		return (Result.Ok(0), muscleGroup, muscleFunction);
 	}
 }

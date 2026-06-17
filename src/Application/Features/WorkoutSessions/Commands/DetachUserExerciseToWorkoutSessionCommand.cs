@@ -4,7 +4,7 @@ using Application.Common.Responses;
 using Application.Features.UserExercises;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,7 +58,7 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 		CancellationToken cancellationToken)
 	{
 		var (validation, userExercise, workoutSession) = await BusinessValidation(request, cancellationToken);
-		if (validation.IsFailure || userExercise == null || workoutSession == null)
+		if (validation.IsFailed || userExercise == null || workoutSession == null)
 		{
 			return validation;
 		}
@@ -67,8 +67,8 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($" Failed to detach User Exercise {userExercise.Id}"));
 	}
 
@@ -79,7 +79,7 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 		var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (userId == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null, null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null, null);
 		}
 
 		// check user exercise
@@ -87,7 +87,7 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 			userExercise => userExercise.Id == request.WorkoutSessionRequest.UserExerciseId, cancellationToken);
 		if (userExercise == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("User Exercise not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("User Exercise not found")), null, null);
 		}
 
 		// check workout session
@@ -98,13 +98,13 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 
 		if (workoutSession == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Workout Session not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("Workout Session not found")), null, null);
 		}
 
 		// check if the user is the owner of the workout session and user exercise
 		if (workoutSession.UserId != userId || userExercise.UserId != userId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null, null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null, null);
 		}
 
 		// check if the user exercise is already detached from the workout session
@@ -112,11 +112,11 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 		    workoutSession.UserExercises.All(exercise => exercise.Id != request.WorkoutSessionRequest.UserExerciseId))
 		{
 			return (
-				Result.Failure<bool>(
+				Result.Fail<bool>(
 					ErrorTypes.BadRequestWithMessage("User Exercise is not attached to the Workout Session")), null,
 				null);
 		}
 
-		return (Result.Success(true), userExercise, workoutSession);
+		return (Result.Ok(true), userExercise, workoutSession);
 	}
 }

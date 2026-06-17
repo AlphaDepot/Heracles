@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.UserExerciseHistories;
 using Application.Features.UserExerciseHistories.Queries;
@@ -87,8 +87,8 @@ public class UserExerciseHistoriesByUserExerciseIdQueryHandlerTest : HandlerBase
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<List<UserExerciseHistory>>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

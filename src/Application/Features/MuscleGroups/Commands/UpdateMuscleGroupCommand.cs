@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleGroups.Commands;
@@ -55,7 +55,7 @@ public class UpdateMuscleGroupCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(UpdateMuscleGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, muscleGroup) = await BusinessValidation(request);
-		if (validation.IsFailure || muscleGroup == null)
+		if (validation.IsFailed || muscleGroup == null)
 		{
 			return validation;
 		}
@@ -66,8 +66,8 @@ public class UpdateMuscleGroupCommandHandler(AppDbContext dbContext)
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"Failed to update Muscle Group {muscleGroup.Id}"));
 	}
 
@@ -75,18 +75,18 @@ public class UpdateMuscleGroupCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var existingMuscleGroup = await dbContext.MuscleGroups.FindAsync(request.MuscleGroup.Id);
 		if (existingMuscleGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		if (existingMuscleGroup.Concurrency != request.MuscleGroup.Concurrency)
 		{
-			return (Result.Failure<bool>(ErrorTypes.ConcurrencyError), null);
+			return (Result.Fail<bool>(ErrorTypes.ConcurrencyAppError), null);
 		}
 
 		var nameAlreadyExists = await dbContext.MuscleGroups.AnyAsync(x =>
@@ -94,9 +94,9 @@ public class UpdateMuscleGroupCommandHandler(AppDbContext dbContext)
 			x.Id != request.MuscleGroup.Id);
 		if (nameAlreadyExists)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NamingConflict), null);
+			return (Result.Fail<bool>(ErrorTypes.NamingConflict), null);
 		}
 
-		return (Result.Success(true), existingMuscleGroup);
+		return (Result.Ok(true), existingMuscleGroup);
 	}
 }

@@ -1,7 +1,8 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using FluentResults;
+using Mediator; using FluentResults;
 
 namespace Application.Features.EquipmentGroups.Commands;
 
@@ -25,7 +26,7 @@ public class RemoveEquipmentGroupCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(RemoveEquipmentGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, equipmentGroup) = await BusinessValidation(request);
-		if (validationResult.IsFailure || equipmentGroup == null)
+		if (validationResult.IsFailed || equipmentGroup == null)
 		{
 			return validationResult;
 		}
@@ -33,22 +34,22 @@ public class RemoveEquipmentGroupCommandHandler(AppDbContext dbContext)
 		dbContext.EquipmentGroups.Remove(equipmentGroup);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, EquipmentGroup?)> BusinessValidation(RemoveEquipmentGroupCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var equipmentGroup = await dbContext.EquipmentGroups.FindAsync(request.Id);
 		if (equipmentGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
-		return (Result.Success(true), equipmentGroup);
+		return (Result.Ok(true), equipmentGroup);
 	}
 }

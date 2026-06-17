@@ -2,8 +2,9 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Features.Equipments;
 using Application.Infrastructure.Data;
+using FluentResults;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Commands;
@@ -17,7 +18,7 @@ public record DetachEquipmentRequest(int EquipmentGroupId, int EquipmentId);
 ///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="EquipmentRequest">The <see cref="DetachEquipmentRequest" /> to detach.</param>
-/// <returns>A <see cref="Result{T}" /> with a boolean value indicating success.</returns>
+/// <returns>A <see cref="Result" /> with a boolean value indicating success.</returns>
 public record DetachEquipmentCommand(DetachEquipmentRequest EquipmentRequest)
 	: IRequest<Result<bool>>;
 
@@ -46,7 +47,7 @@ public class DetachEquipmentCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(DetachEquipmentCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, equipmentGroup, equipment) = await BusinessValidation(request);
-		if (validation.IsFailure || equipmentGroup == null || equipment == null)
+		if (validation.IsFailed || equipmentGroup == null || equipment == null)
 		{
 			return validation;
 		}
@@ -54,7 +55,7 @@ public class DetachEquipmentCommandHandler(AppDbContext dbContext)
 		equipmentGroup.Equipments?.Remove(equipment);
 
 		await dbContext.SaveChangesAsync(cancellationToken);
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, EquipmentGroup?, Equipment?)> BusinessValidation(DetachEquipmentCommand request)
@@ -65,22 +66,22 @@ public class DetachEquipmentCommandHandler(AppDbContext dbContext)
 
 		if (equipmentGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Equipment Group not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("Equipment Group not found")), null, null);
 		}
 
 		var equipment = await dbContext.Equipments.FindAsync(request.EquipmentRequest.EquipmentId);
 		if (equipment == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Equipment not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("Equipment not found")), null, null);
 		}
 
 		if (equipmentGroup.Equipments == null || !equipmentGroup.Equipments.Contains(equipment))
 		{
 			return (
-				Result.Failure<bool>(ErrorTypes.BadRequestWithMessage("Equipment not attached to equipment group.")),
+				Result.Fail<bool>(ErrorTypes.BadRequestWithMessage("Equipment not attached to equipment group.")),
 				null, null);
 		}
 
-		return (Result.Success(true), equipmentGroup, equipment);
+		return (Result.Ok(true), equipmentGroup, equipment);
 	}
 }

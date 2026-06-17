@@ -3,6 +3,7 @@ using Application.Common.Responses;
 using Application.Features.ExerciseTypes;
 using Application.Features.ExerciseTypes.Queries;
 using Application.UnitTest.TestData;
+using FluentResults;
 
 namespace Application.UnitTest.Features.ExerciseTypes;
 

@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleGroups.Queries;
@@ -29,7 +29,7 @@ public class GetMuscleGroupByIdQueryHandler(AppDbContext dbContext)
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 		return muscleGroup == null
-			? Result.Failure<MuscleGroup>(ErrorTypes.NotFound)
-			: Result.Success(muscleGroup);
+			? Result.Fail<MuscleGroup>(ErrorTypes.NotFound)
+			: Result.Ok(muscleGroup);
 	}
 }

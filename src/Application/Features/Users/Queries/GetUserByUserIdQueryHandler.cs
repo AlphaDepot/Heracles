@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,13 +27,13 @@ public class GetUserByUserIdQueryHandler(AppDbContext dbContext, IHttpContextAcc
 	{
 		if (!await IsUserAuthorized(request))
 		{
-			return Result.Failure<User>(ErrorTypes.Unauthorized);
+			return Result.Fail<User>(ErrorTypes.Unauthorized);
 		}
 
 		var user = await dbContext.Users.FirstOrDefaultAsync(x => x.UserId == request.UserId, cancellationToken);
 		return user == null
-			? Result.Failure<User>(ErrorTypes.NotFound)
-			: Result.Success(user);
+			? Result.Fail<User>(ErrorTypes.NotFound)
+			: Result.Ok(user);
 	}
 
 	private async Task<bool> IsUserAuthorized(GetUserByUserIdQuery request)

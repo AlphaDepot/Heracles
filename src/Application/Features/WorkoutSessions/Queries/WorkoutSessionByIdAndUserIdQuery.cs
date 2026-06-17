@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +33,7 @@ public class WorkoutSessionByIdAndUserIdQueryHandler(AppDbContext dbContext, IHt
 
 		if (authenticatedUser == null)
 		{
-			return Result.Failure<WorkoutSession>(ErrorTypes.Unauthorized);
+			return Result.Fail<WorkoutSession>(ErrorTypes.Unauthorized);
 		}
 
 		var session = await dbContext.WorkoutSessions
@@ -43,7 +43,7 @@ public class WorkoutSessionByIdAndUserIdQueryHandler(AppDbContext dbContext, IHt
 
 
 		return session == null
-			? Result.Failure<WorkoutSession>(ErrorTypes.NotFound)
-			: Result.Success(session);
+			? Result.Fail<WorkoutSession>(ErrorTypes.NotFound)
+			: Result.Ok(session);
 	}
 }

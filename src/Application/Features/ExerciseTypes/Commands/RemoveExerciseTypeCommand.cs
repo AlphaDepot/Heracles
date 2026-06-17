@@ -1,7 +1,6 @@
 using Application.Common.Errors;
-using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 
 namespace Application.Features.ExerciseTypes.Commands;
 
@@ -25,7 +24,7 @@ public class RemoveExerciseTypeCommandHandler(AppDbContext dbContext)
 	public async ValueTask<Result<bool>> Handle(RemoveExerciseTypeCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, exerciseType) = await BusinessValidation(request);
-		if (validationResult.IsFailure || exerciseType == null)
+		if (validationResult.IsFailed || exerciseType == null)
 		{
 			return validationResult;
 		}
@@ -33,22 +32,22 @@ public class RemoveExerciseTypeCommandHandler(AppDbContext dbContext)
 		dbContext.ExerciseTypes.Remove(exerciseType);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, ExerciseType?)> BusinessValidation(RemoveExerciseTypeCommand request)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var exerciseType = await dbContext.ExerciseTypes.FindAsync(request.Id);
 		if (exerciseType == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
-		return (Result.Success(true), exerciseType);
+		return (Result.Ok(true), exerciseType);
 	}
 }

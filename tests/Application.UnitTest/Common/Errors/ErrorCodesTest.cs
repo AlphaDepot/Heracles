@@ -62,7 +62,7 @@ public class ErrorCodesTest
 	[Test]
 	public void InvalidErrorType_ShouldHaveCorrectProperties()
 	{
-		var error = ErrorTypes.InvalidErrorType;
+		var error = ErrorTypes.InvalidAppErrorType;
 
 		Assert.That(error, Is.Not.Null);
 		Assert.That(error.Type, Is.EqualTo(ErrorCodes.InvalidErrorType));
@@ -84,7 +84,7 @@ public class ErrorCodesTest
 	[Test]
 	public void DatabaseErrorType_ShouldHaveCorrectProperties()
 	{
-		var error = ErrorTypes.DatabaseError;
+		var error = ErrorTypes.DatabaseAppError;
 
 		Assert.That(error, Is.Not.Null);
 		Assert.That(error.Type, Is.EqualTo(ErrorCodes.DatabaseError));

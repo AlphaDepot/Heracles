@@ -1,8 +1,9 @@
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.EquipmentGroups;
 using Application.Features.EquipmentGroups.Commands;
 using Application.UnitTest.TestData;
+using FluentResults;
 
 namespace Application.UnitTest.Features.EquipmentGroups;
 
@@ -56,10 +57,12 @@ public class CreateEquipmentGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Act
 		var result = await _handler.Handle(command, CancellationToken.None);
 
+
+
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.NamingConflict));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NamingConflict));
 	}
 
 	[Test]
@@ -75,6 +78,6 @@ public class CreateEquipmentGroupCommandHandlerTest : HandlerBaseUnitTest
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<int>>());
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

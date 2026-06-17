@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Application.Common.Errors;
+using Application.Common.Errors; using FluentResults;
 using Application.Common.Responses;
 using Application.Features.UserExercises;
 using Application.Features.Users;
@@ -65,9 +65,9 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error.Type, Is.EqualTo(ErrorCodes.NotFound));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -84,9 +84,9 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error.Type, Is.EqualTo(ErrorCodes.NotFound));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.NotFound));
 	}
 
 	[Test]
@@ -105,9 +105,9 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.DuplicateEntryWithEntityNames(nameof(UserExercise))));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.DuplicateEntry));
 	}
 
 	[Test]
@@ -131,9 +131,9 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 
 	[Test]
@@ -156,8 +156,8 @@ public class AttachUserExerciseToWorkoutSessionCommandHandlerTest : HandlerBaseU
 		// Assert
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result, Is.InstanceOf<Result<bool>>());
-		Assert.That(result.IsFailure, Is.True);
-		Assert.That(result.Error, Is.Not.Null);
-		Assert.That(result.Error, Is.EqualTo(ErrorTypes.Unauthorized));
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.Not.Null);
+		Assert.That(result.Errors.First().Metadata["Type"], Is.EqualTo(ErrorCodes.Unauthorized));
 	}
 }

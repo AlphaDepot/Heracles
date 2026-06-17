@@ -4,7 +4,7 @@ using Application.Common.Responses;
 using Application.Features.UserExercises;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,7 +61,7 @@ public class AttachUserExerciseToWorkoutSessionCommandHandler(
 		CancellationToken cancellationToken)
 	{
 		var (validation, userExercise, workoutSession) = await BusinessValidation(request, cancellationToken);
-		if (validation.IsFailure || userExercise == null || workoutSession == null)
+		if (validation.IsFailed || userExercise == null || workoutSession == null)
 		{
 			return validation;
 		}
@@ -70,7 +70,7 @@ public class AttachUserExerciseToWorkoutSessionCommandHandler(
 		workoutSession.UserExercises.Add(userExercise);
 
 		await dbContext.SaveChangesAsync(cancellationToken);
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, UserExercise?, WorkoutSession?)> BusinessValidation(
@@ -80,14 +80,14 @@ public class AttachUserExerciseToWorkoutSessionCommandHandler(
 		var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (userId == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null, null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null, null);
 		}
 
 		// check user exercise
 		var userExercise = await dbContext.UserExercises.FindAsync(request.WorkoutSessionRequest.UserExerciseId);
 		if (userExercise == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("User Exercise not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("User Exercise not found")), null, null);
 		}
 
 		// check workout session
@@ -97,22 +97,22 @@ public class AttachUserExerciseToWorkoutSessionCommandHandler(
 				cancellationToken);
 		if (workoutSession == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Workout Session not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("Workout Session not found")), null, null);
 		}
 
 		// check if the user is the owner of the workout session and user exercise
 		if (workoutSession.UserId != userId || userExercise.UserId != userId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null, null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null, null);
 		}
 
 
 		// Error if the user is already attached to the workout session
 		if (workoutSession.UserExercises != null && workoutSession.UserExercises.Any(x => x.Id == userExercise.Id))
 		{
-			return (Result.Failure<bool>(ErrorTypes.DuplicateEntryWithEntityNames(nameof(UserExercise))), null, null);
+			return (Result.Fail<bool>(ErrorTypes.DuplicateEntryWithEntityNames(nameof(UserExercise))), null, null);
 		}
 
-		return (Result.Success(true), userExercise, workoutSession);
+		return (Result.Ok(true), userExercise, workoutSession);
 	}
 }

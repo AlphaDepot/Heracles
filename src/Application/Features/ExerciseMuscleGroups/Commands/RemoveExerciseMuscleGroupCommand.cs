@@ -1,7 +1,8 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using FluentResults;
+using Mediator; using FluentResults;
 
 namespace Application.Features.ExerciseMuscleGroups.Commands;
 
@@ -26,7 +27,7 @@ public class RemoveExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		CancellationToken cancellationToken)
 	{
 		var (validationResult, exerciseMuscleGroup) = await BusinessValidation(request);
-		if (validationResult.IsFailure || exerciseMuscleGroup == null)
+		if (validationResult.IsFailed || exerciseMuscleGroup == null)
 		{
 			return validationResult;
 		}
@@ -34,7 +35,7 @@ public class RemoveExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		dbContext.ExerciseMuscleGroups.Remove(exerciseMuscleGroup);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, ExerciseMuscleGroup?)> BusinessValidation(
@@ -42,15 +43,15 @@ public class RemoveExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	{
 		if (!request.IsAdmin)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
 		var exerciseMuscleGroup = await dbContext.ExerciseMuscleGroups.FindAsync(request.Id);
 		if (exerciseMuscleGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
-		return (Result.Success(true), exerciseMuscleGroup);
+		return (Result.Ok(true), exerciseMuscleGroup);
 	}
 }

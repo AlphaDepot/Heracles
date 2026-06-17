@@ -5,7 +5,7 @@ using Application.Common.Utilities;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,7 +63,7 @@ public class CreateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 	public async ValueTask<Result<int>> Handle(CreateWorkoutSessionCommand request, CancellationToken cancellationToken)
 	{
 		var businessValidation = await BusinessValidation(request, cancellationToken);
-		if (businessValidation.IsFailure)
+		if (businessValidation.IsFailed)
 		{
 			return businessValidation;
 		}
@@ -72,7 +72,7 @@ public class CreateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 		await dbContext.WorkoutSessions.AddAsync(workoutSession, cancellationToken);
 		await dbContext.SaveChangesAsync(cancellationToken);
 
-		return Result.Success(workoutSession.Id);
+		return Result.Ok(workoutSession.Id);
 	}
 
 	private async ValueTask<Result<int>> BusinessValidation(CreateWorkoutSessionCommand request,
@@ -83,14 +83,14 @@ public class CreateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 			.AnyAsync(x => x.UserId == request.WorkoutSession.UserId, cancellationToken);
 		if (!existingUser)
 		{
-			return Result.Failure<int>(ErrorTypes.NotFoundWithEntityName(nameof(User)));
+			return Result.Fail<int>(ErrorTypes.NotFoundWithEntityName(nameof(User)));
 		}
 
 		// check if the userid  is the same as the context userid
 		var userId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (userId != request.WorkoutSession.UserId)
 		{
-			return Result.Failure<int>(ErrorTypes.Unauthorized);
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
 		}
 
 		// check if the workout session name is unique
@@ -99,10 +99,10 @@ public class CreateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 				cancellationToken);
 		if (existingWorkoutSession)
 		{
-			return Result.Failure<int>(ErrorTypes.DuplicateEntryWithEntityNames(nameof(WorkoutSession)));
+			return Result.Fail<int>(ErrorTypes.DuplicateEntryWithEntityNames(nameof(WorkoutSession)));
 		}
 
 
-		return Result.Success(0);
+		return Result.Ok(0);
 	}
 }

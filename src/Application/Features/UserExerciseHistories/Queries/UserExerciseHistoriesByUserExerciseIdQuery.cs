@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +37,7 @@ public class UserExerciseHistoriesByUserExerciseIdQueryHandler(
 
 		if (authenticatedUser == null)
 		{
-			return Result.Failure<List<UserExerciseHistory>>(ErrorTypes.Unauthorized);
+			return Result.Fail<List<UserExerciseHistory>>(ErrorTypes.Unauthorized);
 		}
 
 		var sessions = await dbContext.UserExerciseHistories
@@ -45,6 +45,6 @@ public class UserExerciseHistoriesByUserExerciseIdQueryHandler(
 			.OrderBy(x => x.Change)
 			.ToListAsync(cancellationToken);
 
-		return Result.Success(sessions);
+		return Result.Ok(sessions);
 	}
 }

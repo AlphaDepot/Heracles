@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.WorkoutSessions.Commands;
@@ -27,7 +27,7 @@ public class RemoveWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 	public async ValueTask<Result<bool>> Handle(RemoveWorkoutSessionCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, workoutSession) = await BusinessValidation(request, cancellationToken);
-		if (validationResult.IsFailure || workoutSession == null)
+		if (validationResult.IsFailed || workoutSession == null)
 		{
 			return validationResult;
 		}
@@ -36,8 +36,8 @@ public class RemoveWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 		var result = await dbContext.SaveChangesAsync(cancellationToken);
 
 		return result > 0
-			? Result.Success(true)
-			: Result.Failure<bool>(
+			? Result.Ok(true)
+			: Result.Fail<bool>(
 				ErrorTypes.DatabaseErrorWithMessage($"The WorkoutSession with id {request.Id} could not be removed."));
 	}
 
@@ -47,15 +47,15 @@ public class RemoveWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 		var workoutSession = await dbContext.WorkoutSessions.FindAsync(request.Id, cancellationToken);
 		if (workoutSession == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFound), null);
+			return (Result.Fail<bool>(ErrorTypes.NotFound), null);
 		}
 
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (userId != workoutSession.UserId)
 		{
-			return (Result.Failure<bool>(ErrorTypes.Unauthorized), null);
+			return (Result.Fail<bool>(ErrorTypes.Unauthorized), null);
 		}
 
-		return (Result.Success(true), workoutSession);
+		return (Result.Ok(true), workoutSession);
 	}
 }

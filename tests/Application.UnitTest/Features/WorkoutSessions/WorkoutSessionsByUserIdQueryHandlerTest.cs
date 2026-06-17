@@ -2,6 +2,7 @@ using Application.Common.Responses;
 using Application.Features.WorkoutSessions;
 using Application.Features.WorkoutSessions.Queries;
 using Application.UnitTest.TestData;
+using FluentResults;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.UnitTest.Features.WorkoutSessions;

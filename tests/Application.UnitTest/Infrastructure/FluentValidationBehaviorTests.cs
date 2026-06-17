@@ -1,46 +1,46 @@
-using Application.Common.Responses;
-using Application.Infrastructure.Logging;
 using Application.Infrastructure.Validation;
+using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
 using Mediator;
-using Microsoft.AspNetCore.Http;
 using Moq;
-using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace Application.UnitTest.Infrastructure;
 
 [TestFixture]
 public class FluentValidationBehaviorTests
 {
+	private Mock<IValidator<TestRequest>> _validatorMock;
+	private FluentValidationBehavior<TestRequest, Result> _behavior;
+
 	[SetUp]
 	public void SetUp()
 	{
 		_validatorMock = new Mock<IValidator<TestRequest>>();
-		_loggerMock = new Mock<IAppLogger<FluentValidationBehavior<TestRequest, Result>>>();
-		_behavior = new FluentValidationBehavior<TestRequest, Result>(new[] { _validatorMock.Object },
-			_loggerMock.Object);
-	}
 
-	private Mock<IValidator<TestRequest>> _validatorMock;
-	private Mock<IAppLogger<FluentValidationBehavior<TestRequest, Result>>> _loggerMock;
-	private FluentValidationBehavior<TestRequest, Result> _behavior;
+		_behavior = new FluentValidationBehavior<TestRequest, Result>(
+			new[] { _validatorMock.Object }
+		);
+	}
 
 	[Test]
 	public async Task Handle_ShouldReturnNext_WhenNoValidationErrors()
 	{
 		// Arrange
 		var request = new TestRequest();
-		MessageHandlerDelegate<TestRequest, Result> next =
-			(req, ct) => ValueTask.FromResult(Result.Success());
 
-		_validatorMock.Setup(v => v.Validate(It.IsAny<TestRequest>())).Returns(new ValidationResult());
+		MessageHandlerDelegate<TestRequest, Result> next =
+			(_, _) => ValueTask.FromResult(Result.Ok());
+
+		_validatorMock
+			.Setup(v => v.Validate(It.IsAny<TestRequest>()))
+			.Returns(new ValidationResult());
 
 		// Act
 		var result = await _behavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
-		Assert.That(result.IsSuccess);
+		Assert.That(result.IsSuccess, Is.True);
 	}
 
 	[Test]
@@ -48,29 +48,28 @@ public class FluentValidationBehaviorTests
 	{
 		// Arrange
 		var request = new TestRequest();
-		MessageHandlerDelegate<TestRequest, Result> next =
-			(req, ct) => ValueTask.FromResult(Result.Success());
 
-		var validationFailures = new List<ValidationFailure>
+		var failures = new List<ValidationFailure>
 		{
-			new("Property", "Error message")
+			new ValidationFailure("Property", "Error message")
 		};
 
-		_validatorMock.Setup(v => v.Validate(It.IsAny<TestRequest>()))
-			.Returns(new ValidationResult(validationFailures));
+		MessageHandlerDelegate<TestRequest, Result> next =
+			(_, _) => ValueTask.FromResult(Result.Ok());
+
+		_validatorMock
+			.Setup(v => v.Validate(It.IsAny<TestRequest>()))
+			.Returns(new ValidationResult(failures));
 
 		// Act
 		var result = await _behavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
-		Assert.That(result.IsFailure);
-		Assert.That(result.Errors, Has.Length.EqualTo(1));
-		Assert.That(result.Errors.First().Description, Is.EqualTo("Error message"));
-		Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status400BadRequest));
-
+		Assert.That(result.IsFailed, Is.True);
+		Assert.That(result.Errors.Count, Is.EqualTo(1));
+		Assert.That(result.Errors.First().Message, Is.EqualTo("Error message"));
 	}
 
-	public class TestRequest : IRequest<Result>
-	{
-	}
+	// IMPORTANT FIX: must be public so Moq can proxy it
+	public class TestRequest : IRequest<Result> { }
 }

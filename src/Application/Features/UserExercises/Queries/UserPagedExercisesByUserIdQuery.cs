@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,7 +35,7 @@ public class UserPagedExercisesByUserIdQueryHandler(AppDbContext dbContext, IHtt
 
 		if (authenticatedUser == null)
 		{
-			return Result.Failure<PagedResponse<UserExercise>>(ErrorTypes.Unauthorized);
+			return Result.Fail<PagedResponse<UserExercise>>(ErrorTypes.Unauthorized);
 		}
 
 
@@ -43,7 +43,7 @@ public class UserPagedExercisesByUserIdQueryHandler(AppDbContext dbContext, IHtt
 		var userExercises = await queryable.ToListAsync(cancellationToken);
 		var total = await dbContext.UserExercises.CountAsync(x => x.UserId == authenticatedUser, cancellationToken);
 
-		return Result.Success(new PagedResponse<UserExercise>
+		return Result.Ok(new PagedResponse<UserExercise>
 		{
 			Data = userExercises,
 			PageNumber = request.Query.PageNumber,

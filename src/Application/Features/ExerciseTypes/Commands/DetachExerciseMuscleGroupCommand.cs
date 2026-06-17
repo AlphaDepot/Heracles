@@ -1,9 +1,8 @@
 using Application.Common.Errors;
-using Application.Common.Responses;
 using Application.Features.ExerciseMuscleGroups;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using Mediator;
+using Mediator; using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Commands;
@@ -48,7 +47,7 @@ public class DetachExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		CancellationToken cancellationToken)
 	{
 		var (validation, exerciseType, muscleGroup) = await BusinessValidation(request);
-		if (validation.IsFailure || exerciseType == null || muscleGroup == null)
+		if (validation.IsFailed || exerciseType == null || muscleGroup == null)
 		{
 			return validation;
 		}
@@ -56,7 +55,7 @@ public class DetachExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 		exerciseType.MuscleGroups?.Remove(muscleGroup);
 
 		await dbContext.SaveChangesAsync(cancellationToken);
-		return Result.Success(true);
+		return Result.Ok(true);
 	}
 
 	private async Task<(Result<bool>, ExerciseType?, ExerciseMuscleGroup?)> BusinessValidation(
@@ -68,25 +67,25 @@ public class DetachExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 
 		if (exerciseType == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Exercise Type not found")), null, null);
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("Exercise Type not found")), null, null);
 		}
 
 		var muscleGroup = await dbContext.ExerciseMuscleGroups.FindAsync(request.ExerciseMuscleGroup.MuscleGroupId);
 		if (muscleGroup == null)
 		{
-			return (Result.Failure<bool>(ErrorTypes.NotFoundWithMessage("Exercise Muscle Group not found")), null,
+			return (Result.Fail<bool>(ErrorTypes.NotFoundWithMessage("Exercise Muscle Group not found")), null,
 				null);
 		}
 
 		if (exerciseType.MuscleGroups == null || !exerciseType.MuscleGroups.Contains(muscleGroup))
 		{
 			return (
-				Result.Failure<bool>(
+				Result.Fail<bool>(
 					ErrorTypes.BadRequestWithMessage("Exercise Muscle Group not attached to exercise type.")), null,
 				null);
 		}
 
 
-		return (Result.Success(true), exerciseType, muscleGroup);
+		return (Result.Ok(true), exerciseType, muscleGroup);
 	}
 }

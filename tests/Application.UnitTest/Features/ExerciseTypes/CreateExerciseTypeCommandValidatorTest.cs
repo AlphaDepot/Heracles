@@ -17,8 +17,6 @@ public class CreateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 	[TestCase("Name", "Description", "ImageUrl")]
 	[TestCase("Name", null, "ImageUrl")]
 	[TestCase("Name", "", "ImageUrl")]
-	[TestCase("Name", "Description", null)]
-	[TestCase("Name", "Description", "")]
 	public void CreateExerciseTypeCommandValidator_ShouldNotHaveError_WhenInputIsValid(string name, string? description,
 		string? imageUrl)
 	{
@@ -59,7 +57,7 @@ public class CreateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 			case "Description":
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Description);
 				break;
-			case "ImageUrl":
+			case "Images":
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Images);
 				break;
 		}

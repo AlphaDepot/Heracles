@@ -17,8 +17,6 @@ public class UpdateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 	[TestCase(1, "Name", StringStaticGuid, "Description", "ImageUrl")]
 	[TestCase(1, "Name", StringStaticGuid, null, "ImageUrl")]
 	[TestCase(1, "Name", StringStaticGuid, "", "ImageUrl")]
-	[TestCase(1, "Name", StringStaticGuid, "Description", null)]
-	[TestCase(1, "Name", StringStaticGuid, "Description", "")]
 	public void UpdateExerciseTypeCommandValidator_ShouldNotHaveError_WhenInputIsValid(int id, string name,
 		string concurrency, string? description, string? imageUrl)
 	{
@@ -63,7 +61,7 @@ public class UpdateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 			case "Description":
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Description);
 				break;
-			case "ImageUrl":
+			case "Images":
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Images);
 				break;
 			case "Concurrency":

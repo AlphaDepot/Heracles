@@ -65,7 +65,7 @@ public class TestExerciseTypeController : BaseIntegrationTest
 		var exerciseType = new CreateExerciseTypeRequest(
 			"Test Exercise Type" + random.Next(10, 100),
 			"Test Description",
-			"https://test.com/image.jpg");
+			["https://test.com/image.jpg"]);
 
 		// Act
 		var response = await Client.PostAsJsonAsync(BaseUrl, exerciseType);
@@ -90,7 +90,7 @@ public class TestExerciseTypeController : BaseIntegrationTest
 			"Test Exercise Type Updated",
 			existingExerciseType?.Concurrency,
 			"Test Description Updated",
-			"https://test.com/image.jpg");
+			["https://test.com/image.jpg"]);
 		// Act
 		var response = await Client.PutAsJsonAsync($"{BaseUrl}/2", exerciseType);
 		HandleResponseFailure(response);

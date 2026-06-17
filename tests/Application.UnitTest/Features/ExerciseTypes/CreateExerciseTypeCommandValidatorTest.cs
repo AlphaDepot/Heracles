@@ -22,11 +22,17 @@ public class CreateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 	public void CreateExerciseTypeCommandValidator_ShouldNotHaveError_WhenInputIsValid(string name, string? description,
 		string? imageUrl)
 	{
-		var command = new CreateExerciseTypeCommand(new CreateExerciseTypeRequest(name, description, imageUrl));
+
+		var images = string.IsNullOrEmpty(imageUrl)
+			? null
+			: new List<string> { imageUrl };
+
+
+		var command = new CreateExerciseTypeCommand(new CreateExerciseTypeRequest(name, description, images));
 		var result = _validator.TestValidate(command);
 		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Name);
 		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Description);
-		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.ImageUrl);
+		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Images);
 	}
 
 	[TestCase("", "Description", "ImageUrl", "Name")]
@@ -37,7 +43,12 @@ public class CreateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 	public void CreateExerciseTypeCommandValidator_ShouldHaveError_WhenInputIsInvalid(string? name, string description,
 		string imageUrl, string testForPropertyName)
 	{
-		var command = new CreateExerciseTypeCommand(new CreateExerciseTypeRequest(name!, description, imageUrl));
+
+		var images = string.IsNullOrEmpty(imageUrl)
+			? null
+			: new List<string> { imageUrl };
+
+		var command = new CreateExerciseTypeCommand(new CreateExerciseTypeRequest(name!, description, images));
 		var result = _validator.TestValidate(command);
 
 		switch (testForPropertyName)
@@ -49,7 +60,7 @@ public class CreateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Description);
 				break;
 			case "ImageUrl":
-				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.ImageUrl);
+				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Images);
 				break;
 		}
 	}

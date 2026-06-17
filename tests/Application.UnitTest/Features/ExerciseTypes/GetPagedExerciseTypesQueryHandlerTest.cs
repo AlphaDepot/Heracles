@@ -41,7 +41,7 @@ public class GetPagedExerciseTypesQueryHandlerTest : HandlerBaseUnitTest
 		Assert.That(result.Value.Data.First().Id, Is.EqualTo(1));
 		Assert.That(result.Value.Data.First().Name, Is.EqualTo(exerciseType.Name));
 		Assert.That(result.Value.Data.First().Description, Is.EqualTo(exerciseType.Description));
-		Assert.That(result.Value.Data.First().ImageUrl, Is.EqualTo(exerciseType.ImageUrl));
+		Assert.That(result.Value.Data.First().Images, Is.EqualTo(exerciseType.Images));
 	}
 
 
@@ -62,7 +62,7 @@ public class GetPagedExerciseTypesQueryHandlerTest : HandlerBaseUnitTest
 		Assert.That(result.Value.Data.First().Id, Is.EqualTo(1));
 		Assert.That(result.Value.Data.First().Name, Is.EqualTo(exerciseType.Name));
 		Assert.That(result.Value.Data.First().Description, Is.EqualTo(exerciseType.Description));
-		Assert.That(result.Value.Data.First().ImageUrl, Is.EqualTo(exerciseType.ImageUrl));
+		Assert.That(result.Value.Data.First().Images, Is.EqualTo(exerciseType.Images));
 	}
 
 	[Test]
@@ -84,6 +84,6 @@ public class GetPagedExerciseTypesQueryHandlerTest : HandlerBaseUnitTest
 		Assert.That(result.Value.Data.First().Id, Is.EqualTo(sortedExerciseTypes.First().Id));
 		Assert.That(result.Value.Data.First().Name, Is.EqualTo(sortedExerciseTypes.First().Name));
 		Assert.That(result.Value.Data.First().Description, Is.EqualTo(sortedExerciseTypes.First().Description));
-		Assert.That(result.Value.Data.First().ImageUrl, Is.EqualTo(sortedExerciseTypes.First().ImageUrl));
+		Assert.That(result.Value.Data.First().Images, Is.EqualTo(sortedExerciseTypes.First().Images));
 	}
 }

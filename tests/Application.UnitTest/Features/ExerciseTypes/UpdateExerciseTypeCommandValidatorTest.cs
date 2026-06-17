@@ -22,13 +22,16 @@ public class UpdateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 	public void UpdateExerciseTypeCommandValidator_ShouldNotHaveError_WhenInputIsValid(int id, string name,
 		string concurrency, string? description, string? imageUrl)
 	{
+		var images = string.IsNullOrEmpty(imageUrl)
+			? null
+			: new List<string> { imageUrl };
 		var command =
-			new UpdateExerciseTypeCommand(new UpdateExerciseTypeRequest(id, name, concurrency, description, imageUrl));
+			new UpdateExerciseTypeCommand(new UpdateExerciseTypeRequest(id, name, concurrency, description, images));
 		var result = _validator.TestValidate(command);
 		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Id);
 		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Name);
 		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Description);
-		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.ImageUrl);
+		result.ShouldNotHaveValidationErrorFor(x => x.ExerciseType.Images);
 	}
 
 	[TestCase(1, "", StringStaticGuid, "Description", "ImageUrl", "Name")]
@@ -42,8 +45,11 @@ public class UpdateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 	public void UpdateExerciseTypeCommandValidator_ShouldHaveError_WhenInputIsInvalid(int id, string? name,
 		string? concurrency, string description, string imageUrl, string testForPropertyName)
 	{
+		var images = string.IsNullOrEmpty(imageUrl)
+			? null
+			: new List<string> { imageUrl };
 		var command =
-			new UpdateExerciseTypeCommand(new UpdateExerciseTypeRequest(id, name!, concurrency, description, imageUrl));
+			new UpdateExerciseTypeCommand(new UpdateExerciseTypeRequest(id, name!, concurrency, description, images));
 		var result = _validator.TestValidate(command);
 
 		switch (testForPropertyName)
@@ -58,7 +64,7 @@ public class UpdateExerciseTypeCommandValidatorTest : FluentValidationBaseUnitTe
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Description);
 				break;
 			case "ImageUrl":
-				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.ImageUrl);
+				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Images);
 				break;
 			case "Concurrency":
 				result.ShouldHaveValidationErrorFor(x => x.ExerciseType.Concurrency);

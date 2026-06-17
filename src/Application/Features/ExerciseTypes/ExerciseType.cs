@@ -17,10 +17,9 @@ public class ExerciseType : IEntity, IHasName
 	public string? Description { get; set; }
 
 	/// <summary>
-	///     Image URL for the exercise
+	///     Images of the exercise type.
 	/// </summary>
-	[StringLength(255)]
-	public string? ImageUrl { get; set; }
+	public List<string>? Images { get; set; }
 
 	/// <summary>
 	///     List of <see cref="ExerciseMuscleGroup" />

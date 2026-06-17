@@ -28,7 +28,7 @@ public class UpdateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 		var exerciseType = _exerciseTypes.First();
 		var storedExerciseType = await DbContext.ExerciseTypes.FindAsync(exerciseType.Id);
 		var updateRequest = new UpdateExerciseTypeRequest(exerciseType.Id, exerciseType.Name,
-			storedExerciseType?.Concurrency, exerciseType.Description, exerciseType.ImageUrl);
+			storedExerciseType?.Concurrency, exerciseType.Description, exerciseType.Images);
 		var command = new UpdateExerciseTypeCommand(updateRequest);
 
 
@@ -45,7 +45,7 @@ public class UpdateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 		Assert.That(updatedExerciseType.Concurrency, Is.Not.Null);
 		Assert.That(updatedExerciseType.Name, Is.EqualTo(exerciseType.Name));
 		Assert.That(updatedExerciseType.Description, Is.EqualTo(exerciseType.Description));
-		Assert.That(updatedExerciseType.ImageUrl, Is.EqualTo(exerciseType.ImageUrl));
+		Assert.That(updatedExerciseType.Images, Is.EqualTo(exerciseType.Images));
 
 		// Assuming a leeway of 5 seconds
 		Assert.That(updatedExerciseType.CreatedAt, Is.EqualTo(exerciseType.CreatedAt).Within(TimeSpan.FromSeconds(5)));
@@ -58,7 +58,7 @@ public class UpdateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 	{
 		// Arrange
 		var updateRequest =
-			new UpdateExerciseTypeRequest(1, "Name", Guid.NewGuid().ToString(), "Description", "ImageUrl");
+			new UpdateExerciseTypeRequest(1, "Name", Guid.NewGuid().ToString(), "Description", ["ImageUrl"]);
 		var command = new UpdateExerciseTypeCommand(updateRequest, false);
 
 		// Act
@@ -75,7 +75,7 @@ public class UpdateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 	{
 		// Arrange
 		var updateRequest =
-			new UpdateExerciseTypeRequest(5, "Name", Guid.NewGuid().ToString(), "Description", "ImageUrl");
+			new UpdateExerciseTypeRequest(5, "Name", Guid.NewGuid().ToString(), "Description", ["ImageUrl"]);
 		var command = new UpdateExerciseTypeCommand(updateRequest);
 
 		// Act
@@ -96,7 +96,7 @@ public class UpdateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 		// - Seed data
 		var exerciseType = _exerciseTypes.First();
 		var updateRequest = new UpdateExerciseTypeRequest(exerciseType.Id, exerciseType.Name, Guid.NewGuid().ToString(),
-			exerciseType.Description, exerciseType.ImageUrl);
+			exerciseType.Description, exerciseType.Images);
 		var command = new UpdateExerciseTypeCommand(updateRequest);
 
 
@@ -118,7 +118,7 @@ public class UpdateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 		// Arrange
 		var storedExerciseType = await DbContext.ExerciseTypes.FindAsync(_exerciseTypes[2].Id);
 		var updateRequest = new UpdateExerciseTypeRequest(_exerciseTypes[2].Id, _exerciseTypes[1].Name,
-			storedExerciseType?.Concurrency, _exerciseTypes[2].Description, _exerciseTypes[2].ImageUrl);
+			storedExerciseType?.Concurrency, _exerciseTypes[2].Description, _exerciseTypes[2].Images);
 		var command = new UpdateExerciseTypeCommand(updateRequest);
 
 		// Act

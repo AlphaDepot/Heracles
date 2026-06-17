@@ -38,7 +38,7 @@ public class GetExerciseTypeByIdQueryHandlerTest : HandlerBaseUnitTest
 		Assert.That(result.Value.Id, Is.EqualTo(1));
 		Assert.That(result.Value.Name, Is.EqualTo(exerciseType.Name));
 		Assert.That(result.Value.Description, Is.EqualTo(exerciseType.Description));
-		Assert.That(result.Value.ImageUrl, Is.EqualTo(exerciseType.ImageUrl));
+		Assert.That(result.Value.Images, Is.EqualTo(exerciseType.Images));
 	}
 
 	[Test]

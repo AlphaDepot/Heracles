@@ -11,8 +11,8 @@ namespace Application.Features.ExerciseTypes.Commands;
 /// </summary>
 /// <param name="Name"> The name of the <see cref="ExerciseType" />.</param>
 /// <param name="Description"> The description of the <see cref="ExerciseType" />.</param>
-/// <param name="ImageUrl"> The image url of the <see cref="ExerciseType" />.</param>
-public record CreateExerciseTypeRequest(string Name, string? Description, string? ImageUrl);
+/// <param name="Images"> The image urls of the <see cref="ExerciseType" />.</param>
+public record CreateExerciseTypeRequest(string Name, string? Description, List<string>? Images);
 
 /// <summary>
 ///     Creates a new <see cref="ExerciseType" />.
@@ -34,8 +34,8 @@ public class CreateExerciseTypeCommandValidator : AbstractValidator<CreateExerci
 			.MaximumLength(50).WithMessage("Name must not exceed 50 characters.");
 		RuleFor(x => x.ExerciseType.Description)
 			.MaximumLength(1000).WithMessage("Exercise type description must not exceed 1000 characters.");
-		RuleFor(x => x.ExerciseType.ImageUrl)
-			.MaximumLength(255).WithMessage("Exercise type image url must not exceed 255 characters.");
+		RuleFor(x => x.ExerciseType.Images)
+			.NotEmpty().WithMessage("Exercise type must have at least one image.");
 	}
 }
 

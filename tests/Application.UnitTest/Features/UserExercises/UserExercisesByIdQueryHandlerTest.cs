@@ -40,7 +40,7 @@ public class UserExercisesByIdQueryHandlerTest : HandlerBaseUnitTest
 		Assert.That(result.Value.ExerciseTypeId, Is.EqualTo(userExercise.ExerciseTypeId));
 		Assert.That(result.Value.ExerciseType.Name, Is.EqualTo(userExercise.ExerciseType.Name));
 		Assert.That(result.Value.ExerciseType.Description, Is.EqualTo(userExercise.ExerciseType.Description));
-		Assert.That(result.Value.ExerciseType.ImageUrl, Is.EqualTo(userExercise.ExerciseType.ImageUrl));
+		Assert.That(result.Value.ExerciseType.Images, Is.EqualTo(userExercise.ExerciseType.Images));
 	}
 
 	[Test]

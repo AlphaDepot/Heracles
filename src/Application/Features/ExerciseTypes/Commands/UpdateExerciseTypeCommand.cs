@@ -13,13 +13,13 @@ namespace Application.Features.ExerciseTypes.Commands;
 /// <param name="Name"> The name of the <see cref="ExerciseType" /> to update.</param>
 /// <param name="Concurrency"> The concurrency stamp of the <see cref="ExerciseType" /> to update.</param>
 /// <param name="Description"> The description of the <see cref="ExerciseType" /> to update.</param>
-/// <param name="ImageUrl"> The image url of the <see cref="ExerciseType" /> to update.</param>
+/// <param name="Images"> The image url of the <see cref="ExerciseType" /> to update.</param>
 public record UpdateExerciseTypeRequest(
 	int Id,
 	string Name,
 	string? Concurrency,
 	string? Description,
-	string? ImageUrl);
+	List<string>? Images);
 
 /// <summary>
 ///     Updates an <see cref="ExerciseType" />.
@@ -55,8 +55,8 @@ public class UpdateExerciseTypeCommandValidator : AbstractValidator<UpdateExerci
 		RuleFor(x => x.ExerciseType.Description)
 			.MaximumLength(1000).WithMessage("Exercise type description must not exceed 1000 characters.");
 
-		RuleFor(x => x.ExerciseType.ImageUrl)
-			.MaximumLength(255).WithMessage("Exercise type image url must not exceed 255 characters.");
+		RuleFor(x => x.ExerciseType.Images)
+			.NotEmpty().WithMessage("Exercise type must have at least one image.");
 	}
 }
 

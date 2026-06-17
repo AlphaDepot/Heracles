@@ -20,7 +20,7 @@ internal abstract class ExerciseDataLoader
 		SeedExerciseType(context);
 		// TestData ExerciseMuscleGroup fourth since it depends on MuscleGroup and MuscleFunction
 		SeedExerciseMuscleGroup(context);
-		// Update ExerciseTypesController with ExerciseMuscleGroups 
+		// Update ExerciseTypesController with ExerciseMuscleGroups
 		UpdateExerciseTypesWithExerciseMuscleGroups(context);
 	}
 
@@ -31,7 +31,7 @@ internal abstract class ExerciseDataLoader
 	/// <param name="context">The database context.</param>
 	private static void SeedMuscleGroup(AppDbContext context)
 	{
-		// ensure the database is created 
+		// ensure the database is created
 		context.Database.EnsureCreated();
 
 		// check if the database is already seeded
@@ -56,7 +56,7 @@ internal abstract class ExerciseDataLoader
 	/// <param name="context"></param>
 	private static void SeedMuscleFunction(AppDbContext context)
 	{
-		// ensure the database is created 
+		// ensure the database is created
 		context.Database.EnsureCreated();
 
 		// check if the database is already seeded
@@ -81,7 +81,7 @@ internal abstract class ExerciseDataLoader
 	/// <param name="context">The database context.</param>
 	private static void SeedExerciseMuscleGroup(AppDbContext context)
 	{
-		// ensure the database is created 
+		// ensure the database is created
 		context.Database.EnsureCreated();
 
 		// check if the database is already seeded
@@ -107,7 +107,7 @@ internal abstract class ExerciseDataLoader
 	/// <param name="context">The database context.</param>
 	private static void SeedExerciseType(AppDbContext context)
 	{
-		// ensure the database is created 
+		// ensure the database is created
 		context.Database.EnsureCreated();
 
 		// check if the database is already seeded
@@ -273,21 +273,21 @@ internal abstract class ExerciseDataLoader
 				Name = "Bench Press",
 				CreatedAt = date, UpdatedAt = date,
 				Description = "Lay on a bench and press the bar",
-				ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/e/ea/Decline-bench-press-2.png"
+				Images = ["https://upload.wikimedia.org/wikipedia/commons/e/ea/Decline-bench-press-2.png"]
 			},
 			new ExerciseType
 			{
 				Name = "Squat",
 				CreatedAt = date, UpdatedAt = date,
 				Description = "Squat down and stand back up",
-				ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wide-stance-squat-1.gif"
+				Images = ["https://upload.wikimedia.org/wikipedia/commons/0/0f/Wide-stance-squat-1.gif"]
 			},
 			new ExerciseType
 			{
 				Name = "Deadlift",
 				CreatedAt = date, UpdatedAt = date,
 				Description = "Lift the bar from the ground",
-				ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/5/58/Romanian-deadlift-2.png"
+				Images = ["https://upload.wikimedia.org/wikipedia/commons/5/58/Romanian-deadlift-2.png"]
 			}
 		];
 	}

@@ -25,7 +25,7 @@ public class CreateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 	{
 		// Arrange
 		var createRequest = new CreateExerciseTypeRequest("Unique Exercise Type Name", "Exercise Type Description",
-			"Exercise Type Image Url");
+			["Exercise Type Image Url"]);
 		var command = new CreateExerciseTypeCommand(createRequest);
 
 
@@ -44,7 +44,7 @@ public class CreateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 		Assert.That(exerciseType.Concurrency, Is.Not.Null);
 		Assert.That(exerciseType.Name, Is.EqualTo(createRequest.Name));
 		Assert.That(exerciseType.Description, Is.EqualTo(createRequest.Description));
-		Assert.That(exerciseType.ImageUrl, Is.EqualTo(createRequest.ImageUrl));
+		Assert.That(exerciseType.Images, Is.EqualTo(createRequest.Images));
 	}
 
 	[Test]
@@ -56,7 +56,7 @@ public class CreateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 
 		// - Create command
 		var createRequest =
-			new CreateExerciseTypeRequest(exerciseType.Name, exerciseType.Description, exerciseType.ImageUrl);
+			new CreateExerciseTypeRequest(exerciseType.Name, exerciseType.Description, exerciseType.Images);
 		var command = new CreateExerciseTypeCommand(createRequest);
 
 
@@ -76,7 +76,7 @@ public class CreateExerciseTypeCommandHandlerTest : HandlerBaseUnitTest
 		var exerciseType = _exerciseTypes.First();
 
 		var command = new CreateExerciseTypeCommand(
-			new CreateExerciseTypeRequest(exerciseType.Name, exerciseType.Description, exerciseType.ImageUrl), false);
+			new CreateExerciseTypeRequest(exerciseType.Name, exerciseType.Description, exerciseType.Images), false);
 
 
 		// Act

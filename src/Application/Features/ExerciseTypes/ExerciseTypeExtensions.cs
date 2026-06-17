@@ -18,7 +18,7 @@ public static class ExerciseTypeExtensions
 		{
 			Name = request.Name,
 			Description = request.Description,
-			ImageUrl = request.ImageUrl
+			Images = request.Images
 		};
 	}
 
@@ -37,7 +37,7 @@ public static class ExerciseTypeExtensions
 			Id = request.Id,
 			Name = request.Name,
 			Description = request.Description,
-			ImageUrl = request.ImageUrl,
+			Images = request.Images,
 			CreatedAt = exerciseType.CreatedAt,
 			UpdatedAt = exerciseType.UpdatedAt,
 			MuscleGroups = exerciseType.MuscleGroups

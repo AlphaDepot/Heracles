@@ -5,7 +5,7 @@ using Application.Features.UserExercises;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,7 +53,7 @@ public class CreateUserExerciseHistoryValidator : AbstractValidator<CreateUserEx
 public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<CreateUserExerciseHistoryCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateUserExerciseHistoryCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateUserExerciseHistoryCommand request, CancellationToken cancellationToken)
 	{
 		var businessValidation = await BusinessValidation(request, cancellationToken);
 		if (businessValidation.IsFailure)
@@ -68,7 +68,7 @@ public class CreateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHt
 		return Result.Success(userExerciseHistory.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateUserExerciseHistoryCommand request,
+	private async ValueTask<Result<int>> BusinessValidation(CreateUserExerciseHistoryCommand request,
 		CancellationToken cancellationToken)
 	{
 		// Check if the user exists

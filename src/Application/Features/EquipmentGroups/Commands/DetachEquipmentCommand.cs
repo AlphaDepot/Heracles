@@ -3,7 +3,7 @@ using Application.Common.Responses;
 using Application.Features.Equipments;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Commands;
@@ -14,7 +14,7 @@ public record DetachEquipmentRequest(int EquipmentGroupId, int EquipmentId);
 ///     Detaches an <see cref="Equipment" /> from an <see cref="EquipmentGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="EquipmentRequest">The <see cref="DetachEquipmentRequest" /> to detach.</param>
 /// <returns>A <see cref="Result{T}" /> with a boolean value indicating success.</returns>
@@ -43,7 +43,7 @@ public class DetachEquipmentCommandValidator : AbstractValidator<DetachEquipment
 public class DetachEquipmentCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<DetachEquipmentCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(DetachEquipmentCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(DetachEquipmentCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, equipmentGroup, equipment) = await BusinessValidation(request);
 		if (validation.IsFailure || equipmentGroup == null || equipment == null)

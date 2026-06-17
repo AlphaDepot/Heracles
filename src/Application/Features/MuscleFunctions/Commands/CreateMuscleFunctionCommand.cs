@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Commands;
@@ -17,7 +17,7 @@ public record CreateMuscleFunctionRequest(string Name);
 ///     Creates a new <see cref="MuscleFunction" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="MuscleFunction">The <see cref="CreateMuscleFunctionRequest" /> to create.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -44,7 +44,7 @@ public class CreateMuscleFunctionCommandValidator : AbstractValidator<CreateMusc
 public class CreateMuscleFunctionCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<CreateMuscleFunctionCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateMuscleFunctionCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateMuscleFunctionCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
 		if (validationResult.IsFailure)
@@ -59,7 +59,7 @@ public class CreateMuscleFunctionCommandHandler(AppDbContext dbContext)
 		return Result.Success(muscleFunction.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateMuscleFunctionCommand request)
+	private async ValueTask<Result<int>> BusinessValidation(CreateMuscleFunctionCommand request)
 	{
 		if (!request.IsAdmin)
 		{

@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Commands;
@@ -19,7 +19,7 @@ public record UpdateMuscleFunctionRequest(int Id, string Name, string? Concurren
 ///     Updates a <see cref="MuscleFunction" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="MuscleFunction">The <see cref="UpdateMuscleFunctionRequest" /> to update.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -52,7 +52,7 @@ public class UpdateMuscleFunctionCommandValidator : AbstractValidator<UpdateMusc
 public class UpdateMuscleFunctionCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<UpdateMuscleFunctionCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateMuscleFunctionCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(UpdateMuscleFunctionCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, muscleFunction) = await BusinessValidation(request);
 		if (validation.IsFailure || muscleFunction == null)

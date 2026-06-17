@@ -1,7 +1,7 @@
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Queries;
@@ -10,7 +10,7 @@ namespace Application.Features.EquipmentGroups.Queries;
 ///     Retrieves a page of <see cref="EquipmentGroup" />s based on a query.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Query">The  <see cref="QueryRequest" /> to use to filter the results.</param>
 /// <returns>A <see cref="Result{PagedResponse}" />.</returns>
@@ -23,7 +23,7 @@ public record GetPagedEquipmentGroupsQuery(QueryRequest Query) : IRequest<Result
 public class GetPagedEquipmentGroupsQueryHandler(AppDbContext dbContext)
 	: IRequestHandler<GetPagedEquipmentGroupsQuery, Result<PagedResponse<EquipmentGroup>>>
 {
-	public async Task<Result<PagedResponse<EquipmentGroup>>> Handle(GetPagedEquipmentGroupsQuery request,
+	public async ValueTask<Result<PagedResponse<EquipmentGroup>>> Handle(GetPagedEquipmentGroupsQuery request,
 		CancellationToken cancellationToken)
 	{
 		var queryable = QueryableBuilder(request.Query);

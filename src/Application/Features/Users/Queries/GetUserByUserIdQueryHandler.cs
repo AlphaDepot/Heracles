@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +23,7 @@ public record GetUserByUserIdQuery(string UserId) : IRequest<Result<User>>;
 public class GetUserByUserIdQueryHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<GetUserByUserIdQuery, Result<User>>
 {
-	public async Task<Result<User>> Handle(GetUserByUserIdQuery request, CancellationToken cancellationToken)
+	public async ValueTask<Result<User>> Handle(GetUserByUserIdQuery request, CancellationToken cancellationToken)
 	{
 		if (!await IsUserAuthorized(request))
 		{

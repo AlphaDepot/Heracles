@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +12,7 @@ namespace Application.Features.WorkoutSessions.Queries;
 ///     Retrieves a <see cref="WorkoutSession" /> by id.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="WorkoutSession" /> to retrieve.</param>
 /// <returns>A <see cref="Result{WorkoutSession}" />.</returns>
@@ -26,7 +26,7 @@ public record WorkoutSessionByIdAndUserIdQuery(int Id) : IRequest<Result<Workout
 public class WorkoutSessionByIdAndUserIdQueryHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<WorkoutSessionByIdAndUserIdQuery, Result<WorkoutSession>>
 {
-	public async Task<Result<WorkoutSession>> Handle(WorkoutSessionByIdAndUserIdQuery request,
+	public async ValueTask<Result<WorkoutSession>> Handle(WorkoutSessionByIdAndUserIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);

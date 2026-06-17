@@ -1,7 +1,7 @@
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Queries;
@@ -10,7 +10,7 @@ namespace Application.Features.ExerciseTypes.Queries;
 ///     Retrieves a list of <see cref="ExerciseType" />s based on a query with optional paging.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Query">The  <see cref="QueryRequest" /> to use to filter the results.</param>
 /// <returns>A list of <see cref="ExerciseType" />s.</returns>
@@ -23,7 +23,7 @@ public record GetPagedExerciseTypesQuery(QueryRequest Query) : IRequest<Result<P
 public class GetPagedExerciseTypesQueryHandler(AppDbContext dbContext)
 	: IRequestHandler<GetPagedExerciseTypesQuery, Result<PagedResponse<ExerciseType>>>
 {
-	public async Task<Result<PagedResponse<ExerciseType>>> Handle(GetPagedExerciseTypesQuery request,
+	public async ValueTask<Result<PagedResponse<ExerciseType>>> Handle(GetPagedExerciseTypesQuery request,
 		CancellationToken cancellationToken)
 	{
 		var queryable = QueryableBuilder(request.Query);

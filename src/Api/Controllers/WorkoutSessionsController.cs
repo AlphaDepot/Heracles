@@ -1,7 +1,7 @@
 using Application.Features.WorkoutSessions.Commands;
 using Application.Features.WorkoutSessions.Queries;
 using Application.Infrastructure.Extensions;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

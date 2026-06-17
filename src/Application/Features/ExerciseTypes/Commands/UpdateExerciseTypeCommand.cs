@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Commands;
@@ -26,7 +26,7 @@ public record UpdateExerciseTypeRequest(
 ///     Updates an <see cref="ExerciseType" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseType"> The <see cref="UpdateExerciseTypeRequest" /> to update.</param>
 /// <param name="IsAdmin"> If true, the command will succeed even if the user is not an admin.</param>
@@ -68,7 +68,7 @@ public class UpdateExerciseTypeCommandValidator : AbstractValidator<UpdateExerci
 public class UpdateExerciseTypeCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<UpdateExerciseTypeCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateExerciseTypeCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(UpdateExerciseTypeCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, exerciseType) = await BusinessValidation(request);
 		if (validation.IsFailure || exerciseType == null)

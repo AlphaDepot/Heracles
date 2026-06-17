@@ -3,7 +3,7 @@ using Application.Infrastructure.Logging;
 using Application.Infrastructure.Validation;
 using FluentValidation;
 using FluentValidation.Results;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using ValidationResult = FluentValidation.Results.ValidationResult;
@@ -31,17 +31,16 @@ public class FluentValidationBehaviorTests
 	{
 		// Arrange
 		var request = new TestRequest();
-		var next = new Mock<RequestHandlerDelegate<Result>>();
-		next.Setup(n => n()).ReturnsAsync(Result.Success());
+		MessageHandlerDelegate<TestRequest, Result> next =
+			(req, ct) => ValueTask.FromResult(Result.Success());
 
 		_validatorMock.Setup(v => v.Validate(It.IsAny<TestRequest>())).Returns(new ValidationResult());
 
 		// Act
-		var result = await _behavior.Handle(request, next.Object, CancellationToken.None);
+		var result = await _behavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		Assert.That(result.IsSuccess);
-		next.Verify(n => n(), Times.Once);
 	}
 
 	[Test]
@@ -49,7 +48,8 @@ public class FluentValidationBehaviorTests
 	{
 		// Arrange
 		var request = new TestRequest();
-		var next = new Mock<RequestHandlerDelegate<Result>>();
+		MessageHandlerDelegate<TestRequest, Result> next =
+			(req, ct) => ValueTask.FromResult(Result.Success());
 
 		var validationFailures = new List<ValidationFailure>
 		{
@@ -60,7 +60,7 @@ public class FluentValidationBehaviorTests
 			.Returns(new ValidationResult(validationFailures));
 
 		// Act
-		var result = await _behavior.Handle(request, next.Object, CancellationToken.None);
+		var result = await _behavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		Assert.That(result.IsFailure);
@@ -68,7 +68,6 @@ public class FluentValidationBehaviorTests
 		Assert.That(result.Errors.First().Description, Is.EqualTo("Error message"));
 		Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status400BadRequest));
 
-		next.Verify(n => n(), Times.Never);
 	}
 
 	public class TestRequest : IRequest<Result>

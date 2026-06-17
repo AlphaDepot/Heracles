@@ -3,7 +3,8 @@ using Application.Common.Responses;
 using Application.Features.Equipments;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
+
 
 namespace Application.Features.EquipmentGroups.Commands;
 
@@ -18,7 +19,7 @@ public record AttachEquipmentRequest(int EquipmentGroupId, int EquipmentId);
 ///     Attaches an <see cref="Equipment" /> to an <see cref="EquipmentGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="EquipmentRequest">The <see cref="AttachEquipmentRequest" /> to attach.</param>
 /// <returns>A <see cref="Result{T}" /> with a boolean value indicating success.</returns>
@@ -46,7 +47,7 @@ public class AttachEquipmentCommandValidator : AbstractValidator<AttachEquipment
 public class AttachEquipmentCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<AttachEquipmentCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(AttachEquipmentCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(AttachEquipmentCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, equipmentGroup, equipment) = await BusinessValidation(request);
 		if (validation.IsFailure || equipmentGroup == null || equipment == null)

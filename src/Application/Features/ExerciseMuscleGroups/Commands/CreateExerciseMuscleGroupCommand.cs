@@ -4,7 +4,7 @@ using Application.Features.MuscleFunctions;
 using Application.Features.MuscleGroups;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseMuscleGroups.Commands;
@@ -38,7 +38,7 @@ public record CreateExerciseMuscleGroupRequest(
 ///     Creates a new <see cref="ExerciseMuscleGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseMuscleGroup">The <see cref="CreateExerciseMuscleGroupRequest" /> to create.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -76,7 +76,7 @@ public class CreateExerciseMuscleGroupCommandValidator : AbstractValidator<Creat
 public class CreateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<CreateExerciseMuscleGroupCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateExerciseMuscleGroupCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateExerciseMuscleGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, muscleGroup, muscleFunction) = await BusinessValidation(request);
 		if (validationResult.IsFailure)

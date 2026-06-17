@@ -4,7 +4,7 @@ using Application.Common.Responses;
 using Application.Features.UserExercises;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +21,7 @@ public record DetachUserExerciseToWorkoutSessionRequest(int WorkoutSessionId, in
 ///     Detaches a <see cref="UserExercise" /> from a <see cref="WorkoutSession" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="WorkoutSessionRequest"> The <see cref="DetachUserExerciseToWorkoutSessionRequest" />.</param>
 /// <inheritdoc cref="IRequestHandler{TRequest,TResponse}" />
@@ -54,7 +54,7 @@ public class DetachUserExerciseToWorkoutSessionCommandHandler(
 	AppDbContext dbContext,
 	IHttpContextAccessor contextAccessor) : IRequestHandler<DetachUserExerciseToWorkoutSessionCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(DetachUserExerciseToWorkoutSessionCommand request,
+	public async ValueTask<Result<bool>> Handle(DetachUserExerciseToWorkoutSessionCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validation, userExercise, workoutSession) = await BusinessValidation(request, cancellationToken);

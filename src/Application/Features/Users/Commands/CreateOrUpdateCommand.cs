@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,14 +45,14 @@ public class CreateOrUpdateCommandValidator : AbstractValidator<CreateOrUpdateCo
 ///     Handles the <see cref="CreateOrUpdateCommand" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="dbContext">The <see cref="AppDbContext" />.</param>
 /// <param name="contextAccessor">The <see cref="IHttpContextAccessor" />.</param>
 public class CreateOrUpdateCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<CreateOrUpdateCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(CreateOrUpdateCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(CreateOrUpdateCommand request, CancellationToken cancellationToken)
 	{
 		var userId = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (userId != request.UserRequest.UserId)

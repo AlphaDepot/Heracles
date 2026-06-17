@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 
 namespace Application.Features.ExerciseTypes.Commands;
 
@@ -9,7 +9,7 @@ namespace Application.Features.ExerciseTypes.Commands;
 ///     Removes an <see cref="ExerciseType" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The Id of the <see cref="ExerciseType" /> to remove.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -22,7 +22,7 @@ public record RemoveExerciseTypeCommand(int Id, bool IsAdmin = true) : IRequest<
 public class RemoveExerciseTypeCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<RemoveExerciseTypeCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveExerciseTypeCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(RemoveExerciseTypeCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, exerciseType) = await BusinessValidation(request);
 		if (validationResult.IsFailure || exerciseType == null)

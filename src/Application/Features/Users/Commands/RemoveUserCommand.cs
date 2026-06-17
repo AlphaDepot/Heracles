@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 
 namespace Application.Features.Users.Commands;
 
@@ -9,7 +9,7 @@ namespace Application.Features.Users.Commands;
 ///     Represents the request to remove a <see cref="User" />
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id"> The unique identifier of the user.</param>
 /// <param name="IsAdmin"> If true, the user will be removed as an admin.</param>
@@ -21,7 +21,7 @@ public record RemoveUserCommand(int Id, bool IsAdmin = true) : IRequest<Result<b
 /// <param name="dbContext"> The <see cref="AppDbContext" />.</param>
 public class RemoveUserCommandHandler(AppDbContext dbContext) : IRequestHandler<RemoveUserCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, user) = await BusinessValidation(request);
 		if (validationResult.IsFailure || user == null)

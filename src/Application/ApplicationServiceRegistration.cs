@@ -3,6 +3,7 @@ using Application.Infrastructure.Data.SeedData;
 using Application.Infrastructure.Exceptions;
 using Application.Infrastructure.Logging;
 using Application.Infrastructure.Validation;
+using Mediator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,13 +35,15 @@ public static class ApplicationServiceRegistration
 		// Configure AppLogger
 		services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
-		// Setup MediatR
-		services.AddMediatR(cfg =>
+
+		// Mediator
+		services.AddMediator(options =>
 		{
-			cfg.RegisterServicesFromAssemblies(typeof(ApplicationAssemblyReference).Assembly);
-			cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-			cfg.AddOpenBehavior(typeof(FluentValidationBehavior<,>));
+			options.ServiceLifetime = ServiceLifetime.Scoped;
 		});
+
+		services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+		services.AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehavior<,>));
 
 		// Setup FluentValidation
 		//services.AddValidatorsFromAssemblyContaining(typeof(ApplicationAssemblyReference), includeInternalTypes: true);

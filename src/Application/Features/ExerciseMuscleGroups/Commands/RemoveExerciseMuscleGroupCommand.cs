@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 
 namespace Application.Features.ExerciseMuscleGroups.Commands;
 
@@ -9,7 +9,7 @@ namespace Application.Features.ExerciseMuscleGroups.Commands;
 ///     Removes an <see cref="ExerciseMuscleGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The ID of the <see cref="ExerciseMuscleGroup" /> to remove.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -22,7 +22,7 @@ public record RemoveExerciseMuscleGroupCommand(int Id, bool IsAdmin = true) : IR
 public class RemoveExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<RemoveExerciseMuscleGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveExerciseMuscleGroupCommand request,
+	public async ValueTask<Result<bool>> Handle(RemoveExerciseMuscleGroupCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validationResult, exerciseMuscleGroup) = await BusinessValidation(request);

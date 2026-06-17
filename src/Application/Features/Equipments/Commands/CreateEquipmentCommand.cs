@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Equipments.Commands;
@@ -19,7 +19,7 @@ public record CreateEquipmentRequest(string Type, double Weight, double Resistan
 ///     Creates a new <see cref="Equipment" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Equipment">The <see cref="CreateEquipmentRequest" /> to create.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -45,7 +45,7 @@ public class CreateEquipmentCommandValidator : AbstractValidator<CreateEquipment
 public class CreateEquipmentCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<CreateEquipmentCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateEquipmentCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateEquipmentCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
 		if (validationResult.IsFailure)
@@ -60,7 +60,7 @@ public class CreateEquipmentCommandHandler(AppDbContext dbContext)
 		return Result.Success(equipment.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateEquipmentCommand request)
+	private async ValueTask<Result<int>> BusinessValidation(CreateEquipmentCommand request)
 	{
 		if (!request.IsAdmin)
 		{

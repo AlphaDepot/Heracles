@@ -3,7 +3,7 @@ using Application.Common.Responses;
 using Application.Features.ExerciseMuscleGroups;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 
 namespace Application.Features.ExerciseTypes.Commands;
 
@@ -18,7 +18,7 @@ public record AttachExerciseMuscleGroupRequest(int ExerciseTypeId, int MuscleGro
 ///     Adds a <see cref="ExerciseMuscleGroup" /> to an <see cref="ExerciseType" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseMuscleGroup">The <see cref="AttachExerciseMuscleGroupRequest" />.</param>
 public record AttachExerciseMuscleGroupCommand(AttachExerciseMuscleGroupRequest ExerciseMuscleGroup)
@@ -43,7 +43,7 @@ public class AddExerciseMuscleGroupCommandValidator : AbstractValidator<AttachEx
 public class AttachExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<AttachExerciseMuscleGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(AttachExerciseMuscleGroupCommand request,
+	public async ValueTask<Result<bool>> Handle(AttachExerciseMuscleGroupCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validation, exerciseType, muscleGroup) = await BusinessValidation(request);

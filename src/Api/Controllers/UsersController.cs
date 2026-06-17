@@ -3,7 +3,7 @@ using Application.Features.Users;
 using Application.Features.Users.Commands;
 using Application.Features.Users.Queries;
 using Application.Infrastructure.Extensions;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

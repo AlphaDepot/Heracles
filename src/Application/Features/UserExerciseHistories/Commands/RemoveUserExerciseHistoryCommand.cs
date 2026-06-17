@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.UserExerciseHistories.Commands;
@@ -21,7 +21,7 @@ public record RemoveUserExerciseHistoryCommand(int Id) : IRequest<Result<bool>>;
 public class RemoveUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<RemoveUserExerciseHistoryCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveUserExerciseHistoryCommand request,
+	public async ValueTask<Result<bool>> Handle(RemoveUserExerciseHistoryCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validationResult, userExerciseHistory) = await BusinessValidation(request);

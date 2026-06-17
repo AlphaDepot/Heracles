@@ -5,7 +5,7 @@ using Application.Common.Utilities;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ public class UpdateWorkoutSessionRequest
 ///     Updates a <see cref="WorkoutSession" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="WorkoutSession"> The <see cref="UpdateWorkoutSessionRequest" /> to update.</param>
 public record UpdateWorkoutSessionCommand(UpdateWorkoutSessionRequest WorkoutSession) : IRequest<Result<bool>>;
@@ -67,7 +67,7 @@ public class UpdateWorkoutSessionCommandValidator : AbstractValidator<UpdateWork
 public class UpdateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UpdateWorkoutSessionCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateWorkoutSessionCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(UpdateWorkoutSessionCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, workoutSession) = await BusinessValidation(request, cancellationToken);
 		if (validationResult.IsFailure || workoutSession == null)

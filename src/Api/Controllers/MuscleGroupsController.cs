@@ -2,7 +2,7 @@ using Application.Common.Requests;
 using Application.Features.MuscleGroups.Commands;
 using Application.Features.MuscleGroups.Queries;
 using Application.Infrastructure.Extensions;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

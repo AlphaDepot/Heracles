@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands;
@@ -11,7 +11,7 @@ namespace Application.Features.Users.Commands;
 ///     Represents the request to update a <see cref="User" />
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="UserId"> The unique identifier of the user.</param>
 /// <param name="Email"> The email of the user.</param>
@@ -36,7 +36,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 
 public class UpdateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<UpdateUserCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, currentUser) = await BusinessValidation(request);
 		if (validationResult.IsFailure || currentUser == null)

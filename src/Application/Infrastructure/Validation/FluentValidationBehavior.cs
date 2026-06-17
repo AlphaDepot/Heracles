@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Logging;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using ValidationResult = Application.Common.Responses.ValidationResult;
 
@@ -23,21 +23,21 @@ public class FluentValidationBehavior<TRequest, TResponse>
 		_logger = logger;
 	}
 
-	public async Task<TResponse> Handle(
+	public async ValueTask<TResponse> Handle(
 		TRequest request,
-		RequestHandlerDelegate<TResponse> next,
+		MessageHandlerDelegate<TRequest, TResponse> next,
 		CancellationToken cancellationToken)
 	{
 		if (!_validators.Any())
 		{
-			return await next();
+			return await next(request, cancellationToken);
 		}
 
 		var errors = GetValidationErrors(request);
 
 		if (errors.Length == 0)
 		{
-			return await next();
+			return await next(request, cancellationToken);
 		}
 
 		return CreateValidationResult<TResponse>(errors);

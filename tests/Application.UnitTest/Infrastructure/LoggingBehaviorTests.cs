@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Logging;
 using FluentValidation.Results;
-using MediatR;
+using Mediator;
 using Moq;
 using ValidationResult = Application.Common.Responses.ValidationResult;
 
@@ -16,12 +16,12 @@ public class LoggingBehaviorTests
 	{
 		_loggerMock = new Mock<IAppLogger<SampleRequest>>();
 		_loggingBehavior = new LoggingBehavior<SampleRequest, Result>(_loggerMock.Object);
-		_nextMock = new Mock<RequestHandlerDelegate<Result>>();
+
 	}
 
 	private Mock<IAppLogger<SampleRequest>> _loggerMock;
 	private LoggingBehavior<SampleRequest, Result> _loggingBehavior;
-	private Mock<RequestHandlerDelegate<Result>> _nextMock;
+
 
 	[Test]
 	public async Task Handle_LogsRequestAndResponse()
@@ -29,10 +29,13 @@ public class LoggingBehaviorTests
 		// Arrange
 		var request = new SampleRequest();
 		var response = Result.Success();
-		_nextMock.Setup(next => next()).ReturnsAsync(response);
+
+
+		MessageHandlerDelegate<SampleRequest, Result> next =
+			(req, ct) => ValueTask.FromResult(response);
 
 		// Act
-		var result = await _loggingBehavior.Handle(request, _nextMock.Object, CancellationToken.None);
+		var result = await _loggingBehavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		_loggerMock.Verify(logger => logger.LogInformation(It.IsAny<string>(), It.IsAny<object[]>()), Times.Exactly(2));
@@ -44,17 +47,12 @@ public class LoggingBehaviorTests
 	{
 		// Arrange
 		var request = new SampleRequest();
-		var validationErrors = new List<ValidationFailure>
-		{
-			new("PropertyName", "Validation error")
-		};
-
-		var validationResult =
-			Result.Failure(new Error(string.Join(", ", validationErrors.Select(e => e.ErrorMessage)), 400));
-		_nextMock.Setup(next => next()).ReturnsAsync(validationResult);
+		var validationResult = Result.Failure(new Error("Validation error", 400));
+		MessageHandlerDelegate<SampleRequest, Result> next =
+			(req, ct) => ValueTask.FromResult(validationResult);
 
 		// Act
-		var result = await _loggingBehavior.Handle(request, _nextMock.Object, CancellationToken.None);
+		var result = await _loggingBehavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		_loggerMock.Verify(logger => logger.LogWarning(It.IsAny<string>(), It.IsAny<object[]>()), Times.Once);
@@ -67,10 +65,12 @@ public class LoggingBehaviorTests
 		// Arrange
 		var request = new SampleRequest();
 		var warningResult = Result.Failure(new Error("Warning", 400));
-		_nextMock.Setup(next => next()).ReturnsAsync(warningResult);
+
+		MessageHandlerDelegate<SampleRequest, Result> next =
+			(req, ct) => ValueTask.FromResult(warningResult);
 
 		// Act
-		var result = await _loggingBehavior.Handle(request, _nextMock.Object, CancellationToken.None);
+		var result = await _loggingBehavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		_loggerMock.Verify(logger => logger.LogWarning(It.IsAny<string>(), It.IsAny<object[]>()), Times.Once);
@@ -83,10 +83,11 @@ public class LoggingBehaviorTests
 		// Arrange
 		var request = new SampleRequest();
 		var errorResult = Result.Failure(new Error("Error", 500));
-		_nextMock.Setup(next => next()).ReturnsAsync(errorResult);
+		MessageHandlerDelegate<SampleRequest, Result> next =
+			(req, ct) => ValueTask.FromResult(errorResult);
 
 		// Act
-		var result = await _loggingBehavior.Handle(request, _nextMock.Object, CancellationToken.None);
+		var result = await _loggingBehavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		_loggerMock.Verify(logger => logger.LogError(It.IsAny<string>(), It.IsAny<object[]>()), Times.Once);
@@ -98,22 +99,25 @@ public class LoggingBehaviorTests
 	{
 		// Arrange
 		var request = new SampleRequest();
-		var validationErrors = new List<ValidationFailure>
-		{
-			new("PropertyName", "Validation error")
-		};
 
-		var validationResult = ValidationResult.WithErrors(new[]
-			{ new Error(string.Join(", ", validationErrors.Select(e => e.ErrorMessage)), 400) });
-		_nextMock.Setup(next => next()).ReturnsAsync(validationResult);
+		var validationResult = ValidationResult.WithErrors([
+			new Error("Validation error", 400)
+		]);
+
+		MessageHandlerDelegate<SampleRequest, Result> next =
+			(req, ct) => ValueTask.FromResult<Result>(validationResult);
 
 		// Act
-		var actualResult = await _loggingBehavior.Handle(request, _nextMock.Object, CancellationToken.None);
+		var actualResult = await _loggingBehavior.Handle(request, next, CancellationToken.None);
 
 		// Assert
 		_loggerMock.Verify(logger => logger.LogWarning(
-			"Validation errors occurred for request {@RequestName} at {@DateTimeUtc}. Error details: {@Errors}",
-			typeof(SampleRequest).Name, It.IsAny<DateTime>(), validationResult.Errors), Times.Once);
+				"Validation errors occurred for request {@RequestName} at {@DateTimeUtc}. Error details: {@Errors}",
+				typeof(SampleRequest).Name,
+				It.IsAny<DateTime>(),
+				validationResult.Errors),
+			Times.Once);
+
 		Assert.That(actualResult, Is.EqualTo(validationResult));
 	}
 

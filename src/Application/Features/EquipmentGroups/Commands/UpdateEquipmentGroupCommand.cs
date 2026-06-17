@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Commands;
@@ -19,7 +19,7 @@ public record UpdateEquipmentGroupRequest(int Id, string Name, string? Concurren
 ///     Updates an existing <see cref="EquipmentGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="EquipmentGroup">The <see cref="UpdateEquipmentGroupRequest" /> to update.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -52,7 +52,7 @@ public class UpdateEquipmentGroupCommandValidator : AbstractValidator<UpdateEqui
 public class UpdateEquipmentGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<UpdateEquipmentGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateEquipmentGroupCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(UpdateEquipmentGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validation, equipmentGroup) = await BusinessValidation(request);
 		if (validation.IsFailure || equipmentGroup == null)

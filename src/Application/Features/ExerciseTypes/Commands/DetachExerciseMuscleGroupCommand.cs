@@ -3,7 +3,7 @@ using Application.Common.Responses;
 using Application.Features.ExerciseMuscleGroups;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Commands;
@@ -19,7 +19,7 @@ public record DetachExerciseMuscleGroupRequest(int ExerciseTypeId, int MuscleGro
 ///     Removes a <see cref="ExerciseMuscleGroup" /> from an <see cref="ExerciseType" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseMuscleGroup">The <see cref="DetachExerciseMuscleGroupRequest" />.</param>
 public record DetachExerciseMuscleGroupCommand(DetachExerciseMuscleGroupRequest ExerciseMuscleGroup)
@@ -44,7 +44,7 @@ public class DetachExerciseMuscleGroupCommandValidator : AbstractValidator<Detac
 public class DetachExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<DetachExerciseMuscleGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(DetachExerciseMuscleGroupCommand request,
+	public async ValueTask<Result<bool>> Handle(DetachExerciseMuscleGroupCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validation, exerciseType, muscleGroup) = await BusinessValidation(request);

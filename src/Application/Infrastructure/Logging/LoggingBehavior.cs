@@ -1,6 +1,6 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
-using MediatR;
+using Mediator;
 
 namespace Application.Infrastructure.Logging;
 
@@ -23,14 +23,16 @@ public class LoggingBehavior<TRequest, TResponse>
 		_logger = logger;
 	}
 
-	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+	public async ValueTask<TResponse> Handle(
+		TRequest request,
+		MessageHandlerDelegate<TRequest, TResponse> next,
 		CancellationToken cancellationToken)
 	{
 		// Log the request
 		_logger.LogInformation("Handling {@RequestName} on {@DateTimeUtc}", typeof(TRequest).Name, DateTime.UtcNow);
 
 		// Pass the request to the next handler in the pipeline
-		var result = await next();
+		var result = await next(request, cancellationToken);
 
 		if (result is ValidationResult { Errors: not null } validationResult)
 		{

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ public record UserExerciseHistoryByIdQuery(int Id) : IRequest<Result<UserExercis
 public class UserExerciseHistoryByIdQueryHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UserExerciseHistoryByIdQuery, Result<UserExerciseHistory>>
 {
-	public async Task<Result<UserExerciseHistory>> Handle(UserExerciseHistoryByIdQuery request,
+	public async ValueTask<Result<UserExerciseHistory>> Handle(UserExerciseHistoryByIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);

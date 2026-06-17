@@ -1,7 +1,7 @@
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Queries;
@@ -10,7 +10,7 @@ namespace Application.Features.MuscleFunctions.Queries;
 ///     Retrieves a page of <see cref="MuscleFunction" />s.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Query">The  <see cref="QueryRequest" /> to use to filter the results.</param>
 /// <returns>A <see cref="Result{PagedResponse}" />.</returns>
@@ -23,7 +23,7 @@ public record GetPagedMuscleFunctionsQuery(QueryRequest Query) : IRequest<Result
 public class GetPagedMuscleFunctionsQueryHandler(AppDbContext dbContext)
 	: IRequestHandler<GetPagedMuscleFunctionsQuery, Result<PagedResponse<MuscleFunction>>>
 {
-	public async Task<Result<PagedResponse<MuscleFunction>>> Handle(GetPagedMuscleFunctionsQuery request,
+	public async ValueTask<Result<PagedResponse<MuscleFunction>>> Handle(GetPagedMuscleFunctionsQuery request,
 		CancellationToken cancellationToken)
 	{
 		var queryable = QueryableBuilder(request.Query);

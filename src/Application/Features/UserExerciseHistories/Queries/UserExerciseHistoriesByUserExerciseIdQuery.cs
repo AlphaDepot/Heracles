@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +12,7 @@ namespace Application.Features.UserExerciseHistories.Queries;
 ///     Retrieves a list of <see cref="UserExerciseHistory" />s associated with the currently authenticated user.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="UserExerciseId"></param>
 /// <returns> A <see cref="Result{List}" />.</returns>
@@ -30,7 +30,7 @@ public class UserExerciseHistoriesByUserExerciseIdQueryHandler(
 	IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UserExerciseHistoriesByUserExerciseIdQuery, Result<List<UserExerciseHistory>>>
 {
-	public async Task<Result<List<UserExerciseHistory>>> Handle(UserExerciseHistoriesByUserExerciseIdQuery request,
+	public async ValueTask<Result<List<UserExerciseHistory>>> Handle(UserExerciseHistoriesByUserExerciseIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);

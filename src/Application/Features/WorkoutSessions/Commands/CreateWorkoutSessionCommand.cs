@@ -5,7 +5,7 @@ using Application.Common.Utilities;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +15,7 @@ namespace Application.Features.WorkoutSessions.Commands;
 ///     Represents the request to create a new <see cref="WorkoutSession" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Name">The <see cref="CreateWorkoutSessionRequest.Name" /> to create.</param>
 /// <param name="DayOfWeek">The <see cref="CreateWorkoutSessionRequest.DayOfWeek" /> to create.</param>
@@ -28,7 +28,7 @@ public record CreateWorkoutSessionRequest(string Name, string DayOfWeek, int Sor
 ///     Creates a new <see cref="WorkoutSession" />
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="WorkoutSession">The <see cref="CreateWorkoutSessionRequest" /> to create.</param>
 public record CreateWorkoutSessionCommand(CreateWorkoutSessionRequest WorkoutSession) : IRequest<Result<int>>;
@@ -60,7 +60,7 @@ public class CreateWorkoutSessionCommandValidator : AbstractValidator<CreateWork
 public class CreateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<CreateWorkoutSessionCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateWorkoutSessionCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateWorkoutSessionCommand request, CancellationToken cancellationToken)
 	{
 		var businessValidation = await BusinessValidation(request, cancellationToken);
 		if (businessValidation.IsFailure)
@@ -75,7 +75,7 @@ public class CreateWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpCon
 		return Result.Success(workoutSession.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateWorkoutSessionCommand request,
+	private async ValueTask<Result<int>> BusinessValidation(CreateWorkoutSessionCommand request,
 		CancellationToken cancellationToken)
 	{
 		// Check if the user exists

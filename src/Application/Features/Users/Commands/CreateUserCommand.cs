@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Commands;
@@ -11,7 +11,7 @@ namespace Application.Features.Users.Commands;
 ///     Represents the request to create a new <see cref="User" />
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="UserId"> The unique identifier of the user.</param>
 /// <param name="Email"> The email of the user.</param>
@@ -48,7 +48,7 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 /// <param name="dbContext"> The <see cref="AppDbContext" />.</param>
 public class CreateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<CreateUserCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
 		if (validationResult.IsFailure)
@@ -63,7 +63,7 @@ public class CreateUserCommandHandler(AppDbContext dbContext) : IRequestHandler<
 		return Result.Success(user.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateUserCommand request)
+	private async ValueTask<Result<int>> BusinessValidation(CreateUserCommand request)
 	{
 		if (!request.IsAdmin)
 		{

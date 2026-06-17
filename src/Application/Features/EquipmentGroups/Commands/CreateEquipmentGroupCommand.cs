@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Commands;
@@ -13,7 +13,7 @@ public record CreateEquipmentGroupRequest(string Name);
 ///     Creates a new <see cref="EquipmentGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="EquipmentGroup">The <see cref="CreateEquipmentGroupRequest" /> to create.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -41,7 +41,7 @@ public class CreateEquipmentGroupValidator : AbstractValidator<CreateEquipmentGr
 public record CreateEquipmentGroupCommandHandler(AppDbContext DbContext)
 	: IRequestHandler<CreateEquipmentGroupCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateEquipmentGroupCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateEquipmentGroupCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
 		if (validationResult.IsFailure)
@@ -56,7 +56,7 @@ public record CreateEquipmentGroupCommandHandler(AppDbContext DbContext)
 		return Result.Success(equipmentGroup.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateEquipmentGroupCommand request)
+	private async ValueTask<Result<int>> BusinessValidation(CreateEquipmentGroupCommand request)
 	{
 		if (!request.IsAdmin)
 		{

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.UserExercises.Commands;
@@ -11,7 +11,7 @@ namespace Application.Features.UserExercises.Commands;
 ///     Represents the request to remove a <see cref="UserExercise" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The Id of the <see cref="UserExercise" /> to remove.</param>
 public record RemoveUserExerciseCommand(int Id) : IRequest<Result<bool>>;
@@ -24,7 +24,7 @@ public record RemoveUserExerciseCommand(int Id) : IRequest<Result<bool>>;
 public class RemoveUserExerciseCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<RemoveUserExerciseCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveUserExerciseCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(RemoveUserExerciseCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, userExercise) = await BusinessValidation(request);
 		if (validationResult.IsFailure || userExercise == null)

@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.MuscleFunctions.Queries;
@@ -10,7 +10,7 @@ namespace Application.Features.MuscleFunctions.Queries;
 ///     Retrieves a <see cref="MuscleFunction" /> by id.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="MuscleFunction" /> to retrieve.</param>
 /// <returns>A <see cref="Result{MuscleFunction}" />.</returns>
@@ -23,7 +23,7 @@ public record GetMuscleFunctionByIdQuery(int Id) : IRequest<Result<MuscleFunctio
 public class GetMuscleFunctionByIdQueryHandler(AppDbContext dbContext)
 	: IRequestHandler<GetMuscleFunctionByIdQuery, Result<MuscleFunction>>
 {
-	public async Task<Result<MuscleFunction>> Handle(GetMuscleFunctionByIdQuery request,
+	public async ValueTask<Result<MuscleFunction>> Handle(GetMuscleFunctionByIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var muscleFunction = await dbContext.MuscleFunctions

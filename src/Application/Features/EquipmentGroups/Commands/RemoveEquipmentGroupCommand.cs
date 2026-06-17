@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 
 namespace Application.Features.EquipmentGroups.Commands;
 
@@ -9,7 +9,7 @@ namespace Application.Features.EquipmentGroups.Commands;
 ///     Removes an <see cref="EquipmentGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The Id of the <see cref="EquipmentGroup" /> to remove.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -22,7 +22,7 @@ public record RemoveEquipmentGroupCommand(int Id, bool IsAdmin = true) : IReques
 public class RemoveEquipmentGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<RemoveEquipmentGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveEquipmentGroupCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(RemoveEquipmentGroupCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, equipmentGroup) = await BusinessValidation(request);
 		if (validationResult.IsFailure || equipmentGroup == null)

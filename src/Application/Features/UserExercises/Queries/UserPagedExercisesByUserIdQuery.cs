@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ namespace Application.Features.UserExercises.Queries;
 ///     Retrieves a paged list of <see cref="UserExercise" /> related to the currently authenticated user.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Query">The  <see cref="QueryRequest" /> to use to filter the results.</param>
 /// <returns>A <see cref="Result{PagedResponse}" />.</returns>
@@ -28,7 +28,7 @@ public record UserPagedExercisesByUserIdQuery(QueryRequest Query)
 public class UserPagedExercisesByUserIdQueryHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UserPagedExercisesByUserIdQuery, Result<PagedResponse<UserExercise>>>
 {
-	public async Task<Result<PagedResponse<UserExercise>>> Handle(UserPagedExercisesByUserIdQuery request,
+	public async ValueTask<Result<PagedResponse<UserExercise>>> Handle(UserPagedExercisesByUserIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);

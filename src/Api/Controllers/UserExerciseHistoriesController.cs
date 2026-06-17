@@ -1,7 +1,7 @@
 using Application.Features.UserExerciseHistories.Commands;
 using Application.Features.UserExerciseHistories.Queries;
 using Application.Infrastructure.Extensions;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

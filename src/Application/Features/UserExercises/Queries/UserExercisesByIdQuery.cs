@@ -3,7 +3,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Features.Equipments;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ namespace Application.Features.UserExercises.Queries;
 ///     Retrieves a <see cref="UserExercise" /> by id.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="UserExercise" /> to retrieve.</param>
 /// <returns>A <see cref="Result{UserExercise}" />.</returns>
@@ -27,7 +27,7 @@ public record UserExercisesByIdQuery(int Id) : IRequest<Result<UserExercise>>;
 public class UserExercisesByIdQueryHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UserExercisesByIdQuery, Result<UserExercise>>
 {
-	public async Task<Result<UserExercise>> Handle(UserExercisesByIdQuery request, CancellationToken cancellationToken)
+	public async ValueTask<Result<UserExercise>> Handle(UserExercisesByIdQuery request, CancellationToken cancellationToken)
 	{
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 		if (authenticatedUser == null)

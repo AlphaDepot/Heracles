@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +11,7 @@ namespace Application.Features.WorkoutSessions.Queries;
 ///     Retrieves a list of <see cref="WorkoutSession" />s associated with the currently authenticated user.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <returns>A <see cref="Result{List}" />.</returns>
 public record WorkoutSessionsByUserIdQuery : IRequest<Result<List<WorkoutSession>>>;
@@ -24,7 +24,7 @@ public record WorkoutSessionsByUserIdQuery : IRequest<Result<List<WorkoutSession
 public class WorkoutSessionsByUserIdQueryHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<WorkoutSessionsByUserIdQuery, Result<List<WorkoutSession>>>
 {
-	public async Task<Result<List<WorkoutSession>>> Handle(WorkoutSessionsByUserIdQuery request,
+	public async ValueTask<Result<List<WorkoutSession>>> Handle(WorkoutSessionsByUserIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var authenticatedUser = contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);

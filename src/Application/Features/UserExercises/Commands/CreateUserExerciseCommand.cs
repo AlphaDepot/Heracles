@@ -5,7 +5,7 @@ using Application.Features.ExerciseTypes;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +34,7 @@ public class CreateUserExerciseRequest
 ///     Creates a new <see cref="UserExercise" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="UserExercise">The <see cref="CreateUserExerciseRequest" /> to create.</param>
 public record CreateUserExerciseCommand(CreateUserExerciseRequest UserExercise) : IRequest<Result<int>>;
@@ -63,7 +63,7 @@ public class CreateUserExerciseCommandValidator : AbstractValidator<CreateUserEx
 public class CreateUserExerciseCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<CreateUserExerciseCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateUserExerciseCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateUserExerciseCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
 		if (validationResult.IsFailure)
@@ -93,7 +93,7 @@ public class CreateUserExerciseCommandHandler(AppDbContext dbContext, IHttpConte
 		return existingUserExercise?.Id ?? 0;
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateUserExerciseCommand request)
+	private async ValueTask<Result<int>> BusinessValidation(CreateUserExerciseCommand request)
 	{
 		// check if the user exists
 		var existingUser = await dbContext.Users

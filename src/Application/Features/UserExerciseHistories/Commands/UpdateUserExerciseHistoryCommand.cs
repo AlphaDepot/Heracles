@@ -5,7 +5,7 @@ using Application.Features.UserExercises;
 using Application.Features.Users;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,7 +64,7 @@ public class UpdateUserExerciseHistoryCommandValidator : AbstractValidator<Updat
 public class UpdateUserExerciseHistoryCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<UpdateUserExerciseHistoryCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateUserExerciseHistoryCommand request,
+	public async ValueTask<Result<bool>> Handle(UpdateUserExerciseHistoryCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validationResult, userExerciseHistory) = await BusinessValidation(request, cancellationToken);

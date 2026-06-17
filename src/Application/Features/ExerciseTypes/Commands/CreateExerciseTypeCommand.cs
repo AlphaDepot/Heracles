@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.ExerciseTypes.Commands;
@@ -19,7 +19,7 @@ public record CreateExerciseTypeRequest(string Name, string? Description, string
 ///     Creates a new <see cref="ExerciseType" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseType"> The <see cref="CreateExerciseTypeRequest" /> to create.</param>
 /// <param name="IsAdmin"> If true, the command will succeed even if the user is not an admin.</param>
@@ -47,7 +47,7 @@ public class CreateExerciseTypeCommandValidator : AbstractValidator<CreateExerci
 public class CreateExerciseTypeCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<CreateExerciseTypeCommand, Result<int>>
 {
-	public async Task<Result<int>> Handle(CreateExerciseTypeCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<int>> Handle(CreateExerciseTypeCommand request, CancellationToken cancellationToken)
 	{
 		var validationResult = await BusinessValidation(request);
 		if (validationResult.IsFailure)
@@ -63,7 +63,7 @@ public class CreateExerciseTypeCommandHandler(AppDbContext dbContext)
 		return Result.Success(exerciseType.Id);
 	}
 
-	private async Task<Result<int>> BusinessValidation(CreateExerciseTypeCommand request)
+	private async ValueTask<Result<int>> BusinessValidation(CreateExerciseTypeCommand request)
 	{
 		if (!request.IsAdmin)
 		{

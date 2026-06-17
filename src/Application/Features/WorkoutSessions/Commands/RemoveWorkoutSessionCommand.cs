@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.WorkoutSessions.Commands;
@@ -11,7 +11,7 @@ namespace Application.Features.WorkoutSessions.Commands;
 ///     Represents the request to remove a <see cref="WorkoutSession" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The Id of the <see cref="WorkoutSession" /> to remove.</param>
 public record RemoveWorkoutSessionCommand(int Id) : IRequest<Result<bool>>;
@@ -24,7 +24,7 @@ public record RemoveWorkoutSessionCommand(int Id) : IRequest<Result<bool>>;
 public class RemoveWorkoutSessionCommandHandler(AppDbContext dbContext, IHttpContextAccessor contextAccessor)
 	: IRequestHandler<RemoveWorkoutSessionCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(RemoveWorkoutSessionCommand request, CancellationToken cancellationToken)
+	public async ValueTask<Result<bool>> Handle(RemoveWorkoutSessionCommand request, CancellationToken cancellationToken)
 	{
 		var (validationResult, workoutSession) = await BusinessValidation(request, cancellationToken);
 		if (validationResult.IsFailure || workoutSession == null)

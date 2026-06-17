@@ -2,7 +2,7 @@ using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
 using FluentValidation;
-using MediatR;
+using Mediator;
 
 namespace Application.Features.ExerciseMuscleGroups.Commands;
 
@@ -21,7 +21,7 @@ public record UpdateExerciseMuscleGroupRequest(int Id, string? Concurrency, doub
 ///     Updates an <see cref="ExerciseMuscleGroup" />.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="ExerciseMuscleGroup">The <see cref="UpdateExerciseMuscleGroupRequest" /> to update.</param>
 /// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
@@ -56,7 +56,7 @@ public class UpdateExerciseMuscleGroupCommandValidator : AbstractValidator<Updat
 public class UpdateExerciseMuscleGroupCommandHandler(AppDbContext dbContext)
 	: IRequestHandler<UpdateExerciseMuscleGroupCommand, Result<bool>>
 {
-	public async Task<Result<bool>> Handle(UpdateExerciseMuscleGroupCommand request,
+	public async ValueTask<Result<bool>> Handle(UpdateExerciseMuscleGroupCommand request,
 		CancellationToken cancellationToken)
 	{
 		var (validation, exerciseMuscleGroup) = await BusinessValidation(request);

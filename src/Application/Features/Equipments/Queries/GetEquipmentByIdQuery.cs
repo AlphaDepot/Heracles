@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Equipments.Queries;
@@ -10,7 +10,7 @@ namespace Application.Features.Equipments.Queries;
 ///     Retrieves a <see cref="Equipment" /> by id.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="Equipment" /> to retrieve.</param>
 /// <returns>A <see cref="Result{Equipment}" />.</returns>
@@ -23,7 +23,7 @@ public record GetEquipmentByIdQuery(int Id) : IRequest<Result<Equipment>>;
 public class GetEquipmentByIdQueryHandler(AppDbContext dbContext)
 	: IRequestHandler<GetEquipmentByIdQuery, Result<Equipment>>
 {
-	public async Task<Result<Equipment>> Handle(GetEquipmentByIdQuery request, CancellationToken cancellationToken)
+	public async ValueTask<Result<Equipment>> Handle(GetEquipmentByIdQuery request, CancellationToken cancellationToken)
 	{
 		var equipment = await dbContext.Equipments
 			.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);

@@ -1,7 +1,7 @@
 using Application.Common.Errors;
 using Application.Common.Responses;
 using Application.Infrastructure.Data;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.EquipmentGroups.Queries;
@@ -10,7 +10,7 @@ namespace Application.Features.EquipmentGroups.Queries;
 ///     Retrieves an <see cref="EquipmentGroup" /> by id.
 /// </summary>
 /// <remarks>
-///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="MediatR" /> to process the command.
+///     Utilizes <see cref="IRequestHandler{TRequest,TResponse}" /> from <see cref="Mediator" /> to process the command.
 /// </remarks>
 /// <param name="Id">The id of the <see cref="EquipmentGroup" /> to retrieve.</param>
 /// <returns>A <see cref="Result{EquipmentGroup}" />.</returns>
@@ -23,7 +23,7 @@ public record GetEquipmentGroupByIdQuery(int Id) : IRequest<Result<EquipmentGrou
 public class GetEquipmentGroupByIdQueryHandler(AppDbContext dbContext)
 	: IRequestHandler<GetEquipmentGroupByIdQuery, Result<EquipmentGroup>>
 {
-	public async Task<Result<EquipmentGroup>> Handle(GetEquipmentGroupByIdQuery request,
+	public async ValueTask<Result<EquipmentGroup>> Handle(GetEquipmentGroupByIdQuery request,
 		CancellationToken cancellationToken)
 	{
 		var equipmentGroup = await dbContext.EquipmentGroups

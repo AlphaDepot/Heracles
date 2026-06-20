@@ -1,0 +1,79 @@
+using FluentResults;
+using FluentValidation;
+using Heracles.Domain.Entities;
+using Heracles.Shared.Errors;
+using Heracles.Shared.Interfaces;
+using Heracles.Shared.Interfaces.Repositories;
+using Heracles.Shared.Requests.EquipmentGroups;
+using Microsoft.EntityFrameworkCore;
+
+namespace Heracles.Application.Features.EquipmentGroups.Commands;
+
+/// <summary>
+///     Creates a new <see cref="EquipmentGroup" />.
+/// </summary>
+/// <remarks>
+///     Utilizes <see cref="Mediator.IRequestHandler{TRequest}" /> from <see cref="Mediator" /> to process the command.
+/// </remarks>
+/// <param name="EquipmentGroup">The <see cref="CreateEquipmentGroupRequest" /> to create.</param>
+/// <param name="IsAdmin">If true, the command will succeed even if the user is not an admin.</param>
+/// <returns>A <see cref="Result" /> indicating if the operation was successful.</returns>
+public record CreateEquipmentGroupCommand(CreateEquipmentGroupRequest EquipmentGroup, bool IsAdmin = true)
+	: Mediator.IRequest<Result<int>>;
+
+/// <summary>
+///     Validates the <see cref="CreateEquipmentGroupCommand" />.
+/// </summary>
+public class CreateEquipmentGroupValidator : AbstractValidator<CreateEquipmentGroupCommand>
+{
+	public CreateEquipmentGroupValidator()
+	{
+		RuleFor(x => x.EquipmentGroup.Name)
+			.NotEmpty().WithMessage("Name is required")
+			.Length(1, 255).WithMessage("Name must be between 1 and 255 characters");
+	}
+}
+
+/// <summary>
+///     Handles the <see cref="CreateEquipmentGroupCommand" />.
+/// </summary>
+/// <param name="repository">The <see cref="IEquipmentGroupRepository" />.</param>
+public class CreateEquipmentGroupCommandHandler(IEquipmentGroupRepository repository)
+	: Mediator.IRequestHandler<CreateEquipmentGroupCommand, Result<int>>
+{
+	public async ValueTask<Result<int>> Handle(CreateEquipmentGroupCommand request, CancellationToken token)
+	{
+		var validation = await BusinessValidation(request, token);
+		if (validation.IsFailed)
+		{
+			return validation;
+		}
+
+		var entity = new EquipmentGroup
+		{
+			Name = request.EquipmentGroup.Name
+		};
+
+		await repository.AddAsync(entity, token);
+		await repository.SaveChangesAsync(token);
+
+		return Result.Ok(entity.Id);
+	}
+
+	private async ValueTask<Result<int>> BusinessValidation(CreateEquipmentGroupCommand request,
+		CancellationToken token)
+	{
+		if (!request.IsAdmin)
+		{
+			return Result.Fail<int>(ErrorTypes.Unauthorized);
+		}
+
+		var exists = await repository.ExistsByNameAsync(request.EquipmentGroup.Name, token);
+		if (exists)
+		{
+			return Result.Fail<int>(ErrorTypes.NamingConflict);
+		}
+
+		return Result.Ok(0);
+	}
+}

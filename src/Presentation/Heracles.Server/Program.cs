@@ -1,4 +1,5 @@
 
+using Heracles.Blazor.Extensions;
 using Heracles.Server;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
+
+builder.Services.AddHeracles();
 
 var app = builder.Build();
 

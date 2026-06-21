@@ -1,4 +1,4 @@
-namespace Heracles.Blazor.Components.Theme;
+namespace Heracles.Blazor.Theme;
 
 public enum ThemeMode
 {

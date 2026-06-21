@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace Heracles.Blazor.Components.Theme;
+namespace Heracles.Blazor.Theme;
 
 /// <summary>
 ///     Service responsible for managing theme modes (Light, Dark, System)

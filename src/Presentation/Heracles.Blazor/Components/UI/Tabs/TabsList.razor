@@ -1,0 +1,15 @@
+﻿<div class="@CssClass">
+	@ChildContent
+</div>
+
+@code {
+	[CascadingParameter] public Tabs Parent { get; set; } = default!;
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public string? Class { get; set; }
+
+
+	private string CssClass => Tw.Merge(
+		"inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+		Class);
+
+}

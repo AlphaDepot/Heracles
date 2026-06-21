@@ -1,0 +1,19 @@
+﻿<kbd data-slot="kbd-group"
+     class="@CssClass"
+     @attributes="AdditionalAttributes">
+	@ChildContent
+</kbd>
+
+@code {
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string CssClass => Tw.Merge(
+		"inline-flex items-center gap-1",
+		Class
+	);
+
+}

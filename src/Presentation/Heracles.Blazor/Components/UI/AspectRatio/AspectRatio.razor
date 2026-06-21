@@ -1,0 +1,19 @@
+﻿<div
+	data-slot="aspect-ratio"
+	class="relative block max-w-full @Class"
+	style="--ratio:@Ratio; padding-bottom:calc(100% / var(--ratio));"
+	@attributes="AdditionalAttributes">
+	<div class="absolute inset-0">
+		@ChildContent
+	</div>
+</div>
+
+@code
+{
+	[Parameter] public double Ratio { get; set; } = 1;
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

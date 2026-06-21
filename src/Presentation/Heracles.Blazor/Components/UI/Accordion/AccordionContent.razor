@@ -1,0 +1,25 @@
+﻿<div data-slot="accordion-content"
+     data-state="@State"
+     class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+     @attributes="AdditionalAttributes">
+
+	@if (Item.Open)
+	{
+		<div class="@($"pt-0 pb-4 px-1 {Class}")">
+			@ChildContent
+		</div>
+	}
+</div>
+
+@code
+{
+	[CascadingParameter] public AccordionItem Item { get; set; } = default!;
+
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string State => Item.Open ? "open" : "closed";
+}

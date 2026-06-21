@@ -1,0 +1,22 @@
+﻿using TailwindMerge;
+
+namespace Heracles.Blazor.Utilities;
+
+public static class Tw
+{
+	private static readonly TwMerge Instance = new();
+
+	// Generic params-based surface
+	public static string Merge(params string[] classes)
+	{
+		return Instance.Merge(classes);
+	}
+
+	// Convenience overload for two parts (optional)
+	public static string Merge(string baseClass, string? additional)
+	{
+		return additional is null
+			? baseClass
+			: Instance.Merge(baseClass, additional);
+	}
+}

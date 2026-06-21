@@ -1,0 +1,39 @@
+﻿@inject CarouselService CarouselService
+
+<div class="@ContainerClass">
+	<span class="text-white text-sm">@(_current + 1)/@ItemsCount</span>
+</div>
+
+@code {
+	[Parameter] public int ItemsCount { get; set; }
+	[Parameter] public string Class { get; set; } = string.Empty;
+
+	[CascadingParameter(Name = "CarouselId")]
+	public string CarouselId { get; set; } = null!;
+
+	private int _current;
+
+	private string ContainerClass =>
+		Tw.Merge("absolute bottom-4 left-1/2 -translate-x-1/2 z-20", Class);
+
+	protected override void OnInitialized()
+	{
+		CarouselService.StateChanged += OnStateChanged;
+		_current = CarouselService.GetSelectedIndex(CarouselId);
+	}
+
+	private void OnStateChanged(string id)
+	{
+		if (id != CarouselId)
+			return;
+
+		_current = CarouselService.GetSelectedIndex(CarouselId);
+		InvokeAsync(StateHasChanged);
+	}
+
+	public void Dispose()
+	{
+		CarouselService.StateChanged -= OnStateChanged;
+	}
+
+}

@@ -1,0 +1,33 @@
+﻿<CascadingValue Value="this">
+	<div class="@Class">
+		@ChildContent
+	</div>
+</CascadingValue>
+
+@code {
+	[Parameter] public string? Value { get; set; }
+	[Parameter] public string? DefaultValue { get; set; }
+	[Parameter] public EventCallback<string> ValueChanged { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public string? Class { get; set; }
+
+	private string? _internalValue;
+
+	public string CurrentValue => Value ?? _internalValue ?? "";
+
+	protected override void OnInitialized()
+	{
+		_internalValue = DefaultValue;
+	}
+
+	public async Task SetValueAsync(string value)
+	{
+		_internalValue = value;
+
+		if (ValueChanged.HasDelegate)
+			await ValueChanged.InvokeAsync(value);
+
+		StateHasChanged();
+	}
+
+}

@@ -1,0 +1,199 @@
+﻿@using Heracles.Blazor.Components.Motion
+@using Heracles.Blazor.Services
+<MotionElement @ref="_motion"
+               Tag="div"
+               Class="@IconClass"
+               Initial="@_initial"
+               Animate="@_animate"
+               OnMouseEnter="OnHoverEnter"
+               OnMouseLeave="OnHoverLeave">
+	@ChildContent
+</MotionElement>
+
+@code {
+	[Inject] public DockService DockService { get; set; } = null!;
+	[Inject] public MotionService Motion { get; set; } = null!;
+	[Inject] public JavascriptUtils JsUtils { get; set; } = null!;
+
+	[CascadingParameter] public Dock.DockConfig? Config { get; set; }
+
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public string Class { get; set; } = string.Empty;
+	[Parameter] public int? Size { get; set; }
+	[Parameter] public int? Magnification { get; set; }
+	[Parameter] public int? Distance { get; set; }
+	[Parameter] public bool? DisableMagnification { get; set; }
+
+	private MotionElement? _motion;
+	private bool _rendered;
+	private bool _hovering;
+	private double _padding;
+
+	private object? _initial;
+	private object? _animate;
+
+	private int EffectiveSize => Size ?? Config?.Size ?? 40;
+	private int EffectiveMagnification => Magnification ?? Config?.Magnification ?? 60;
+	private int EffectiveDistance => Distance ?? Config?.Distance ?? 140;
+	private bool EffectiveDisableMagnification => DisableMagnification ?? Config?.DisableMagnification ?? false;
+
+	private string IconClass => Tw.Merge(
+		"flex aspect-square cursor-pointer items-center justify-center rounded-full overflow-hidden",
+		"hover:bg-action-hover transition-colors duration-150",
+		Class
+	);
+
+	protected override void OnInitialized()
+	{
+		DockService.MouseMoved += OnMouseMove;
+	}
+
+	protected override Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var size = EffectiveSize;
+			_padding = Math.Max(6, size * 0.2);
+
+			_initial = new
+			{
+				width = $"{size}px",
+				height = $"{size}px",
+				padding = $"{_padding}px"
+			};
+
+			_animate = _initial;
+
+			_rendered = true;
+			StateHasChanged();
+		}
+
+		return Task.CompletedTask;
+	}
+
+	private async Task OnHoverEnter(MouseEventArgs _)
+	{
+		_hovering = true;
+
+		if (_motion is null)
+			return;
+
+		var el = _motion.ElementRef;
+
+		var target = EffectiveDisableMagnification
+			? EffectiveSize
+			: EffectiveMagnification;
+
+		_animate = new
+		{
+			width = $"{target}px",
+			height = $"{target}px",
+			padding = $"{_padding}px"
+		};
+
+		await Motion.Animate(
+			el,
+			_animate,
+			new { duration = 0.15, easing = "ease-out" }
+		);
+	}
+
+	private async Task OnHoverLeave(MouseEventArgs _)
+	{
+		_hovering = false;
+
+		if (_motion is null)
+			return;
+
+		var el = _motion.ElementRef;
+
+		var baseSize = EffectiveSize;
+
+		_animate = new
+		{
+			width = $"{baseSize}px",
+			height = $"{baseSize}px",
+			padding = $"{_padding}px"
+		};
+
+		await Motion.Animate(
+			el,
+			_animate,
+			new { duration = 0.15, easing = "ease-out" }
+		);
+	}
+
+	private async Task OnMouseMove(double mouseX)
+	{
+		if (!_rendered || _motion is null)
+			return;
+
+		if (_hovering)
+			return;
+
+		var el = _motion.ElementRef;
+
+		var (x, width) = await JsUtils.GetRect(el);
+		if (width == 0)
+			return;
+
+		if (double.IsInfinity(mouseX))
+		{
+			var baseSize = EffectiveSize;
+
+			_animate = new
+			{
+				width = $"{baseSize}px",
+				height = $"{baseSize}px",
+				padding = $"{_padding}px"
+			};
+
+			await Motion.Animate(
+				el,
+				_animate,
+				new { duration = 0.15, easing = "ease-out" }
+			);
+
+			return;
+		}
+
+		var center = x + width / 2;
+		var distance = mouseX - center;
+
+		var size = EffectiveSize;
+		var magnification = EffectiveMagnification;
+		var range = EffectiveDistance;
+
+		var target = EffectiveDisableMagnification
+			? size
+			: Map(distance, -range, range, size, magnification);
+
+		_animate = new
+		{
+			width = $"{target}px",
+			height = $"{target}px",
+			padding = $"{_padding}px"
+		};
+
+		await Motion.Animate(
+			el,
+			_animate,
+			new { duration = 0.15, easing = "ease-out" }
+		);
+	}
+
+	private double Map(double value, double inMin, double inMax, double outMin, double outMax)
+	{
+		if (value < inMin || value > inMax)
+			return outMin;
+
+		var ratio = (value - inMin) / (inMax - inMin);
+		return outMin + ratio * (outMax - outMin);
+	}
+
+	public void Dispose()
+	{
+		DockService.MouseMoved -= OnMouseMove;
+	}
+
+}

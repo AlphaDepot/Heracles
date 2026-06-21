@@ -1,0 +1,20 @@
+﻿<div
+	data-slot="card"
+	class="@CssClass"
+	@attributes="AdditionalAttributes">
+	@ChildContent
+</div>
+
+@code {
+
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string CssClass =>
+		$"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border border-border py-6 shadow-sm {Class}"
+			.Trim();
+
+}

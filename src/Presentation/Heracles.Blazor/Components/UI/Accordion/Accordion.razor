@@ -1,0 +1,61 @@
+﻿<CascadingValue Value="this">
+	<div data-slot="accordion" @attributes="AdditionalAttributes">
+		@ChildContent
+	</div>
+</CascadingValue>
+
+@code
+{
+	private HashSet<string> _internal = [];
+	[Parameter] public string Type { get; set; } = "single"; // "single" or "multiple"
+	[Parameter] public bool Collapsible { get; set; }
+
+	[Parameter] public IEnumerable<string>? Value { get; set; }
+	[Parameter] public IEnumerable<string>? DefaultValue { get; set; }
+	[Parameter] public EventCallback<IEnumerable<string>> ValueChanged { get; set; }
+
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	protected override void OnInitialized()
+	{
+		if (Value != null)
+			_internal = [..Value];
+		else if (DefaultValue != null)
+			_internal = [..DefaultValue];
+	}
+
+	public bool IsOpen(string key)
+	{
+		return _internal.Contains(key);
+	}
+
+	public async Task Toggle(string key)
+	{
+		if (Type == "single")
+		{
+			if (_internal.Contains(key))
+			{
+				if (Collapsible)
+					_internal.Remove(key);
+			}
+			else
+			{
+				_internal.Clear();
+				_internal.Add(key);
+			}
+		}
+		else
+		{
+			if (!_internal.Add(key))
+				_internal.Remove(key);
+		}
+
+		if (ValueChanged.HasDelegate)
+			await ValueChanged.InvokeAsync(_internal);
+
+		StateHasChanged();
+	}
+}

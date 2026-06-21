@@ -1,0 +1,23 @@
+﻿<CascadingValue Value="this">
+	<div data-slot="accordion-item"
+	     class="@CssClass"
+	     @attributes="AdditionalAttributes">
+		@ChildContent
+	</div>
+</CascadingValue>
+
+@code {
+	[CascadingParameter] public Accordion Parent { get; set; } = null!;
+	[Parameter] public string Value { get; set; } = null!;
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	public bool Open => Parent.IsOpen(Value);
+
+	private string CssClass =>
+		$"border-b last:border-b-0 {Class}".Trim();
+
+}

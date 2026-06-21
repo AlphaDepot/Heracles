@@ -1,0 +1,32 @@
+﻿@inject CarouselService CarouselService
+
+<div class="overflow-hidden" @ref="_viewportRef">
+	<div class="@ContentClass">
+		@ChildContent
+	</div>
+</div>
+
+@code {
+
+	[CascadingParameter(Name = "CarouselId")]
+	public string CarouselId { get; set; } = null!;
+
+	[CascadingParameter(Name = "Orientation")]
+	public Orientation Orientation { get; set; } = Orientation.Horizontal;
+
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	private ElementReference _viewportRef;
+
+	private string ContentClass =>
+		Orientation == Orientation.Horizontal
+			? "flex -ml-4"
+			: "flex flex-col -mt-4";
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+			await CarouselService.InitializeAsync(CarouselId, _viewportRef);
+	}
+
+}

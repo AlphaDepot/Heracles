@@ -1,0 +1,35 @@
+﻿<svg
+	class="@Css"
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="@StrokeWidth"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	@attributes="AdditionalAttributes">
+
+	@((MarkupString)Kind.Svg)
+</svg>
+
+@code {
+	[Parameter] public IconValue Kind { get; set; }
+	[Parameter] public Size Size { get; set; } = Size.Medium;
+	[Parameter] public int StrokeWidth { get; set; } = 2;
+	[Parameter] public string? Class { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string Css =>
+		$"rounded-full {sizeCss} {Class}".Trim();
+
+
+	private string sizeCss => Size switch
+	{
+		Size.Small => "h-5 w-5",
+		Size.Medium => "h-8 w-8",
+		Size.Large => "h-10 w-10",
+		_ => "h-8 w-8"
+	};
+
+}

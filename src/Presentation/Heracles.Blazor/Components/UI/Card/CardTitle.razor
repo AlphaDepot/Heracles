@@ -1,0 +1,18 @@
+﻿<div
+	class="@CssClass"
+	@attributes="AdditionalAttributes">
+	@ChildContent
+</div>
+
+@code {
+
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string CssClass =>
+		$"leading-none px-2 font-semibold {Class}".Trim();
+
+}

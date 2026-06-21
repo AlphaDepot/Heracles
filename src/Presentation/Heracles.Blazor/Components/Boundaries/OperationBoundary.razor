@@ -1,0 +1,372 @@
+﻿@using Heracles.Blazor.Components.UI.Alerts
+@using Heracles.Blazor.Exceptions
+@inject NavigationManager NavigationManager
+
+@* ====================================================================================================
+    OPERATION ERROR BOUNDARY
+    ----------------------------------------------------------------------------------------------------
+    A state-aware container built to safely encapsulate asynchronous Blazor workloads.
+    It unifies lifecycle data acquisition, background transaction tracking, inline/full-page error boundaries,
+    and automated deep-linking routing exception strategies.
+
+    STRUCTURED USAGE BLUEPRINTS:
+
+    1) CLASSIC PAGE LOADING MODE (Blocking Lifecycle Initialization)
+       - Automated execution bound directly to the native Blazor initialization cycle.
+       - Complete DOM containment: Child content is completely hidden during execution and failure states.
+       - Error Context: Renders a large, full-page structured error layout with "Retry" and "Go Home" routines.
+       
+       <OperationErrorBoundary RunOnInit="@FetchDashboardDataAsync"
+                               BlockChildContent="true"
+                               LoadingMessage="Assembling your workspace dashboard..."
+                               ErrorMessage="System error occurred while retrieving profile data."
+                               RedirectUrl="/dashboard/recovery">
+           <WorkspaceDashboard DashboardData="_data" />
+       </OperationErrorBoundary>
+
+
+    2) INTERACTIVE CRUD FORM MODE (Non-Blocking On-Demand Named Operations)
+       - Decoupled from lifecycle hooks; mapped dynamically into a case-insensitive lookup table.
+       - Concurrent DOM execution: Child layout stays fully interactive so users don't lose data context.
+       - Error Context: Discharges targeted, closeable inline alert flags right over or under editing layouts.
+
+       <OperationErrorBoundary @ref="_formBoundary"
+                               BlockChildContent="false"
+                               NamedOperations="@(new Dictionary<string, Func<Task>> { 
+                                   { "PersistDraft", SaveDraftWorkAsync }, 
+                                   { "PublishPost", FinalizeAndPublishAsync } 
+                               })"
+                               ErrorMessage="Transaction failed. Changes could not be pushed.">
+           <MudTextField @bind-Value="_post.Body" Label="Draft Content" Lines="10" />
+           
+           <div class="flex gap-3">
+               <MudButton OnClick="@(() => _formBoundary.RunAsync("PersistDraft"))">Save Draft</MudButton>
+               <MudButton OnClick="@(() => _formBoundary.RunAsync("PublishPost"))">Publish Now</MudButton>
+           </div>
+       </OperationErrorBoundary>
+
+
+    3) DESTRUCTIVE TRANSACTION INTERVENTION (Blocking Named Operations)
+       - Invokes an on-demand named dictionary process but intentionally enforces a complete UI lockdown.
+       - Use Case: Preventing double-clicks or data mutation risks during catastrophic operations (e.g., Deletes).
+       - Invoked seamlessly by supplying the boolean parameter directly inside the controller execution method.
+
+       <OperationErrorBoundary @ref="_deleteBoundary"
+                               BlockChildContent="false" 
+                               NamedOperations="@(new Dictionary<string, Func<Task>> { { "PurgeAccount", HardDeleteUserAccountAsync } })"
+                               LoadingMessage="Purging data streams and closing account balances permanently...">
+           <MudText>Danger Zone: This action cannot be undone.</MudText>
+           <MudButton OnClick="@(() => _deleteBoundary.RunAsync("PurgeAccount", blockChild: true))">
+               Delete Account Permanently
+           </MudButton>
+       </OperationErrorBoundary>
+
+
+    4) FILTERED SEARCH & RELOAD MODE (Parent-Driven State Re-Initialization)
+       - Listens to parameter mutations on the parent element (like search filters or paginator matrices).
+       - Leverages the public API surface to dynamically force re-runs of established lifecycle configurations.
+
+       <OperationErrorBoundary @ref="_searchBoundary"
+                               RunOnParamSet="@ExecuteSearchQueryAsync"
+                               BlockChildContent="false">
+           <MudSelect T="string" Label="Category" ValueChanged="OnCategoryChanged">
+               <MudSelectItem Value="@("Hardware")" />
+               <MudSelectItem Value="@("Software")" />
+           </MudSelect>
+           <InventoryResults Items="_searchResults" />
+       </OperationErrorBoundary>
+
+       @code {
+           private OperationErrorBoundary _searchBoundary;
+           private async Task OnCategoryChanged(string category)
+           {
+               _currentCategory = category;
+               // Forces the component to evaluate parameters and run the process again on demand
+               await _searchBoundary.RunParametersSetAsync(); 
+           }
+       }
+
+
+    5) TAILORED ENTERPRISE UX OVERRIDES (Template Customization Mode)
+       - Bypasses default MudBlazor fallbacks to ingest complex, proprietary visual layouts.
+       - Injects strongly-typed contextual error properties right into specialized debugging layouts.
+
+       <OperationErrorBoundary RunOnInit="@LoadFinancialLedgerAsync"
+                               BlockChildContent="true">
+           <LoadingTemplate>
+               <SkeletonLedgerLoader GridRows="12" />
+           </LoadingTemplate>
+           <ErrorTemplate Context="exception">
+               <SystemDiagnosticsCrashCard ExceptionObj="@exception" SupportTicketId="TX-991" />
+           </ErrorTemplate>
+           <ChildContent>
+               <LedgerGrid Transactions="_ledger" />
+           </ChildContent>
+       </OperationErrorBoundary>
+    ====================================================================================================
+*@
+
+@* ───────────────────────────────────────────────────────────────
+    1. REDIRECTING STATE
+    ───────────────────────────────────────────────────────────────
+    If a known routing exception (NotFound, Forbidden, Unauthorized) is
+    caught during execution, we halt rendering instantly. Navigating 
+    immediately prevents partial UI rendering or layout flickering.
+*@
+@if (_redirecting)
+{
+	return;
+}
+@* ───────────────────────────────────────────────────────────────
+    2. LOADING STATE
+    ───────────────────────────────────────────────────────────────
+    An async action is executing. Renders either a custom loading UI 
+    or a default progress indicator alongside the configured message.
+*@
+@if (_isRunning)
+{
+	if (LoadingTemplate is not null)
+	{
+		@LoadingTemplate
+	}
+	else
+	{
+		<div class="flex gap-2 justify-center items-center mt-4">
+			<MudProgressCircular Indeterminate="true"/>
+			<p>@LoadingMessage</p>
+		</div>
+	}
+
+	if (_currentBlockChildContent)
+	{
+		return;
+	}
+}
+@* ───────────────────────────────────────────────────────────────
+    3. ERROR STATE
+    ───────────────────────────────────────────────────────────────
+    Handles exceptions caught during execution, matching the layout structure 
+    to the intent of the failed operation (Full-Page Card vs. Inline Alert).
+*@
+@if (_error is not null)
+{
+	if (ErrorTemplate is not null)
+	{
+		@ErrorTemplate(_error)
+	}
+	else if (_lastOpWasLifecycle)
+	{
+		@* A. FULL-PAGE / BLOCKING ERROR UI
+            Triggered when a core lifecycle step fails (e.g., OnInit). 
+            Renders a prominent, centered error panel blocking main content.
+        
+        
+
+		*@
+		<div class="flex flex-col gap-3 justify-center items-center mt-10 p-4 h-full">
+			<div Class="border rounded p-4 max-w-100 bg-card">
+				<div class="flex flex-col gap-2">
+					<h3>@ErrorMessage</h3>
+					<p Class="mt-2 text-xs text-destructive">
+						@((MarkupString)_error.Message.Replace("\n", "<br />"))
+					</p>
+
+					<div class="flex gap-1">
+						<Button Variant="Variant.Outlined" OnClick="@RetryAsync">
+							Retry
+						</Button>
+						<Button Variant="Variant.Default" OnClick="@NavigateTo">
+							Go Home
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		@* B. INLINE / NON-BLOCKING ERROR UI
+            Triggered when a dictionary-mapped action fails (e.g., RunAsync("Save")).
+            Renders an alert flag above or below the interactive child form controls.
+        
+        
+
+		*@
+		<Alert Severity="Severity.Error" Class="my-2">
+			<h6>@ErrorMessage</h6>
+			<p class="mt-2 text-xs text-destructive">
+				@((MarkupString)_error.Message.Replace("\n", "<br/>"))
+			</p>
+
+			<div class="flex gap-1 mt-2">
+				<Button Variant="Variant.Outlined" OnClick="@RetryAsync">Retry</Button>
+				<Button Variant="Variant.Ghost" OnClick="@Reset">Dismiss</Button>
+			</div>
+		</Alert>
+	}
+
+	if (!_currentBlockChildContent)
+	{
+		@ChildContent
+	}
+
+	return;
+}
+
+@* ───────────────────────────────────────────────────────────────
+    4. DEFAULT IDLE STATE
+    ───────────────────────────────────────────────────────────────
+    No actions are processing, no errors are active. Display child layout.
+*@
+@ChildContent
+
+@code {
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	// Lifecycle Operation Slots
+	/// <summary> Core data acquisition task run during OnInitializedAsync. </summary>
+	[Parameter]
+	public Func<Task>? RunOnInit { get; set; }
+
+	/// <summary> Task run during ParametersSetAsync when state or routing dependencies alter. </summary>
+	[Parameter]
+	public Func<Task>? RunOnParamSet { get; set; }
+
+	/// <summary> Task run exactly once after the initial browser render cycle completes. </summary>
+	[Parameter]
+	public Func<Task>? RunOnAfterRender { get; set; }
+
+	/// <summary> Maps on-demand user commands (e.g., "Save", "Export") by case-insensitive text tokens. </summary>
+	[Parameter]
+	public Dictionary<string, Func<Task>> NamedOperations { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+	[Parameter] public bool BlockChildContent { get; set; } = true;
+	[Parameter] public string LoadingMessage { get; set; } = "Processing...";
+	[Parameter] public string ErrorMessage { get; set; } = "An error occurred.";
+	[Parameter] public RenderFragment? LoadingTemplate { get; set; }
+	[Parameter] public RenderFragment<Exception>? ErrorTemplate { get; set; }
+	[Parameter] public string RedirectUrl { get; set; } = AppRoutes.Home;
+
+	private bool _isRunning;
+	private Exception? _error;
+	private bool _hasRunAfterRender;
+	private bool _redirecting;
+
+	private bool _lastOpWasLifecycle;
+	private bool _currentBlockChildContent;
+	private Func<Task>? _lastExecutedOperation;
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (RunOnInit is not null)
+			await RunInternalAsync(RunOnInit, true, BlockChildContent);
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (RunOnParamSet is not null)
+			await RunInternalAsync(RunOnParamSet, true, BlockChildContent);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (RunOnAfterRender is not null && !_hasRunAfterRender)
+		{
+			_hasRunAfterRender = true;
+			await RunInternalAsync(RunOnAfterRender, true, BlockChildContent);
+		}
+	}
+
+	#region Public API
+
+	public Task RunInitAsync()
+	{
+		return RunInternalAsync(RunOnInit, true, BlockChildContent);
+	}
+
+	public Task RunParametersSetAsync()
+	{
+		return RunInternalAsync(RunOnParamSet, true, BlockChildContent);
+	}
+
+	public Task RunAfterRenderAsync()
+	{
+		return RunInternalAsync(RunOnAfterRender, true, BlockChildContent);
+	}
+
+	// Executes a specific operation out of the NamedOperations dictionary by its key
+	public Task RunAsync(string operationName, bool blockChild = false)
+	{
+		if (NamedOperations.TryGetValue(operationName, out var operation))
+		{
+			// Named operations usually behave like inline, non-blocking actions.
+			// You can explicitly flip blockChild to true if a specific action needs to lock the UI.
+			return RunInternalAsync(operation, false, blockChild);
+		}
+
+		throw new KeyNotFoundException($"The operation '{operationName}' was not found in the NamedOperations dictionary.");
+	}
+
+	public void Reset()
+	{
+		_error = null;
+		_isRunning = false;
+		StateHasChanged();
+	}
+
+	#endregion
+
+	private async Task RunInternalAsync(Func<Task>? operation, bool isLifecycle, bool blockChild)
+	{
+		if (operation is null)
+			return;
+
+		_lastExecutedOperation = operation;
+		_lastOpWasLifecycle = isLifecycle;
+		_currentBlockChildContent = blockChild;
+
+		_error = null;
+		_isRunning = true;
+		StateHasChanged();
+
+		try
+		{
+			await operation.Invoke();
+		}
+		catch (NotFoundException)
+		{
+			_redirecting = true;
+			NavigationManager.NavigateTo($"{AppRoutes.Errors.NotFound}?RedirectUrl={RedirectUrl}");
+		}
+		catch (ForbiddenException)
+		{
+			_redirecting = true;
+			NavigationManager.NavigateTo($"{AppRoutes.Errors.Forbidden}?RedirectUrl={RedirectUrl}");
+		}
+		catch (UnauthorizedException)
+		{
+			_redirecting = true;
+			NavigationManager.NavigateTo($"{AppRoutes.Errors.Unauthorized}?RedirectUrl=none");
+		}
+		catch (Exception ex)
+		{
+			_error = ex;
+		}
+		finally
+		{
+			_isRunning = false;
+			StateHasChanged();
+		}
+	}
+
+	private Task RetryAsync()
+	{
+		return RunInternalAsync(_lastExecutedOperation, _lastOpWasLifecycle, _currentBlockChildContent);
+	}
+
+	private void NavigateTo()
+	{
+		NavigationManager.NavigateTo(string.IsNullOrWhiteSpace(RedirectUrl) ? "/" : RedirectUrl);
+	}
+
+}

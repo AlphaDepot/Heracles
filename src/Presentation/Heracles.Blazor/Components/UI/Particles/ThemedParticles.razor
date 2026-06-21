@@ -1,0 +1,30 @@
+﻿@using Heracles.Blazor.Components.Theme
+@inject IThemeManager ThemeManager
+<Particles
+	Class="absolute inset-0 z-0"
+	Quantity="100"
+	Ease="80"
+	Color="@Color"
+	Staticity="50"
+	Size="1"
+	Vx="0"
+	Vy="0"
+/>
+
+@code {
+	private string Color => ThemeManager.IsDarkMode ? "#ffffff" : "#000000";
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			ThemeManager.OnChange += StateHasChanged;
+		}
+	}
+
+	public void Dispose()
+	{
+		ThemeManager.OnChange -= StateHasChanged;
+	}
+
+}

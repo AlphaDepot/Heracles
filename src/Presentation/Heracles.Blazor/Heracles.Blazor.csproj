@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization"/>
+    <PackageReference Include="TwMerge"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\UI\Input\"/>
+    <Folder Include="Pages\"/>
+    <Folder Include="wwwroot\css\"/>
+    <Folder Include="wwwroot\img\"/>
+    <Folder Include="wwwroot\js\"/>
+  </ItemGroup>
+
+
+  <Target Name="Tailwind" BeforeTargets="Build">
+    <Exec WorkingDirectory="Client" Command="npm install"
+          Condition=" !Exists('Client/node_modules') "
+    />
+    <Exec Command="npx @tailwindcss/cli -i ./css/styles.css -o ../wwwroot/css/styles.css"
+          WorkingDirectory="Client"
+    />
+  </Target>
+
+  <Target Name="BuildJs" BeforeTargets="Build">
+    <!-- Install node_modules if missing -->
+    <Exec WorkingDirectory="Client"
+          Command="npm install"
+          Condition="!Exists('Client/node_modules')"/>
+
+    <!-- Run your esbuild bundler -->
+    <Exec WorkingDirectory="Client"
+          Command="npm run build:js"/>
+  </Target>
+
+</Project>

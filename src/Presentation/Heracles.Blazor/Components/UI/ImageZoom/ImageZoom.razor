@@ -1,0 +1,55 @@
+﻿@inject IJSRuntime Js
+
+
+@if (string.IsNullOrWhiteSpace(Src))
+{
+	<span>Invalid image tag (no src)</span>
+}
+else
+{
+	<img @ref="_imgRef"
+	     src="@Src"
+	     alt="@Alt"
+	     class="@Class"
+	     @attributes="AdditionalAttributes"/>
+}
+
+
+
+@code {
+	[Parameter] public string Src { get; set; } = "";
+	[Parameter] public string Alt { get; set; } = "";
+
+	[Parameter] public string? Class { get; set; }
+
+	// all other attributes (e.g. style) can be passed via Class and handled in CSS
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; } = new();
+
+	private ElementReference _imgRef;
+	private IJSObjectReference? _module;
+	private IJSObjectReference? _zoomInstance;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (!firstRender)
+			return;
+
+		_module = await Js.InvokeAsync<IJSObjectReference>(
+			"import",
+			"./_content/Heracles.Blazor/js/image-zoom.js"
+		);
+
+		_zoomInstance = await _module.InvokeAsync<IJSObjectReference>(
+			"createZoom",
+			_imgRef,
+			new
+			{
+				background = "oklch(0 0 0 / 0.8)",
+				margin = 0,
+				scrollOffset = 40
+			}
+		);
+	}
+
+}

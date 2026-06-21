@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heracles.Application.UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heracles.Api.IntegrationTests", "tests\Heracles.Api.IntegrationTests\Heracles.Api.IntegrationTests.csproj", "{26340A4B-8E88-4083-943F-8E67A2809EFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heracles.Blazor", "src\Presentation\Heracles.Blazor\Heracles.Blazor.csproj", "{56E32F4F-1BCF-44DD-9F7B-27845D558887}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,7 @@ Global
 		{44177F30-15DC-4414-B46F-0B5985CA25B8} = {603F4CAE-2CC5-4FF4-A062-98ED029F9D35}
 		{2584E169-AD19-4C22-9A04-C78C34720408} = {AB60FADA-2DFB-423E-8CCC-B33FE8C9E433}
 		{26340A4B-8E88-4083-943F-8E67A2809EFF} = {AB60FADA-2DFB-423E-8CCC-B33FE8C9E433}
+		{56E32F4F-1BCF-44DD-9F7B-27845D558887} = {603F4CAE-2CC5-4FF4-A062-98ED029F9D35}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6490141C-29F6-4361-AC5A-9F054FCFF0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -89,5 +92,9 @@ Global
 		{26340A4B-8E88-4083-943F-8E67A2809EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26340A4B-8E88-4083-943F-8E67A2809EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26340A4B-8E88-4083-943F-8E67A2809EFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56E32F4F-1BCF-44DD-9F7B-27845D558887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56E32F4F-1BCF-44DD-9F7B-27845D558887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56E32F4F-1BCF-44DD-9F7B-27845D558887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56E32F4F-1BCF-44DD-9F7B-27845D558887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

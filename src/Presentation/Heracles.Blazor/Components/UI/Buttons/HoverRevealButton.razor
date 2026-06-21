@@ -1,0 +1,63 @@
+﻿@inject NavigationManager Nav
+<button @attributes="AdditionalAttributes"
+        class="@CssClass"
+        @onclick="HandleClick">
+
+	<div class="flex items-center gap-2">
+		<div class="bg-primary h-2 w-2 rounded-full transition-all duration-300 group-hover:scale-[100.8]"></div>
+		<span class="inline-block transition-all duration-300 group-hover:translate-x-8 group-hover:opacity-0">
+            @ChildContent
+        </span>
+
+	</div>
+
+	<div class="text-primary-foreground absolute top-0 z-10 flex h-full w-full 
+            translate-x-8 items-center justify-center gap-2 opacity-0 
+            transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+
+		@if (Direction == "left")
+		{
+			<Icon Kind="@Lucide.Outline.ArrowLeft" Size="Size.Small"/>
+		}
+
+		<span>@ChildContent</span>
+
+		@if (Direction == "right")
+		{
+			<Icon Kind="@Lucide.Outline.ArrowRight" Size="Size.Small"/>
+		}
+	</div>
+
+</button>
+
+
+@code
+{
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter] public string? Class { get; set; }
+
+	[Parameter] public string Direction { get; set; } = "right";
+
+	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+	[Parameter] public string? Href { get; set; } = string.Empty;
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string CssClass => Tw.Merge(
+		"group  bg-card! relative w-auto cursor-pointer overflow-hidden! rounded-full! border border-border p-2 px-6 text-center font-semibold", Class);
+
+	private async Task HandleClick(MouseEventArgs e)
+	{
+		if (!string.IsNullOrWhiteSpace(Href))
+		{
+			Nav.NavigateTo(Href);
+			return;
+		}
+
+		if (OnClick.HasDelegate)
+			await OnClick.InvokeAsync(e);
+	}
+
+}

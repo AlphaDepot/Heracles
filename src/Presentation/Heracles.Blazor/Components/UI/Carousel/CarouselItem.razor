@@ -1,0 +1,17 @@
+﻿<div role="group"
+     aria-roledescription="slide"
+     class="@GroupClass">
+	@ChildContent
+</div>
+
+@code {
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public string Class { get; set; } = string.Empty;
+
+	[CascadingParameter(Name = "Orientation")]
+	public Orientation Orientation { get; set; } = Orientation.Horizontal;
+
+	private string GroupClass => Tw.Merge("min-w-0 shrink-0 grow-0 basis-full", Orientation == Orientation.Horizontal ? "pl-4" : "pt-4", Class);
+
+}
+

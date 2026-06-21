@@ -1,0 +1,49 @@
+﻿<div class="@WrapperClass">
+	@if (TextureUrl is not null)
+	{
+		<div aria-hidden="true"
+		     class="pointer-events-none absolute inset-0"
+		     style="@TextureStyle">
+		</div>
+	}
+
+	@if (ChildContent is not null)
+	{
+		<div class="relative">
+			@ChildContent
+		</div>
+	}
+</div>
+
+@code {
+	[Parameter] public TextureVariant Variant { get; set; } = TextureVariant.FabricOfSquares;
+
+
+	[Parameter] public double Opacity { get; set; } = 0.5;
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	private string? TextureUrl =>
+		Variant == TextureVariant.None ? null : TextureMap[Variant];
+
+	private string WrapperClass =>
+		$"relative {Class}";
+
+	private string TextureStyle =>
+		$"background-image: url('{TextureUrl}'); " +
+		$"background-repeat: repeat; " +
+		$"opacity: {Opacity};";
+
+	private static readonly Dictionary<TextureVariant, string> TextureMap = new()
+	{
+		{ TextureVariant.FabricOfSquares, "/_content/Heracles.Blazor/img/textures/fabric-of-squares.png" },
+		{ TextureVariant.GridNoise, "/_content/Heracles.Blazor/img/textures/grid-noise.png" },
+		{ TextureVariant.Inflicted, "/_content/Heracles.Blazor/img/textures/inflicted.png" },
+		{ TextureVariant.DebutLight, "/_content/Heracles.Blazor/img/textures/debut-light.png" },
+		{ TextureVariant.GroovePaper, "/_content/Heracles.Blazor/img/textures/groovepaper.png" }
+	};
+
+
+}
+
+

@@ -1,0 +1,27 @@
+﻿<div class="relative w-full overflow-hidden">
+	<Carousel Class="w-full" Loop="Loop" Autoplay="Autoplay" AutoplayDelay="AutoplayDelay">
+		<CarouselContent>
+			@foreach (var item in Items)
+			{
+				<CarouselItem class="relative">
+					@item
+				</CarouselItem>
+			}
+		</CarouselContent>
+
+		<CarouselPrevious Inline="true"
+		                  class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white hover:bg-black/60"/>
+		<CarouselNext Inline="true"
+		              class="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white hover:bg-black/60"/>
+
+		<CarouselDots ItemsCount="@Items.Count" Class="bottom-2 gap-4"/>
+	</Carousel>
+</div>
+
+@code {
+	[Parameter] public List<RenderFragment> Items { get; set; } = [];
+	[Parameter] public bool Loop { get; set; }
+	[Parameter] public bool Autoplay { get; set; }
+	[Parameter] public int AutoplayDelay { get; set; } = 4000;
+
+}

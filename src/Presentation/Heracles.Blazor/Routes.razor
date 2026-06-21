@@ -1,0 +1,17 @@
+﻿@using Heracles.Blazor.Layout
+@using Heracles.Blazor.Pages.Errors
+<CascadingAuthenticationState>
+	<Router AppAssembly="typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
+		<Found Context="routeData">
+			<AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(BaseLayout)">
+				<Authorizing>
+					<p>Determining session state, please wait...</p>
+				</Authorizing>
+				<NotAuthorized>
+					<p>You are not authorized to access this resource.</p>
+				</NotAuthorized>
+			</AuthorizeRouteView>
+			<FocusOnNavigate RouteData="routeData" Selector="h1"/>
+		</Found>
+	</Router>
+</CascadingAuthenticationState>

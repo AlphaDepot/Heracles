@@ -1,0 +1,73 @@
+﻿@* Dock.razor *@
+@inject DockService DockService
+
+<CascadingValue Value="_config">
+	<div @ref="_dockRef"
+	     class="@CssClass"
+	     @onmousemove="OnMouseMove"
+	     @onmouseleave="OnMouseLeave">
+		@ChildContent
+	</div>
+</CascadingValue>
+
+@code {
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public string Class { get; set; } = string.Empty;
+	[Parameter] public int IconSize { get; set; } = 40;
+	[Parameter] public int IconMagnification { get; set; } = 50;
+	[Parameter] public int IconDistance { get; set; } = 140;
+	[Parameter] public bool DisableMagnification { get; set; }
+	[Parameter] public string Direction { get; set; } = "middle";
+
+	private ElementReference _dockRef;
+	private double _mouseX = double.PositiveInfinity;
+
+	private DockConfig _config = new();
+
+	private string CssClass => Tw.Merge(
+		// React dockVariants
+		"supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10",
+		"mx-auto mt-8",
+		"flex h-[58px] w-max items-center justify-center gap-2",
+		"rounded-2xl border p-2 backdrop-blur-md",
+		Direction switch
+		{
+			"top" => "items-start",
+			"bottom" => "items-end",
+			_ => "items-center"
+		},
+		Class
+	);
+
+	protected override void OnParametersSet()
+	{
+		_config = new DockConfig
+		{
+			Size = IconSize,
+			Magnification = IconMagnification,
+			Distance = IconDistance,
+			DisableMagnification = DisableMagnification
+		};
+	}
+
+	private async Task OnMouseMove(MouseEventArgs e)
+	{
+		_mouseX = e.PageX;
+		await DockService.NotifyMouseMove(_mouseX);
+	}
+
+	private async Task OnMouseLeave()
+	{
+		_mouseX = double.PositiveInfinity;
+		await DockService.NotifyMouseMove(_mouseX);
+	}
+
+	public class DockConfig
+	{
+		public int Size { get; set; }
+		public int Magnification { get; set; }
+		public int Distance { get; set; }
+		public bool DisableMagnification { get; set; }
+	}
+
+}

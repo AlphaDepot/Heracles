@@ -1,0 +1,17 @@
+﻿<MotionElement Tag="button"
+               Class="@Class"
+               Initial="@Initial"
+               Animate="@Animate"
+               WhileTap="@WhileTap"
+               OnClick="@OnClick">
+	@ChildContent
+</MotionElement>
+
+@code {
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public object? Initial { get; set; }
+	[Parameter] public object? Animate { get; set; }
+	[Parameter] public object? WhileTap { get; set; }
+	[Parameter] public EventCallback OnClick { get; set; }
+}

@@ -1,0 +1,47 @@
+﻿<th data-slot="table-head"
+    class="@CssClass"
+    @onclick="HandleClick"
+    @attributes="MergedAttributes">
+
+	<div class="flex items-center gap-1">
+		@ChildContent
+
+		@if (SortConfig?.Column == ColumnIndex)
+		{
+			<span>
+                @(SortConfig.Value.Asc ? "▲" : "▼")
+            </span>
+		}
+	</div>
+</th>
+
+@code {
+	[Parameter] public int ColumnIndex { get; set; }
+	[Parameter] public (int Column, bool Asc)? SortConfig { get; set; }
+	[Parameter] public EventCallback<int> OnHeaderClicked { get; set; }
+
+	[Parameter] public string Class { get; set; } = string.Empty;
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter] public Dictionary<string, object>? HeaderAttributes { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+	private string CssClass => Tw.Merge(
+		"bg-card/50 text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap",
+		SortConfig != null ? "cursor-pointer" : "",
+		Class
+	);
+
+	private IReadOnlyDictionary<string, object> MergedAttributes =>
+		(HeaderAttributes ?? new Dictionary<string, object>())
+		.Concat(AdditionalAttributes ?? new Dictionary<string, object>())
+		.ToDictionary(k => k.Key, v => v.Value);
+
+	private Task HandleClick(MouseEventArgs e)
+	{
+		return OnHeaderClicked.InvokeAsync(ColumnIndex);
+	}
+
+}

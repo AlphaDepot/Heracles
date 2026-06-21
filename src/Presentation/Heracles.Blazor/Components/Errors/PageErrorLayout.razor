@@ -1,0 +1,77 @@
+﻿
+@* 
+    Shared error page UI + redirect logic for 404, 403, 401, etc.
+    This component handles:
+    - Status code
+    - Title + message
+    - RedirectUrl query parameter
+    - Home-page detection
+    - Navigation back to home or fallback
+    - Optional button visibility
+*@
+
+@inject NavigationManager NavigationManager
+
+<div class="flex flex-col gap-2 items-center justify-center grow text-center py-10 w-full">
+	<div Class="p-10 rounded-lg shadow-lg max-w-lg w-full bg-card">
+
+		<h1 Typo="Typo.h1" Color="@NumberColor" Class="text-9xl! font-bold">
+			@StatusCode
+		</h1>
+
+		<h2 Typo="Typo.h2" Class="text-2xl font-semibold">
+			@Title
+		</h2>
+
+		<p Typo="Typo.body1" Class="my-2">
+			@Message
+		</p>
+
+		@if (IsNone)
+		{
+			<p Typo="Typo.body1">
+				The operation failed, please contact support.
+			</p>
+		}
+		else if (ShowButton)
+		{
+			<Button Variant="Variant.Outlined"
+			        Color="Color.Primary"
+			        OnClick="@GoHome">
+				@ButtonText
+			</Button>
+		}
+	</div>
+</div>
+
+@code {
+
+	// UI parameters
+	[Parameter] public string StatusCode { get; set; } = "000";
+	[Parameter] public string Title { get; set; } = "Unknown Error";
+	[Parameter] public string Message { get; set; } = "An unexpected error occurred.";
+	[Parameter] public bool ShowButton { get; set; } = true;
+	[Parameter] public string ButtonText { get; set; } = "Go Home";
+	[Parameter] public string NumberColor { get; set; } = "text-info";
+
+	// Query parameter for redirect
+	[SupplyParameterFromQuery(Name = "RedirectUrl")]
+	public string? RedirectUrl { get; set; }
+
+	private string _redirectUrl = AppRoutes.Home;
+
+	// Detect if the redirect target is the home page itself
+	private bool IsNone => _redirectUrl == "none";
+
+	protected override void OnInitialized()
+	{
+		if (!string.IsNullOrWhiteSpace(RedirectUrl))
+			_redirectUrl = RedirectUrl;
+	}
+
+	private void GoHome()
+	{
+		NavigationManager.NavigateTo(_redirectUrl);
+	}
+
+}

@@ -1,0 +1,125 @@
+﻿@inject IThemeManager ThemeManager
+@inject IJSRuntime JsRuntime
+@using Heracles.Blazor.Components.Theme
+@implements IAsyncDisposable
+
+<canvas @ref="_canvasRef" class="@Class" style="pointer-events: none;"></canvas>
+
+@code {
+	private ElementReference _canvasRef;
+	private IJSObjectReference? _module;
+	private IJSObjectReference? _instance;
+
+	private string? _lastColor;
+
+
+	[Parameter] public string Class { get; set; } = "";
+	[Parameter] public int Quantity { get; set; } = 100;
+	[Parameter] public int Ease { get; set; } = 50;
+	[Parameter] public int Staticity { get; set; } = 50;
+	[Parameter] public double Size { get; set; } = 0.4;
+
+		/// The color of the particles when the theme is light
+	/// <summary>
+    ///     The color of the particles when the theme is light
+    /// </summary>
+	[Parameter]
+	public string LightColor { get; set; } = "#000000";
+
+		/// The color of the particles when the theme is dark
+	/// <summary>
+    ///     The color of the particles when the theme is dark
+    /// </summary>
+	[Parameter]
+	public string DarkColor { get; set; } = "#ffffff";
+
+	[Parameter] public double Vx { get; set; }
+	[Parameter] public double Vy { get; set; }
+
+
+	private string ParticleColor => ThemeManager.IsDarkMode ? DarkColor : LightColor;
+
+
+	protected override void OnInitialized()
+	{
+		ThemeManager.OnChange += ThemeChanged;
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (!firstRender) return;
+
+		_module = await JsRuntime.InvokeAsync<IJSObjectReference>(
+			"import",
+			"/_content/Heracles.Blazor/js/particles.js"
+		);
+
+		await InitializeParticles();
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (_lastColor != ParticleColor)
+		{
+			_lastColor = ParticleColor;
+
+			if (_instance != null)
+			{
+				await _instance.InvokeVoidAsync("dispose");
+				_instance = null;
+			}
+
+			if (_module != null)
+			{
+				await InitializeParticles();
+			}
+		}
+	}
+
+	private void ThemeChanged()
+	{
+		InvokeAsync(StateHasChanged);
+	}
+
+	private async Task InitializeParticles()
+	{
+		var rgb = HexToRgb(ParticleColor);
+
+		_instance = await _module!.InvokeAsync<IJSObjectReference>(
+			"initParticles",
+			_canvasRef,
+			new
+			{
+				quantity = Quantity,
+				ease = Ease,
+				staticity = Staticity,
+				size = Size,
+				vx = Vx,
+				vy = Vy,
+				rgb = $"{rgb.r}, {rgb.g}, {rgb.b}"
+			}
+		);
+	}
+
+	private (int r, int g, int b) HexToRgb(string hex)
+	{
+		hex = hex.Replace("#", "");
+		if (hex.Length == 3)
+			hex = string.Concat(hex.Select(c => $"{c}{c}"));
+
+		var value = Convert.ToInt32(hex, 16);
+		return ((value >> 16) & 255, (value >> 8) & 255, value & 255);
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		ThemeManager.OnChange -= ThemeChanged;
+
+		if (_instance != null)
+			await _instance.InvokeVoidAsync("dispose");
+
+		if (_module != null)
+			await _module.DisposeAsync();
+	}
+
+}

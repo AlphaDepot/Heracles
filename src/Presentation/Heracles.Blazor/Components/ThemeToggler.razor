@@ -1,0 +1,25 @@
+﻿@using Heracles.Blazor.Theme
+@inject IThemeManager Theme
+
+<div class="flex flex-col gap-2 p-4 border rounded">
+	<button
+		class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700"
+		@onclick="Toggle">
+		Toggle Theme (Light → Dark → System)
+	</button>
+
+	<div class="text-sm">
+		<strong>Current Mode:</strong> @Theme.CurrentThemeMode
+	</div>
+
+	<div class="text-sm">
+		<strong>IsDarkMode:</strong> @Theme.IsDarkMode
+	</div>
+</div>
+
+@code {
+	private async Task Toggle()
+	{
+		await Theme.ToggleAsync();
+	}
+}

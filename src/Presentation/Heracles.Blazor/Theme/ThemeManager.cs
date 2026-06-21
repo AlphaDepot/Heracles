@@ -53,8 +53,10 @@ public class ThemeManager(IJSRuntime js) : IThemeManager, IAsyncDisposable
         // Load saved theme mode from JS/localStorage
         var saved = await module.InvokeAsync<ThemeState?>("loadTheme");
 
-        // Default to System if nothing is saved
-        CurrentThemeMode = saved?.Mode ?? ThemeMode.System;
+        // Convert string → enum
+        CurrentThemeMode = saved is not null
+	        ? ParseMode(saved.Mode)
+	        : ThemeMode.System;
 
         // Apply theme immediately
         await ApplyThemeModeAsync();
@@ -137,13 +139,23 @@ public class ThemeManager(IJSRuntime js) : IThemeManager, IAsyncDisposable
     }
 
     /// <summary>
-    /// Represents the saved theme state returned from JS/localStorage.
+    /// Converts a JS string ("light", "dark", "system") into a ThemeMode enum.
+    /// Uses a switch expression for clarity and safety.
+    /// </summary>
+    private static ThemeMode ParseMode(string? mode) =>
+	    mode?.ToLowerInvariant() switch
+	    {
+		    "light"  => ThemeMode.Light,
+		    "dark"   => ThemeMode.Dark,
+		    _        => ThemeMode.System
+	    };
+
+    /// <summary>
+    /// Internal DTO used ONLY for JS interop.
+    /// JS returns: { "mode": "light" | "dark" | "system" }
     /// </summary>
     private sealed class ThemeState
     {
-        /// <summary>
-        /// The saved theme mode ("light", "dark", or "system").
-        /// </summary>
-        public ThemeMode Mode { get; set; }
+	    public string Mode { get; set; } = "system";
     }
 }

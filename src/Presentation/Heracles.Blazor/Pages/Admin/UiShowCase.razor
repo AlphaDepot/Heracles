@@ -1,0 +1,46 @@
+﻿@page "/admin/ui-showcase"
+@using Heracles.Blazor.Components.UI.Tabs
+@using Heracles.Blazor.Components.UI.Toast
+@inject ToastService ToastService
+<h3>Ui ShowCase</h3>
+
+<div>
+	<Tabs DefaultValue="ThemeToggle">
+		<TabsList >
+			<TabsTrigger Value="ThemeToggle" >Theme Toggle</TabsTrigger>
+			<TabsTrigger Value="Toasts">Toasts</TabsTrigger>
+			<TabsTrigger Value="Icons">Icons</TabsTrigger>
+		</TabsList>
+		<TabsContent Value="ThemeToggle">
+			<ThemeToggler />
+		</TabsContent>
+		<TabsContent Value="Toasts">
+			<div>
+				<Button @onclick="NormalToast" Variant="Variant.Outlined">Normal Toast</Button>
+				<Button @onclick="ErrorToast" Variant="Variant.Destructive">Error Toast</Button>
+			</div>
+		</TabsContent>
+		<TabsContent Value="Icons">
+			<div class="flex flex-col gap-2">
+				<Icon Kind="Lucide.Outline.ArrowLeft" />
+				<Icon Kind="Lucide.Outline.Flame" Size="Size.Small" />
+				<Icon Kind="Lucide.Outline.Info" Size="Size.Large" />
+			</div>
+		</TabsContent>
+	</Tabs>
+</div>
+
+@code {
+
+	private void NormalToast()
+	{
+		ToastService.Show("Friday, February 10, 2023 at 5:57 PM", "Scheduled: Catch up");
+	}
+	
+	private void ErrorToast()
+	{
+		ToastService.Error("There was a problem with your request.", "Uh oh! Something went wrong.");
+	}
+
+}
+

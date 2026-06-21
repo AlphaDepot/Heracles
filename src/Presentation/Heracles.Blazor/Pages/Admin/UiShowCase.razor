@@ -4,6 +4,8 @@
 @using Heracles.Blazor.Components.UI.Toast
 @using Heracles.Blazor.Components.UI.Inputs
 @using Heracles.Blazor.Components.UI.NavigationMenu
+@using Heracles.Blazor.Components.UI.Separators
+@using Heracles.Blazor.Components.UI.Sliders
 
 @inject ToastService ToastService
 <h3>Ui ShowCase</h3>
@@ -16,7 +18,8 @@
 			<TabsTrigger Value="Icons">Icons</TabsTrigger>
 			<TabsTrigger Value="Inputs">Inputs</TabsTrigger>
 			<TabsTrigger Value="NavigationMenus">Navigation Menus</TabsTrigger>
-		
+			<TabsTrigger Value="Slider">Slider</TabsTrigger>
+
 		</TabsList>
 		<TabsContent Value="ThemeToggle">
 			<ThemeToggler />
@@ -81,11 +84,29 @@
 				
 			</div>
 		</TabsContent>
+		
+		<TabsContent Value="Slider">
+			<div class="flex flex-col gap-2">
+				<p>Slider Val: @_sliderValue</p>
+				<Slider @bind-Value="_sliderValue"/>
+				<Separator />
+				<p>Slider Val: @_sliderValue2</p>
+				<Slider @bind-Value="_sliderValue2" Min="10" Max="80" Step="10"/>
+				<Separator />
+				<Slider @bind-Value="_sliderValue3" Disabled="true"/>
+			</div>
+		</TabsContent>
 	
 	</Tabs>
 </div>
 
+
+
 @code {
+	
+	private double _sliderValue = 50;
+	private double _sliderValue2 = 50;
+	private double _sliderValue3 = 50;
 	
 	private void NormalToast()
 	{

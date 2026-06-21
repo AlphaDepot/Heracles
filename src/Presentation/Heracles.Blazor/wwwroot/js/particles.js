@@ -3,10 +3,9 @@ function initParticles(canvas, options) {
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   let circles = [];
-  let mouse = {x: 0, y: 0};
+  let mouse = { x: 0, y: 0 };
   let rafId = null;
   let resizeObserver = null;
-
   function resize() {
     const container2 = canvas.offsetParent || canvas.parentElement;
     if (!container2) return;
@@ -21,7 +20,6 @@ function initParticles(canvas, options) {
       circles.push(createCircle(rect.width, rect.height));
     }
   }
-
   function createCircle(w, h) {
     return {
       x: Math.random() * w,
@@ -36,14 +34,12 @@ function initParticles(canvas, options) {
       translateY: 0
     };
   }
-
   function drawCircle(c) {
     ctx.beginPath();
     ctx.arc(c.x + c.translateX, c.y + c.translateY, c.size, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(${options.rgb}, ${c.alpha})`;
     ctx.fill();
   }
-
   function animate() {
     const w = canvas.width / dpr;
     const h = canvas.height / dpr;
@@ -62,13 +58,11 @@ function initParticles(canvas, options) {
     });
     rafId = requestAnimationFrame(animate);
   }
-
   function onMouseMove(e) {
     const rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left - rect.width / 2;
     mouse.y = e.clientY - rect.top - rect.height / 2;
   }
-
   window.addEventListener("mousemove", onMouseMove);
   window.addEventListener("resize", resize);
   const container = canvas.offsetParent || canvas.parentElement;
@@ -87,7 +81,6 @@ function initParticles(canvas, options) {
     }
   };
 }
-
 export {
   initParticles
 };

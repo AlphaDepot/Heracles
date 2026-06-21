@@ -1,5 +1,5 @@
 // node_modules/medium-zoom/dist/medium-zoom.esm.js
-var _extends = Object.assign || function (target) {
+var _extends = Object.assign || function(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
     for (var key in source) {
@@ -49,8 +49,7 @@ var createOverlay = function createOverlay2(background) {
   return overlay;
 };
 var cloneTarget = function cloneTarget2(template) {
-  var _template$getBounding = template.getBoundingClientRect(), top = _template$getBounding.top,
-    left = _template$getBounding.left, width = _template$getBounding.width, height = _template$getBounding.height;
+  var _template$getBounding = template.getBoundingClientRect(), top = _template$getBounding.top, left = _template$getBounding.left, width = _template$getBounding.width, height = _template$getBounding.height;
   var clone = template.cloneNode();
   var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
   var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
@@ -81,7 +80,6 @@ var mediumZoom = function mediumZoom2(selector) {
   var Promise2 = window.Promise || function Promise3(fn) {
     function noop() {
     }
-
     fn(noop, noop);
   };
   var _handleClick = function _handleClick2(event) {
@@ -93,7 +91,7 @@ var mediumZoom = function mediumZoom2(selector) {
     if (images.indexOf(target) === -1) {
       return;
     }
-    toggle2({target});
+    toggle2({ target });
   };
   var _handleScroll = function _handleScroll2() {
     if (isAnimating || !active.original) {
@@ -124,9 +122,9 @@ var mediumZoom = function mediumZoom2(selector) {
       newOptions.template = template;
     }
     zoomOptions = _extends({}, zoomOptions, newOptions);
-    images.forEach(function (image) {
+    images.forEach(function(image) {
       image.dispatchEvent(createCustomEvent("medium-zoom:update", {
-        detail: {zoom}
+        detail: { zoom }
       }));
     });
     return zoom;
@@ -139,18 +137,18 @@ var mediumZoom = function mediumZoom2(selector) {
     for (var _len = arguments.length, selectors = Array(_len), _key = 0; _key < _len; _key++) {
       selectors[_key] = arguments[_key];
     }
-    var newImages = selectors.reduce(function (imagesAccumulator, currentSelector) {
+    var newImages = selectors.reduce(function(imagesAccumulator, currentSelector) {
       return [].concat(imagesAccumulator, getImagesFromSelector(currentSelector));
     }, []);
-    newImages.filter(function (newImage) {
+    newImages.filter(function(newImage) {
       return images.indexOf(newImage) === -1;
-    }).forEach(function (newImage) {
+    }).forEach(function(newImage) {
       images.push(newImage);
       newImage.classList.add("medium-zoom-image");
     });
-    eventListeners.forEach(function (_ref) {
+    eventListeners.forEach(function(_ref) {
       var type = _ref.type, listener = _ref.listener, options2 = _ref.options;
-      newImages.forEach(function (image) {
+      newImages.forEach(function(image) {
         image.addEventListener(type, listener, options2);
       });
     });
@@ -163,34 +161,34 @@ var mediumZoom = function mediumZoom2(selector) {
     if (active.zoomed) {
       close2();
     }
-    var imagesToDetach = selectors.length > 0 ? selectors.reduce(function (imagesAccumulator, currentSelector) {
+    var imagesToDetach = selectors.length > 0 ? selectors.reduce(function(imagesAccumulator, currentSelector) {
       return [].concat(imagesAccumulator, getImagesFromSelector(currentSelector));
     }, []) : images;
-    imagesToDetach.forEach(function (image) {
+    imagesToDetach.forEach(function(image) {
       image.classList.remove("medium-zoom-image");
       image.dispatchEvent(createCustomEvent("medium-zoom:detach", {
-        detail: {zoom}
+        detail: { zoom }
       }));
     });
-    images = images.filter(function (image) {
+    images = images.filter(function(image) {
       return imagesToDetach.indexOf(image) === -1;
     });
     return zoom;
   };
   var on = function on2(type, listener) {
     var options2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
-    images.forEach(function (image) {
+    images.forEach(function(image) {
       image.addEventListener("medium-zoom:" + type, listener, options2);
     });
-    eventListeners.push({type: "medium-zoom:" + type, listener, options: options2});
+    eventListeners.push({ type: "medium-zoom:" + type, listener, options: options2 });
     return zoom;
   };
   var off = function off2(type, listener) {
     var options2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
-    images.forEach(function (image) {
+    images.forEach(function(image) {
       image.removeEventListener("medium-zoom:" + type, listener, options2);
     });
-    eventListeners = eventListeners.filter(function (eventListener) {
+    eventListeners = eventListeners.filter(function(eventListener) {
       return !(eventListener.type === "medium-zoom:" + type && eventListener.listener.toString() === listener.toString());
     });
     return zoom;
@@ -215,9 +213,7 @@ var mediumZoom = function mediumZoom2(selector) {
           viewportHeight = container.height - container.top - container.bottom - zoomOptions.margin * 2;
         } else {
           var zoomContainer = isNode(zoomOptions.container) ? zoomOptions.container : document.querySelector(zoomOptions.container);
-          var _zoomContainer$getBou = zoomContainer.getBoundingClientRect(), _width = _zoomContainer$getBou.width,
-            _height = _zoomContainer$getBou.height, _left = _zoomContainer$getBou.left,
-            _top = _zoomContainer$getBou.top;
+          var _zoomContainer$getBou = zoomContainer.getBoundingClientRect(), _width = _zoomContainer$getBou.width, _height = _zoomContainer$getBou.height, _left = _zoomContainer$getBou.left, _top = _zoomContainer$getBou.top;
           container = _extends({}, container, {
             width: _width,
             height: _height,
@@ -231,8 +227,7 @@ var mediumZoom = function mediumZoom2(selector) {
       var zoomTarget = active.zoomedHd || active.original;
       var naturalWidth = isSvg(zoomTarget) ? viewportWidth : zoomTarget.naturalWidth || viewportWidth;
       var naturalHeight = isSvg(zoomTarget) ? viewportHeight : zoomTarget.naturalHeight || viewportHeight;
-      var _zoomTarget$getBoundi = zoomTarget.getBoundingClientRect(), top = _zoomTarget$getBoundi.top,
-        left = _zoomTarget$getBoundi.left, width = _zoomTarget$getBoundi.width, height = _zoomTarget$getBoundi.height;
+      var _zoomTarget$getBoundi = zoomTarget.getBoundingClientRect(), top = _zoomTarget$getBoundi.top, left = _zoomTarget$getBoundi.left, width = _zoomTarget$getBoundi.width, height = _zoomTarget$getBoundi.height;
       var scaleX = Math.min(Math.max(width, naturalWidth), viewportWidth) / width;
       var scaleY = Math.min(Math.max(height, naturalHeight), viewportHeight) / height;
       var scale = Math.min(scaleX, scaleY);
@@ -244,7 +239,7 @@ var mediumZoom = function mediumZoom2(selector) {
         active.zoomedHd.style.transform = transform;
       }
     };
-    return new Promise2(function (resolve) {
+    return new Promise2(function(resolve) {
       if (target && images.indexOf(target) === -1) {
         resolve(zoom);
         return;
@@ -253,7 +248,7 @@ var mediumZoom = function mediumZoom2(selector) {
         isAnimating = false;
         active.zoomed.removeEventListener("transitionend", _handleOpenEnd2);
         active.original.dispatchEvent(createCustomEvent("medium-zoom:opened", {
-          detail: {zoom}
+          detail: { zoom }
         }));
         resolve(zoom);
       };
@@ -271,7 +266,7 @@ var mediumZoom = function mediumZoom2(selector) {
         return;
       }
       active.original.dispatchEvent(createCustomEvent("medium-zoom:open", {
-        detail: {zoom}
+        detail: { zoom }
       }));
       scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
       isAnimating = true;
@@ -287,7 +282,7 @@ var mediumZoom = function mediumZoom2(selector) {
         active.zoomed.src = active.original.currentSrc;
       }
       document.body.appendChild(active.zoomed);
-      window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function() {
         document.body.classList.add("medium-zoom--opened");
       });
       active.original.classList.add("medium-zoom-image--hidden");
@@ -300,13 +295,13 @@ var mediumZoom = function mediumZoom2(selector) {
         active.zoomedHd.removeAttribute("sizes");
         active.zoomedHd.removeAttribute("loading");
         active.zoomedHd.src = active.zoomed.getAttribute("data-zoom-src");
-        active.zoomedHd.onerror = function () {
+        active.zoomedHd.onerror = function() {
           clearInterval(getZoomTargetSize);
           console.warn("Unable to reach the zoom image target " + active.zoomedHd.src);
           active.zoomedHd = null;
           _animate();
         };
-        var getZoomTargetSize = setInterval(function () {
+        var getZoomTargetSize = setInterval(function() {
           if (active.zoomedHd.complete) {
             clearInterval(getZoomTargetSize);
             active.zoomedHd.classList.add("medium-zoom-image--opened");
@@ -319,7 +314,7 @@ var mediumZoom = function mediumZoom2(selector) {
         active.zoomedHd = active.zoomed.cloneNode();
         active.zoomedHd.removeAttribute("sizes");
         active.zoomedHd.removeAttribute("loading");
-        var loadEventListener = active.zoomedHd.addEventListener("load", function () {
+        var loadEventListener = active.zoomedHd.addEventListener("load", function() {
           active.zoomedHd.removeEventListener("load", loadEventListener);
           active.zoomedHd.classList.add("medium-zoom-image--opened");
           active.zoomedHd.addEventListener("click", close2);
@@ -332,7 +327,7 @@ var mediumZoom = function mediumZoom2(selector) {
     });
   };
   var close2 = function close3() {
-    return new Promise2(function (resolve) {
+    return new Promise2(function(resolve) {
       if (isAnimating || !active.original) {
         resolve(zoom);
         return;
@@ -351,7 +346,7 @@ var mediumZoom = function mediumZoom2(selector) {
         isAnimating = false;
         active.zoomed.removeEventListener("transitionend", _handleCloseEnd2);
         active.original.dispatchEvent(createCustomEvent("medium-zoom:closed", {
-          detail: {zoom}
+          detail: { zoom }
         }));
         active.original = null;
         active.zoomed = null;
@@ -370,7 +365,7 @@ var mediumZoom = function mediumZoom2(selector) {
         active.template.style.opacity = 0;
       }
       active.original.dispatchEvent(createCustomEvent("medium-zoom:close", {
-        detail: {zoom}
+        detail: { zoom }
       }));
       active.zoomed.addEventListener("transitionend", _handleCloseEnd);
     });
@@ -380,7 +375,7 @@ var mediumZoom = function mediumZoom2(selector) {
     if (active.original) {
       return close2();
     }
-    return open2({target});
+    return open2({ target });
   };
   var getOptions2 = function getOptions3() {
     return zoomOptions;
@@ -436,7 +431,6 @@ var mediumZoom = function mediumZoom2(selector) {
   };
   return zoom;
 };
-
 function styleInject(css2, ref) {
   if (ref === void 0) ref = {};
   var insertAt = ref.insertAt;
@@ -461,7 +455,6 @@ function styleInject(css2, ref) {
     style.appendChild(document.createTextNode(css2));
   }
 }
-
 var css = ".medium-zoom-overlay{position:fixed;top:0;right:0;bottom:0;left:0;opacity:0;transition:opacity .3s;will-change:opacity}.medium-zoom--opened .medium-zoom-overlay{cursor:pointer;cursor:zoom-out;opacity:1}.medium-zoom-image{cursor:pointer;cursor:zoom-in;transition:transform .3s cubic-bezier(.2,0,.2,1)!important}.medium-zoom-image--hidden{visibility:hidden}.medium-zoom-image--opened{position:relative;cursor:pointer;cursor:zoom-out;will-change:transform}";
 styleInject(css);
 var medium_zoom_esm_default = mediumZoom;
@@ -475,43 +468,33 @@ function createZoom(element, options) {
   const zoom = medium_zoom_esm_default(element, options);
   return zoom;
 }
-
 function open(zoom, options) {
   return zoom.open(options);
 }
-
 function close(zoom) {
   return zoom.close();
 }
-
 function toggle(zoom, options) {
   return zoom.toggle(options);
 }
-
 function update(zoom, options) {
   return zoom.update(options);
 }
-
 function detach(zoom, element) {
   return zoom.detach(element);
 }
-
 function attach(zoom, element) {
   return zoom.attach(element);
 }
-
 function getOptions(zoom) {
   return zoom.getOptions();
 }
-
 function getImages(zoom) {
   return zoom.getImages();
 }
-
 function getZoomedImage(zoom) {
   return zoom.getZoomedImage();
 }
-
 export {
   attach,
   close,

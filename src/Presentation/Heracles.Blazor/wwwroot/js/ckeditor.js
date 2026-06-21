@@ -25,7 +25,6 @@ function loadCkEditorCss() {
     document.head.appendChild(customLink);
   }
 }
-
 export {
   loadCkEditorCss
 };

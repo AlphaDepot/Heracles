@@ -3,7 +3,6 @@ function addUniqueItem(arr, item) {
   if (arr.indexOf(item) === -1)
     arr.push(item);
 }
-
 function removeItem(arr, item) {
   const index = arr.indexOf(item);
   if (index > -1)
@@ -82,12 +81,10 @@ var SubscriptionManager = class {
   constructor() {
     this.subscriptions = [];
   }
-
   add(handler) {
     addUniqueItem(this.subscriptions, handler);
     return () => removeItem(this.subscriptions, handler);
   }
-
   notify(a, b, c) {
     const numSubscriptions = this.subscriptions.length;
     if (!numSubscriptions)
@@ -101,11 +98,9 @@ var SubscriptionManager = class {
       }
     }
   }
-
   getSize() {
     return this.subscriptions.length;
   }
-
   clear() {
     this.subscriptions.length = 0;
   }
@@ -120,7 +115,6 @@ var velocityPerSecond = /* @__NO_SIDE_EFFECTS__ */ (velocity, frameDuration) => 
 
 // node_modules/motion-utils/dist/es/warn-once.mjs
 var warned = /* @__PURE__ */ new Set();
-
 function warnOnce(condition, message, errorCode) {
   if (condition || warned.has(message))
     return;
@@ -138,7 +132,6 @@ var wrap = (min, max, v) => {
 var calcBezier = (t, a1, a2) => (((1 - 3 * a2 + 3 * a1) * t + (3 * a2 - 6 * a1)) * t + 3 * a1) * t;
 var subdivisionPrecision = 1e-7;
 var subdivisionMaxIterations = 12;
-
 function binarySubdivide(x, lowerBound, upperBound, mX1, mX2) {
   let currentX;
   let currentT;
@@ -154,7 +147,6 @@ function binarySubdivide(x, lowerBound, upperBound, mX1, mX2) {
   } while (Math.abs(currentX) > subdivisionPrecision && ++i < subdivisionMaxIterations);
   return currentT;
 }
-
 // @__NO_SIDE_EFFECTS__
 function cubicBezier(mX1, mY1, mX2, mY2) {
   if (mX1 === mY1 && mX2 === mY2)
@@ -269,7 +261,6 @@ function createRenderStep(runNextFrame, stepName) {
     isProcessing: false
   };
   let numCalls = 0;
-
   function triggerCallback(callback) {
     if (toKeepAlive.has(callback)) {
       step.schedule(callback);
@@ -278,7 +269,6 @@ function createRenderStep(runNextFrame, stepName) {
     numCalls++;
     callback(latestFrameData);
   }
-
   const step = {
     /**
      * Schedule a process to run on the next frame.
@@ -329,7 +319,6 @@ function createRenderStep(runNextFrame, stepName) {
 
 // node_modules/motion-dom/dist/es/frameloop/batcher.mjs
 var maxElapsed = 40;
-
 function createRenderBatcher(scheduleNextBatch, allowKeepAlive) {
   let runNextFrame = false;
   let useDefaultElapsed = true;
@@ -343,7 +332,7 @@ function createRenderBatcher(scheduleNextBatch, allowKeepAlive) {
     acc[key] = createRenderStep(flagRunNextFrame, allowKeepAlive ? key : void 0);
     return acc;
   }, {});
-  const {setup, read, resolveKeyframes, preUpdate, update, preRender, render, postRender} = steps;
+  const { setup, read, resolveKeyframes, preUpdate, update, preRender, render, postRender } = steps;
   const processBatch = () => {
     const useManualTiming = MotionGlobalConfig.useManualTiming;
     const timestamp = useManualTiming ? state.timestamp : performance.now();
@@ -388,24 +377,17 @@ function createRenderBatcher(scheduleNextBatch, allowKeepAlive) {
       steps[stepsOrder[i]].cancel(process2);
     }
   };
-  return {schedule, cancel, state, steps};
+  return { schedule, cancel, state, steps };
 }
 
 // node_modules/motion-dom/dist/es/frameloop/frame.mjs
-var {
-  schedule: frame,
-  cancel: cancelFrame,
-  state: frameData,
-  steps: frameSteps
-} = /* @__PURE__ */ createRenderBatcher(typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame : noop, true);
+var { schedule: frame, cancel: cancelFrame, state: frameData, steps: frameSteps } = /* @__PURE__ */ createRenderBatcher(typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame : noop, true);
 
 // node_modules/motion-dom/dist/es/frameloop/sync-time.mjs
 var now;
-
 function clearTime() {
   now = void 0;
 }
-
 var time = {
   now: () => {
     if (now === void 0) {
@@ -437,7 +419,6 @@ var isCSSVariableToken = (value) => {
   return singleCssVariableRegex.test(value.split("/*")[0].trim());
 };
 var singleCssVariableRegex = /var\(--(?:[\w-]+\s*|[\w-]+\s*,(?:\s*[^)(\s]|\s*\((?:[^)(]|\([^)(]*\))*\))+\s*)\)$/iu;
-
 function containsCSSVariable(value) {
   if (typeof value !== "string")
     return false;
@@ -498,12 +479,7 @@ var rgbUnit = {
 var rgba = {
   test: /* @__PURE__ */ isColorString("rgb", "red"),
   parse: /* @__PURE__ */ splitColor("red", "green", "blue"),
-  transform: ({
-                red,
-                green,
-                blue,
-                alpha: alpha$1 = 1
-              }) => "rgba(" + rgbUnit.transform(red) + ", " + rgbUnit.transform(green) + ", " + rgbUnit.transform(blue) + ", " + sanitize(alpha.transform(alpha$1)) + ")"
+  transform: ({ red, green, blue, alpha: alpha$1 = 1 }) => "rgba(" + rgbUnit.transform(red) + ", " + rgbUnit.transform(green) + ", " + rgbUnit.transform(blue) + ", " + sanitize(alpha.transform(alpha$1)) + ")"
 };
 
 // node_modules/motion-dom/dist/es/value/types/color/hex.mjs
@@ -534,7 +510,6 @@ function parseHex(v) {
     alpha: a ? parseInt(a, 16) / 255 : 1
   };
 }
-
 var hex = {
   test: /* @__PURE__ */ isColorString("#"),
   parse: parseHex,
@@ -562,7 +537,7 @@ var progressPercentage = /* @__PURE__ */ (() => ({
 var hsla = {
   test: /* @__PURE__ */ isColorString("hsl", "hue"),
   parse: /* @__PURE__ */ splitColor("hue", "saturation", "lightness"),
-  transform: ({hue, saturation, lightness, alpha: alpha$1 = 1}) => {
+  transform: ({ hue, saturation, lightness, alpha: alpha$1 = 1 }) => {
     return "hsla(" + Math.round(hue) + ", " + percent.transform(sanitize(saturation)) + ", " + percent.transform(sanitize(lightness)) + ", " + sanitize(alpha.transform(alpha$1)) + ")";
   }
 };
@@ -596,14 +571,12 @@ var colorRegex = /(?:#[\da-f]{3,8}|(?:rgb|hsl)a?\((?:-?[\d.]+%?[,\s]+){2}-?[\d.]
 function test(v) {
   return isNaN(v) && typeof v === "string" && (v.match(floatRegex)?.length || 0) + (v.match(colorRegex)?.length || 0) > 0;
 }
-
 var NUMBER_TOKEN = "number";
 var COLOR_TOKEN = "color";
 var VAR_TOKEN = "var";
 var VAR_FUNCTION_TOKEN = "var(";
 var SPLIT_TOKEN = "${}";
 var complexRegex = /var\s*\(\s*--(?:[\w-]+\s*|[\w-]+\s*,(?:\s*[^)(\s]|\s*\((?:[^)(]|\([^)(]*\))*\))+\s*)\)|#[\da-f]{3,8}|(?:rgb|hsl)a?\((?:-?[\d.]+%?[,\s]+){2}-?[\d.]+%?\s*(?:[,/]\s*)?(?:\b\d+(?:\.\d+)?|\.\d+)?%?\)|-?(?:\d+(?:\.\d+)?|\.\d+)/giu;
-
 function analyseComplexValue(value) {
   const originalValue = value.toString();
   const values = [];
@@ -632,14 +605,12 @@ function analyseComplexValue(value) {
     return SPLIT_TOKEN;
   });
   const split = tokenised.split(SPLIT_TOKEN);
-  return {values, split, indexes, types};
+  return { values, split, indexes, types };
 }
-
 function parseComplexValue(v) {
   return analyseComplexValue(v).values;
 }
-
-function buildTransformer({split, types}) {
+function buildTransformer({ split, types }) {
   const numSections = split.length;
   return (v) => {
     let output = "";
@@ -659,11 +630,9 @@ function buildTransformer({split, types}) {
     return output;
   };
 }
-
 function createTransformer(source) {
   return buildTransformer(analyseComplexValue(source));
 }
-
 var convertNumbersToZero = (v) => typeof v === "number" ? 0 : color.test(v) ? color.getAnimatableNone(v) : v;
 var convertToZero = (value, splitBefore) => {
   if (typeof value === "number") {
@@ -671,13 +640,11 @@ var convertToZero = (value, splitBefore) => {
   }
   return convertNumbersToZero(value);
 };
-
 function getAnimatableNone(v) {
   const info = analyseComplexValue(v);
   const transformer = buildTransformer(info);
   return transformer(info.values.map((value, i) => convertToZero(value, info.split[i])));
 }
-
 var complex = {
   test,
   parse: parseComplexValue,
@@ -699,8 +666,7 @@ function hueToRgb(p, q, t) {
     return p + (q - p) * (2 / 3 - t) * 6;
   return p;
 }
-
-function hslaToRgba({hue, saturation, lightness, alpha: alpha2}) {
+function hslaToRgba({ hue, saturation, lightness, alpha: alpha2 }) {
   hue /= 360;
   saturation /= 100;
   lightness /= 100;
@@ -742,7 +708,6 @@ var mixLinearColor = (from, to, v) => {
 };
 var colorTypes = [hex, rgba, hsla];
 var getColorType = (v) => colorTypes.find((type) => type.test(v));
-
 function asRGBA(color2) {
   const type = getColorType(color2);
   warning(Boolean(type), `'${color2}' is not an animatable color. Use the equivalent color code instead.`, "color-not-animatable");
@@ -754,14 +719,13 @@ function asRGBA(color2) {
   }
   return model;
 }
-
 var mixColor = (from, to) => {
   const fromRGBA = asRGBA(from);
   const toRGBA = asRGBA(to);
   if (!fromRGBA || !toRGBA) {
     return mixImmediate(from, to);
   }
-  const blended = {...fromRGBA};
+  const blended = { ...fromRGBA };
   return (v) => {
     blended.red = mixLinearColor(fromRGBA.red, toRGBA.red, v);
     blended.green = mixLinearColor(fromRGBA.green, toRGBA.green, v);
@@ -773,7 +737,6 @@ var mixColor = (from, to) => {
 
 // node_modules/motion-dom/dist/es/utils/mix/visibility.mjs
 var invisibleValues = /* @__PURE__ */ new Set(["none", "hidden"]);
-
 function mixVisibility(origin, target) {
   if (invisibleValues.has(origin)) {
     return (p) => p <= 0 ? origin : target;
@@ -786,7 +749,6 @@ function mixVisibility(origin, target) {
 function mixNumber2(a, b) {
   return (p) => mixNumber(a, b, p);
 }
-
 function getMixer(a) {
   if (typeof a === "number") {
     return mixNumber2;
@@ -799,7 +761,6 @@ function getMixer(a) {
   }
   return mixImmediate;
 }
-
 function mixArray(a, b) {
   const output = [...a];
   const numValues = output.length;
@@ -811,9 +772,8 @@ function mixArray(a, b) {
     return output;
   };
 }
-
 function mixObject(a, b) {
-  const output = {...a, ...b};
+  const output = { ...a, ...b };
   const blendValue = {};
   for (const key in output) {
     if (a[key] !== void 0 && b[key] !== void 0) {
@@ -827,10 +787,9 @@ function mixObject(a, b) {
     return output;
   };
 }
-
 function matchOrder(origin, target) {
   const orderedOrigin = [];
-  const pointers = {color: 0, var: 0, number: 0};
+  const pointers = { color: 0, var: 0, number: 0 };
   for (let i = 0; i < target.values.length; i++) {
     const type = target.types[i];
     const originIndex = origin.indexes[type][pointers[type]];
@@ -840,7 +799,6 @@ function matchOrder(origin, target) {
   }
   return orderedOrigin;
 }
-
 var mixComplex = (origin, target) => {
   const template = complex.createTransformer(target);
   const originStats = analyseComplexValue(origin);
@@ -868,7 +826,7 @@ function mix(from, to, p) {
 
 // node_modules/motion-dom/dist/es/animation/drivers/frame.mjs
 var frameloopDriver = (update) => {
-  const passTimestamp = ({timestamp}) => update(timestamp);
+  const passTimestamp = ({ timestamp }) => update(timestamp);
   return {
     start: (keepAlive = true) => frame.update(passTimestamp, keepAlive),
     stop: () => cancelFrame(passTimestamp),
@@ -892,7 +850,6 @@ var generateLinearEasing = (easing, duration, resolution = 10) => {
 
 // node_modules/motion-dom/dist/es/animation/generators/utils/calc-duration.mjs
 var maxGeneratorDuration = 2e4;
-
 function calcGeneratorDuration(generator) {
   let duration = 0;
   const timeStep = 50;
@@ -906,7 +863,7 @@ function calcGeneratorDuration(generator) {
 
 // node_modules/motion-dom/dist/es/animation/generators/utils/create-generator-easing.mjs
 function createGeneratorEasing(options, scale2 = 100, createGenerator) {
-  const generator = createGenerator({...options, keyframes: [0, scale2]});
+  const generator = createGenerator({ ...options, keyframes: [0, scale2] });
   const duration = Math.min(calcGeneratorDuration(generator), maxGeneratorDuration);
   return {
     type: "keyframes",
@@ -947,13 +904,10 @@ var springDefaults = {
   minDamping: 0.05,
   maxDamping: 1
 };
-
 function calcAngularFreq(undampedFreq, dampingRatio) {
   return undampedFreq * Math.sqrt(1 - dampingRatio * dampingRatio);
 }
-
 var rootIterations = 12;
-
 function approximateRoot(envelope, derivative, initialGuess) {
   let result = initialGuess;
   for (let i = 1; i < rootIterations; i++) {
@@ -961,15 +915,8 @@ function approximateRoot(envelope, derivative, initialGuess) {
   }
   return result;
 }
-
 var safeMin = 1e-3;
-
-function findSpring({
-                      duration = springDefaults.duration,
-                      bounce = springDefaults.bounce,
-                      velocity = springDefaults.velocity,
-                      mass = springDefaults.mass
-                    }) {
+function findSpring({ duration = springDefaults.duration, bounce = springDefaults.bounce, velocity = springDefaults.velocity, mass = springDefaults.mass }) {
   let envelope;
   let derivative;
   warning(duration <= secondsToMilliseconds(springDefaults.maxDuration), "Spring duration must be 10 seconds or less", "spring-duration-limit");
@@ -1025,14 +972,11 @@ function findSpring({
     };
   }
 }
-
 var durationKeys = ["duration", "bounce"];
 var physicsKeys = ["stiffness", "damping", "mass"];
-
 function isSpringType(options, keys) {
   return keys.some((key) => options[key] !== void 0);
 }
-
 function getSpringOptions(options) {
   let springOptions = {
     velocity: springDefaults.velocity,
@@ -1056,7 +1000,7 @@ function getSpringOptions(options) {
         damping
       };
     } else {
-      const derived = findSpring({...options, velocity: 0});
+      const derived = findSpring({ ...options, velocity: 0 });
       springOptions = {
         ...springOptions,
         ...derived,
@@ -1067,18 +1011,17 @@ function getSpringOptions(options) {
   }
   return springOptions;
 }
-
 function spring(optionsOrVisualDuration = springDefaults.visualDuration, bounce = springDefaults.bounce) {
   const options = typeof optionsOrVisualDuration !== "object" ? {
     visualDuration: optionsOrVisualDuration,
     keyframes: [0, 1],
     bounce
   } : optionsOrVisualDuration;
-  let {restSpeed, restDelta} = options;
+  let { restSpeed, restDelta } = options;
   const origin = options.keyframes[0];
   const target = options.keyframes[options.keyframes.length - 1];
-  const state = {done: false, value: origin};
-  const {stiffness, damping, mass, duration, velocity, isResolvedFromDuration} = getSpringOptions({
+  const state = { done: false, value: origin };
+  const { stiffness, damping, mass, duration, velocity, isResolvedFromDuration } = getSpringOptions({
     ...options,
     velocity: -millisecondsToSeconds(options.velocity || 0)
   });
@@ -1162,7 +1105,6 @@ function spring(optionsOrVisualDuration = springDefaults.visualDuration, bounce 
   };
   return generator;
 }
-
 spring.applyToOptions = (options) => {
   const generatorOptions = createGeneratorEasing(options, 100, spring);
   options.ease = generatorOptions.ease;
@@ -1173,26 +1115,13 @@ spring.applyToOptions = (options) => {
 
 // node_modules/motion-dom/dist/es/animation/generators/utils/velocity.mjs
 var velocitySampleDuration = 5;
-
 function getGeneratorVelocity(resolveValue, t, current) {
   const prevT = Math.max(t - velocitySampleDuration, 0);
   return velocityPerSecond(current - resolveValue(prevT), t - prevT);
 }
 
 // node_modules/motion-dom/dist/es/animation/generators/inertia.mjs
-function inertia({
-                   keyframes: keyframes2,
-                   velocity = 0,
-                   power = 0.8,
-                   timeConstant = 325,
-                   bounceDamping = 10,
-                   bounceStiffness = 500,
-                   modifyTarget,
-                   min,
-                   max,
-                   restDelta = 0.5,
-                   restSpeed
-                 }) {
+function inertia({ keyframes: keyframes2, velocity = 0, power = 0.8, timeConstant = 325, bounceDamping = 10, bounceStiffness = 500, modifyTarget, min, max, restDelta = 0.5, restSpeed }) {
   const origin = keyframes2[0];
   const state = {
     done: false,
@@ -1270,8 +1199,7 @@ function createMixers(output, ease2, customMixer) {
   }
   return mixers;
 }
-
-function interpolate(input, output, {clamp: isClamp = true, ease: ease2, mixer} = {}) {
+function interpolate(input, output, { clamp: isClamp = true, ease: ease2, mixer } = {}) {
   const inputLength = input.length;
   invariant(inputLength === output.length, "Both input and output ranges must be the same length", "range-length");
   if (inputLength === 1)
@@ -1326,8 +1254,7 @@ function convertOffsetToTimes(offset, duration) {
 function defaultEasing(values, easing) {
   return values.map(() => easing || easeInOut).splice(0, values.length - 1);
 }
-
-function keyframes({duration = 300, keyframes: keyframeValues, times, ease: ease2 = "easeInOut"}) {
+function keyframes({ duration = 300, keyframes: keyframeValues, times, ease: ease2 = "easeInOut" }) {
   const easingFunctions = isEasingArray(ease2) ? ease2.map(easingDefinitionToFunction) : easingDefinitionToFunction(ease2);
   const state = {
     done: false,
@@ -1354,8 +1281,7 @@ function keyframes({duration = 300, keyframes: keyframeValues, times, ease: ease
 
 // node_modules/motion-dom/dist/es/animation/keyframes/get-final.mjs
 var isNotNull = (value) => value !== null;
-
-function getFinalKeyframe(keyframes2, {repeat, repeatType = "loop"}, finalKeyframe, speed = 1) {
+function getFinalKeyframe(keyframes2, { repeat, repeatType = "loop" }, finalKeyframe, speed = 1) {
   const resolvedKeyframes = keyframes2.filter(isNotNull);
   const useFirstKeyframe = speed < 0 || repeat && repeatType !== "loop" && repeat % 2 === 1;
   const index = useFirstKeyframe ? 0 : resolvedKeyframes.length - 1;
@@ -1370,7 +1296,6 @@ var transitionTypeMap = {
   keyframes,
   spring
 };
-
 function replaceTransitionType(transition) {
   if (typeof transition.type === "string") {
     transition.type = transitionTypeMap[transition.type];
@@ -1382,21 +1307,17 @@ var WithPromise = class {
   constructor() {
     this.updateFinished();
   }
-
   get finished() {
     return this._finished;
   }
-
   updateFinished() {
     this._finished = new Promise((resolve) => {
       this.resolve = resolve;
     });
   }
-
   notifyFinished() {
     this.resolve();
   }
-
   /**
    * Allows the animation to be awaited.
    *
@@ -1423,7 +1344,7 @@ var JSAnimation = class extends WithPromise {
       value: void 0
     };
     this.stop = () => {
-      const {motionValue: motionValue2} = this.options;
+      const { motionValue: motionValue2 } = this.options;
       if (motionValue2 && motionValue2.updatedAt !== time.now()) {
         this.tick(time.now());
       }
@@ -1440,58 +1361,11 @@ var JSAnimation = class extends WithPromise {
     if (options.autoplay === false)
       this.pause();
   }
-
-  get duration() {
-    return millisecondsToSeconds(this.calculatedDuration);
-  }
-
-  get iterationDuration() {
-    const {delay = 0} = this.options || {};
-    return this.duration + millisecondsToSeconds(delay);
-  }
-
-  get time() {
-    return millisecondsToSeconds(this.currentTime);
-  }
-
-  set time(newTime) {
-    newTime = secondsToMilliseconds(newTime);
-    this.currentTime = newTime;
-    if (this.startTime === null || this.holdTime !== null || this.playbackSpeed === 0) {
-      this.holdTime = newTime;
-    } else if (this.driver) {
-      this.startTime = this.driver.now() - newTime / this.playbackSpeed;
-    }
-    if (this.driver) {
-      this.driver.start(false);
-    } else {
-      this.startTime = 0;
-      this.state = "paused";
-      this.holdTime = newTime;
-      this.tick(newTime);
-    }
-  }
-
-  get speed() {
-    return this.playbackSpeed;
-  }
-
-  set speed(newSpeed) {
-    const hasChanged = this.playbackSpeed !== newSpeed;
-    if (hasChanged && this.driver) {
-      this.updateTime(time.now());
-    }
-    this.playbackSpeed = newSpeed;
-    if (hasChanged && this.driver) {
-      this.time = millisecondsToSeconds(this.currentTime);
-    }
-  }
-
   initAnimation() {
-    const {options} = this;
+    const { options } = this;
     replaceTransitionType(options);
-    const {type = keyframes, repeat = 0, repeatDelay = 0, repeatType, velocity = 0} = options;
-    let {keyframes: keyframes$1} = options;
+    const { type = keyframes, repeat = 0, repeatDelay = 0, repeatType, velocity = 0 } = options;
+    let { keyframes: keyframes$1 } = options;
     const generatorFactory = type || keyframes;
     if (generatorFactory !== keyframes) {
       invariant(keyframes$1.length <= 2, `Only two keyframes currently supported with spring and inertia animations. Trying to animate ${keyframes$1}`, "spring-two-frames");
@@ -1500,7 +1374,7 @@ var JSAnimation = class extends WithPromise {
       this.mixKeyframes = pipe(percentToProgress, mix(keyframes$1[0], keyframes$1[1]));
       keyframes$1 = [0, 100];
     }
-    const generator = generatorFactory({...options, keyframes: keyframes$1});
+    const generator = generatorFactory({ ...options, keyframes: keyframes$1 });
     if (repeatType === "mirror") {
       this.mirroredGenerator = generatorFactory({
         ...options,
@@ -1511,13 +1385,12 @@ var JSAnimation = class extends WithPromise {
     if (generator.calculatedDuration === null) {
       generator.calculatedDuration = calcGeneratorDuration(generator);
     }
-    const {calculatedDuration} = generator;
+    const { calculatedDuration } = generator;
     this.calculatedDuration = calculatedDuration;
     this.resolvedDuration = calculatedDuration + repeatDelay;
     this.totalDuration = this.resolvedDuration * (repeat + 1) - repeatDelay;
     this.generator = generator;
   }
-
   updateTime(timestamp) {
     const animationTime = Math.round(timestamp - this.startTime) * this.playbackSpeed;
     if (this.holdTime !== null) {
@@ -1526,21 +1399,11 @@ var JSAnimation = class extends WithPromise {
       this.currentTime = animationTime;
     }
   }
-
   tick(timestamp, sample = false) {
-    const {generator, totalDuration, mixKeyframes, mirroredGenerator, resolvedDuration, calculatedDuration} = this;
+    const { generator, totalDuration, mixKeyframes, mirroredGenerator, resolvedDuration, calculatedDuration } = this;
     if (this.startTime === null)
       return generator.next(0);
-    const {
-      delay = 0,
-      keyframes: keyframes2,
-      repeat,
-      repeatType,
-      repeatDelay,
-      type,
-      onUpdate,
-      finalKeyframe
-    } = this.options;
+    const { delay = 0, keyframes: keyframes2, repeat, repeatType, repeatDelay, type, onUpdate, finalKeyframe } = this.options;
     if (this.speed > 0) {
       this.startTime = Math.min(this.startTime, timestamp);
     } else if (this.speed < 0) {
@@ -1591,7 +1454,7 @@ var JSAnimation = class extends WithPromise {
     if (mixKeyframes && !isInDelayPhase) {
       state.value = mixKeyframes(state.value);
     }
-    let {done} = state;
+    let { done } = state;
     if (!isInDelayPhase && calculatedDuration !== null) {
       done = this.playbackSpeed >= 0 ? this.currentTime >= totalDuration : this.currentTime <= 0;
     }
@@ -1607,7 +1470,6 @@ var JSAnimation = class extends WithPromise {
     }
     return state;
   }
-
   /**
    * Allows the returned animation to be awaited or promise-chained. Currently
    * resolves when the animation finishes at all but in a future update could/should
@@ -1616,7 +1478,33 @@ var JSAnimation = class extends WithPromise {
   then(resolve, reject) {
     return this.finished.then(resolve, reject);
   }
-
+  get duration() {
+    return millisecondsToSeconds(this.calculatedDuration);
+  }
+  get iterationDuration() {
+    const { delay = 0 } = this.options || {};
+    return this.duration + millisecondsToSeconds(delay);
+  }
+  get time() {
+    return millisecondsToSeconds(this.currentTime);
+  }
+  set time(newTime) {
+    newTime = secondsToMilliseconds(newTime);
+    this.currentTime = newTime;
+    if (this.startTime === null || this.holdTime !== null || this.playbackSpeed === 0) {
+      this.holdTime = newTime;
+    } else if (this.driver) {
+      this.startTime = this.driver.now() - newTime / this.playbackSpeed;
+    }
+    if (this.driver) {
+      this.driver.start(false);
+    } else {
+      this.startTime = 0;
+      this.state = "paused";
+      this.holdTime = newTime;
+      this.tick(newTime);
+    }
+  }
   /**
    * Returns the generator's velocity at the current time in units/second.
    * Uses the analytical derivative when available (springs), avoiding
@@ -1632,11 +1520,23 @@ var JSAnimation = class extends WithPromise {
     const current = this.generator.next(t).value;
     return getGeneratorVelocity((s) => this.generator.next(s).value, t, current);
   }
-
+  get speed() {
+    return this.playbackSpeed;
+  }
+  set speed(newSpeed) {
+    const hasChanged = this.playbackSpeed !== newSpeed;
+    if (hasChanged && this.driver) {
+      this.updateTime(time.now());
+    }
+    this.playbackSpeed = newSpeed;
+    if (hasChanged && this.driver) {
+      this.time = millisecondsToSeconds(this.currentTime);
+    }
+  }
   play() {
     if (this.isStopped)
       return;
-    const {driver = frameloopDriver, startTime} = this.options;
+    const { driver = frameloopDriver, startTime } = this.options;
     if (!this.driver) {
       this.driver = driver((timestamp) => this.tick(timestamp));
     }
@@ -1657,13 +1557,11 @@ var JSAnimation = class extends WithPromise {
     this.state = "running";
     this.driver.start();
   }
-
   pause() {
     this.state = "paused";
     this.updateTime(time.now());
     this.holdTime = this.currentTime;
   }
-
   complete() {
     if (this.state !== "running") {
       this.play();
@@ -1671,14 +1569,12 @@ var JSAnimation = class extends WithPromise {
     this.state = "finished";
     this.holdTime = null;
   }
-
   finish() {
     this.notifyFinished();
     this.teardown();
     this.state = "finished";
     this.options.onComplete?.();
   }
-
   cancel() {
     this.holdTime = null;
     this.startTime = 0;
@@ -1686,26 +1582,22 @@ var JSAnimation = class extends WithPromise {
     this.teardown();
     this.options.onCancel?.();
   }
-
   teardown() {
     this.state = "idle";
     this.stopDriver();
     this.startTime = this.holdTime = null;
     activeAnimations.mainThread--;
   }
-
   stopDriver() {
     if (!this.driver)
       return;
     this.driver.stop();
     this.driver = void 0;
   }
-
   sample(sampleTime) {
     this.startTime = 0;
     return this.tick(sampleTime, true);
   }
-
   attachTimeline(timeline) {
     if (this.options.allowFlatten) {
       this.options.type = "keyframes";
@@ -1771,11 +1663,9 @@ var matrix3dParsers = {
   skewY: (v) => radToDeg(Math.atan(v[1])),
   skew: (v) => (Math.abs(v[1]) + Math.abs(v[4])) / 2
 };
-
 function defaultTransformValue(name) {
   return name.includes("scale") ? 1 : 0;
 }
-
 function parseValueFromTransform(transform, name) {
   if (!transform || transform === "none") {
     return defaultTransformValue(name);
@@ -1798,12 +1688,10 @@ function parseValueFromTransform(transform, name) {
   const values = match[1].split(",").map(convertTransformToNumber);
   return typeof valueParser === "function" ? valueParser(values) : values[valueParser];
 }
-
 var readTransformValue = (instance, name) => {
-  const {transform = "none"} = getComputedStyle(instance);
+  const { transform = "none" } = getComputedStyle(instance);
   return parseValueFromTransform(transform, name);
 };
-
 function convertTransformToNumber(value) {
   return parseFloat(value.trim());
 }
@@ -1834,7 +1722,6 @@ var transformProps = /* @__PURE__ */ (() => /* @__PURE__ */ new Set([...transfor
 var isNumOrPxType = (v) => v === number || v === px;
 var transformKeys = /* @__PURE__ */ new Set(["x", "y", "z"]);
 var nonTranslationalTransformKeys = transformPropOrder.filter((key) => !transformKeys.has(key));
-
 function removeNonTranslationalTransform(visualElement) {
   const removedTransforms = [];
   nonTranslationalTransformKeys.forEach((key) => {
@@ -1846,24 +1733,23 @@ function removeNonTranslationalTransform(visualElement) {
   });
   return removedTransforms;
 }
-
 var positionalValues = {
   // Dimensions
-  width: ({x}, {paddingLeft = "0", paddingRight = "0", boxSizing}) => {
+  width: ({ x }, { paddingLeft = "0", paddingRight = "0", boxSizing }) => {
     const width = x.max - x.min;
     return boxSizing === "border-box" ? width : width - parseFloat(paddingLeft) - parseFloat(paddingRight);
   },
-  height: ({y}, {paddingTop = "0", paddingBottom = "0", boxSizing}) => {
+  height: ({ y }, { paddingTop = "0", paddingBottom = "0", boxSizing }) => {
     const height = y.max - y.min;
     return boxSizing === "border-box" ? height : height - parseFloat(paddingTop) - parseFloat(paddingBottom);
   },
-  top: (_bbox, {top}) => parseFloat(top),
-  left: (_bbox, {left}) => parseFloat(left),
-  bottom: ({y}, {top}) => parseFloat(top) + (y.max - y.min),
-  right: ({x}, {left}) => parseFloat(left) + (x.max - x.min),
+  top: (_bbox, { top }) => parseFloat(top),
+  left: (_bbox, { left }) => parseFloat(left),
+  bottom: ({ y }, { top }) => parseFloat(top) + (y.max - y.min),
+  right: ({ x }, { left }) => parseFloat(left) + (x.max - x.min),
   // Transform
-  x: (_bbox, {transform}) => parseValueFromTransform(transform, "x"),
-  y: (_bbox, {transform}) => parseValueFromTransform(transform, "y")
+  x: (_bbox, { transform }) => parseValueFromTransform(transform, "x"),
+  y: (_bbox, { transform }) => parseValueFromTransform(transform, "y")
 };
 positionalValues.translateX = positionalValues.x;
 positionalValues.translateY = positionalValues.y;
@@ -1873,7 +1759,6 @@ var toResolve = /* @__PURE__ */ new Set();
 var isScheduled = false;
 var anyNeedsMeasurement = false;
 var isForced = false;
-
 function measureAllKeyframes() {
   if (anyNeedsMeasurement) {
     const resolversToMeasure = Array.from(toResolve).filter((resolver) => resolver.needsMeasurement);
@@ -1908,7 +1793,6 @@ function measureAllKeyframes() {
   toResolve.forEach((resolver) => resolver.complete(isForced));
   toResolve.clear();
 }
-
 function readAllKeyframes() {
   toResolve.forEach((resolver) => {
     resolver.readKeyframes();
@@ -1917,14 +1801,12 @@ function readAllKeyframes() {
     }
   });
 }
-
 function flushKeyframeResolvers() {
   isForced = true;
   readAllKeyframes();
   measureAllKeyframes();
   isForced = false;
 }
-
 var KeyframeResolver = class {
   constructor(unresolvedKeyframes, onComplete, name, motionValue2, element, isAsync = false) {
     this.state = "pending";
@@ -1937,7 +1819,6 @@ var KeyframeResolver = class {
     this.element = element;
     this.isAsync = isAsync;
   }
-
   scheduleResolve() {
     this.state = "scheduled";
     if (this.isAsync) {
@@ -1952,9 +1833,8 @@ var KeyframeResolver = class {
       this.complete();
     }
   }
-
   readKeyframes() {
-    const {unresolvedKeyframes, name, element, motionValue: motionValue2} = this;
+    const { unresolvedKeyframes, name, element, motionValue: motionValue2 } = this;
     if (unresolvedKeyframes[0] === null) {
       const currentValue = motionValue2?.get();
       const finalKeyframe = unresolvedKeyframes[unresolvedKeyframes.length - 1];
@@ -1975,32 +1855,25 @@ var KeyframeResolver = class {
     }
     fillWildcards(unresolvedKeyframes);
   }
-
   setFinalKeyframe() {
   }
-
   measureInitialState() {
   }
-
   renderEndStyles() {
   }
-
   measureEndState() {
   }
-
   complete(isForcedComplete = false) {
     this.state = "complete";
     this.onComplete(this.unresolvedKeyframes, this.finalKeyframe, isForcedComplete);
     toResolve.delete(this);
   }
-
   cancel() {
     if (this.state === "scheduled") {
       toResolve.delete(this);
       this.state = "pending";
     }
   }
-
   resume() {
     if (this.state === "pending")
       this.scheduleResolve();
@@ -2030,7 +1903,7 @@ var supportsScrollTimeline = /* @__PURE__ */ memoSupports(() => window.ScrollTim
 // node_modules/motion-dom/dist/es/utils/supports/linear-easing.mjs
 var supportsLinearEasing = /* @__PURE__ */ memoSupports(() => {
   try {
-    document.createElement("div").animate({opacity: 0}, {easing: "linear(0, 1)"});
+    document.createElement("div").animate({ opacity: 0 }, { easing: "linear(0, 1)" });
   } catch (e) {
     return false;
   }
@@ -2069,14 +1942,7 @@ function mapEasingToNativeEasing(easing, duration) {
 }
 
 // node_modules/motion-dom/dist/es/animation/waapi/start-waapi-animation.mjs
-function startWaapiAnimation(element, valueName, keyframes2, {
-  delay = 0,
-  duration = 300,
-  repeat = 0,
-  repeatType = "loop",
-  ease: ease2 = "easeOut",
-  times
-} = {}, pseudoElement = void 0) {
+function startWaapiAnimation(element, valueName, keyframes2, { delay = 0, duration = 300, repeat = 0, repeatType = "loop", ease: ease2 = "easeOut", times } = {}, pseudoElement = void 0) {
   const keyframeOptions = {
     [valueName]: keyframes2
   };
@@ -2113,7 +1979,7 @@ function isGenerator(type) {
 }
 
 // node_modules/motion-dom/dist/es/animation/waapi/utils/apply-generator.mjs
-function applyGeneratorOptions({type, ...options}) {
+function applyGeneratorOptions({ type, ...options }) {
   if (isGenerator(type) && supportsLinearEasing()) {
     return type.applyToOptions(options);
   } else {
@@ -2132,15 +1998,7 @@ var NativeAnimation = class extends WithPromise {
     this.manualStartTime = null;
     if (!options)
       return;
-    const {
-      element,
-      name,
-      keyframes: keyframes2,
-      pseudoElement,
-      allowFlatten = false,
-      finalKeyframe,
-      onComplete
-    } = options;
+    const { element, name, keyframes: keyframes2, pseudoElement, allowFlatten = false, finalKeyframe, onComplete } = options;
     this.isPseudoElement = Boolean(pseudoElement);
     this.allowFlatten = allowFlatten;
     this.options = options;
@@ -2164,57 +2022,6 @@ var NativeAnimation = class extends WithPromise {
       this.notifyFinished();
     };
   }
-
-  get duration() {
-    const duration = this.animation.effect?.getComputedTiming?.().duration || 0;
-    return millisecondsToSeconds(Number(duration));
-  }
-
-  get iterationDuration() {
-    const {delay = 0} = this.options || {};
-    return this.duration + millisecondsToSeconds(delay);
-  }
-
-  get time() {
-    return millisecondsToSeconds(Number(this.animation.currentTime) || 0);
-  }
-
-  set time(newTime) {
-    const wasFinished = this.finishedTime !== null;
-    this.manualStartTime = null;
-    this.finishedTime = null;
-    this.animation.currentTime = secondsToMilliseconds(newTime);
-    if (wasFinished) {
-      this.animation.pause();
-    }
-  }
-
-  /**
-   * The playback speed of the animation.
-   * 1 = normal speed, 2 = double speed, 0.5 = half speed.
-   */
-  get speed() {
-    return this.animation.playbackRate;
-  }
-
-  set speed(newSpeed) {
-    if (newSpeed < 0)
-      this.finishedTime = null;
-    this.animation.playbackRate = newSpeed;
-  }
-
-  get state() {
-    return this.finishedTime !== null ? "finished" : this.animation.playState;
-  }
-
-  get startTime() {
-    return this.manualStartTime ?? Number(this.animation.startTime);
-  }
-
-  set startTime(newStartTime) {
-    this.manualStartTime = this.animation.startTime = newStartTime;
-  }
-
   play() {
     if (this.isStopped)
       return;
@@ -2224,27 +2031,23 @@ var NativeAnimation = class extends WithPromise {
       this.updateFinished();
     }
   }
-
   pause() {
     this.animation.pause();
   }
-
   complete() {
     this.animation.finish?.();
   }
-
   cancel() {
     try {
       this.animation.cancel();
     } catch (e) {
     }
   }
-
   stop() {
     if (this.isStopped)
       return;
     this.isStopped = true;
-    const {state} = this;
+    const { state } = this;
     if (state === "idle" || state === "finished") {
       return;
     }
@@ -2256,7 +2059,6 @@ var NativeAnimation = class extends WithPromise {
     if (!this.isPseudoElement)
       this.cancel();
   }
-
   /**
    * WAAPI doesn't natively have any interruption capabilities.
    *
@@ -2275,13 +2077,53 @@ var NativeAnimation = class extends WithPromise {
       this.animation.commitStyles?.();
     }
   }
-
+  get duration() {
+    const duration = this.animation.effect?.getComputedTiming?.().duration || 0;
+    return millisecondsToSeconds(Number(duration));
+  }
+  get iterationDuration() {
+    const { delay = 0 } = this.options || {};
+    return this.duration + millisecondsToSeconds(delay);
+  }
+  get time() {
+    return millisecondsToSeconds(Number(this.animation.currentTime) || 0);
+  }
+  set time(newTime) {
+    const wasFinished = this.finishedTime !== null;
+    this.manualStartTime = null;
+    this.finishedTime = null;
+    this.animation.currentTime = secondsToMilliseconds(newTime);
+    if (wasFinished) {
+      this.animation.pause();
+    }
+  }
+  /**
+   * The playback speed of the animation.
+   * 1 = normal speed, 2 = double speed, 0.5 = half speed.
+   */
+  get speed() {
+    return this.animation.playbackRate;
+  }
+  set speed(newSpeed) {
+    if (newSpeed < 0)
+      this.finishedTime = null;
+    this.animation.playbackRate = newSpeed;
+  }
+  get state() {
+    return this.finishedTime !== null ? "finished" : this.animation.playState;
+  }
+  get startTime() {
+    return this.manualStartTime ?? Number(this.animation.startTime);
+  }
+  set startTime(newStartTime) {
+    this.manualStartTime = this.animation.startTime = newStartTime;
+  }
   /**
    * Attaches a timeline to the animation, for instance the `ScrollTimeline`.
    */
-  attachTimeline({timeline, rangeStart, rangeEnd, observe}) {
+  attachTimeline({ timeline, rangeStart, rangeEnd, observe }) {
     if (this.allowFlatten) {
-      this.animation.effect?.updateTiming({easing: "linear"});
+      this.animation.effect?.updateTiming({ easing: "linear" });
     }
     this.animation.onfinish = null;
     if (timeline && supportsScrollTimeline()) {
@@ -2303,11 +2145,9 @@ var unsupportedEasingFunctions = {
   backInOut,
   circInOut
 };
-
 function isUnsupportedEase(key) {
   return key in unsupportedEasingFunctions;
 }
-
 function replaceStringEasing(transition) {
   if (typeof transition.ease === "string" && isUnsupportedEase(transition.ease)) {
     transition.ease = unsupportedEasingFunctions[transition.ease];
@@ -2326,7 +2166,6 @@ var NativeAnimationExtended = class extends NativeAnimation {
     }
     this.options = options;
   }
-
   /**
    * WAAPI doesn't natively have any interruption capabilities.
    *
@@ -2336,7 +2175,7 @@ var NativeAnimationExtended = class extends NativeAnimation {
    * Motion to calculate velocity for any subsequent animation.
    */
   updateMotionValue(value) {
-    const {motionValue: motionValue2, onUpdate, onComplete, element, ...options} = this.options;
+    const { motionValue: motionValue2, onUpdate, onComplete, element, ...options } = this.options;
     if (!motionValue2)
       return;
     if (value !== void 0) {
@@ -2350,7 +2189,7 @@ var NativeAnimationExtended = class extends NativeAnimation {
     const sampleTime = Math.max(sampleDelta, time.now() - this.startTime);
     const delta = clamp(0, sampleDelta, sampleTime - sampleDelta);
     const current = sampleAnimation.sample(sampleTime).value;
-    const {name} = this.options;
+    const { name } = this.options;
     if (element && name)
       setStyle(element, name, current);
     motionValue2.setWithVelocity(sampleAnimation.sample(Math.max(0, sampleTime - delta)).value, current, delta);
@@ -2365,8 +2204,8 @@ var isAnimatable = (value, name) => {
   if (typeof value === "number" || Array.isArray(value))
     return true;
   if (typeof value === "string" && // It's animatable if we have a string
-    (complex.test(value) || value === "0") && // And it contains numbers and/or colors
-    !value.startsWith("url(")) {
+  (complex.test(value) || value === "0") && // And it contains numbers and/or colors
+  !value.startsWith("url(")) {
     return true;
   }
   return false;
@@ -2382,7 +2221,6 @@ function hasKeyframesChanged(keyframes2) {
       return true;
   }
 }
-
 function canAnimate(keyframes2, name, type, velocity) {
   const originKeyframe = keyframes2[0];
   if (originKeyframe === null) {
@@ -2419,7 +2257,6 @@ var acceleratedValues = /* @__PURE__ */ new Set([
 
 // node_modules/motion-dom/dist/es/animation/waapi/utils/is-browser-color.mjs
 var browserColorFunctions = /^(?:oklch|oklab|lab|lch|color|color-mix|light-dark)\(/;
-
 function hasBrowserOnlyColors(keyframes2) {
   for (let i = 0; i < keyframes2.length; i++) {
     if (typeof keyframes2[i] === "string" && browserColorFunctions.test(keyframes2[i])) {
@@ -2443,41 +2280,28 @@ var colorProperties = /* @__PURE__ */ new Set([
   "borderLeftColor"
 ]);
 var supportsWaapi = /* @__PURE__ */ memo(() => Object.hasOwnProperty.call(Element.prototype, "animate"));
-
 function supportsBrowserAnimation(options) {
-  const {motionValue: motionValue2, name, repeatDelay, repeatType, damping, type, keyframes: keyframes2} = options;
+  const { motionValue: motionValue2, name, repeatDelay, repeatType, damping, type, keyframes: keyframes2 } = options;
   const subject = motionValue2?.owner?.current;
   if (!(subject instanceof HTMLElement)) {
     return false;
   }
-  const {onUpdate, transformTemplate} = motionValue2.owner.getProps();
+  const { onUpdate, transformTemplate } = motionValue2.owner.getProps();
   return supportsWaapi() && name && /**
-     * Force WAAPI for color properties with browser-only color formats
-     * (oklch, oklab, lab, lch, etc.) that the JS animation path can't parse.
-     */
-    (acceleratedValues.has(name) || colorProperties.has(name) && hasBrowserOnlyColors(keyframes2)) && (name !== "transform" || !transformTemplate) && /**
-     * If we're outputting values to onUpdate then we can't use WAAPI as there's
-     * no way to read the value from WAAPI every frame.
-     */
-    !onUpdate && !repeatDelay && repeatType !== "mirror" && damping !== 0 && type !== "inertia";
+   * Force WAAPI for color properties with browser-only color formats
+   * (oklch, oklab, lab, lch, etc.) that the JS animation path can't parse.
+   */
+  (acceleratedValues.has(name) || colorProperties.has(name) && hasBrowserOnlyColors(keyframes2)) && (name !== "transform" || !transformTemplate) && /**
+   * If we're outputting values to onUpdate then we can't use WAAPI as there's
+   * no way to read the value from WAAPI every frame.
+   */
+  !onUpdate && !repeatDelay && repeatType !== "mirror" && damping !== 0 && type !== "inertia";
 }
 
 // node_modules/motion-dom/dist/es/animation/AsyncMotionValueAnimation.mjs
 var MAX_RESOLVE_DELAY = 40;
 var AsyncMotionValueAnimation = class extends WithPromise {
-  constructor({
-                autoplay = true,
-                delay = 0,
-                type = "keyframes",
-                repeat = 0,
-                repeatDelay = 0,
-                repeatType = "loop",
-                keyframes: keyframes2,
-                name,
-                motionValue: motionValue2,
-                element,
-                ...options
-              }) {
+  constructor({ autoplay = true, delay = 0, type = "keyframes", repeat = 0, repeatDelay = 0, repeatType = "loop", keyframes: keyframes2, name, motionValue: motionValue2, element, ...options }) {
     super();
     this.stop = () => {
       if (this._animation) {
@@ -2503,58 +2327,9 @@ var AsyncMotionValueAnimation = class extends WithPromise {
     this.keyframeResolver = new KeyframeResolver$1(keyframes2, (resolvedKeyframes, finalKeyframe, forced) => this.onKeyframesResolved(resolvedKeyframes, finalKeyframe, optionsWithDefaults, !forced), name, motionValue2, element);
     this.keyframeResolver?.scheduleResolve();
   }
-
-  get finished() {
-    if (!this._animation) {
-      return this._finished;
-    } else {
-      return this.animation.finished;
-    }
-  }
-
-  get animation() {
-    if (!this._animation) {
-      this.keyframeResolver?.resume();
-      flushKeyframeResolvers();
-    }
-    return this._animation;
-  }
-
-  get duration() {
-    return this.animation.duration;
-  }
-
-  get iterationDuration() {
-    return this.animation.iterationDuration;
-  }
-
-  get time() {
-    return this.animation.time;
-  }
-
-  set time(newTime) {
-    this.animation.time = newTime;
-  }
-
-  get speed() {
-    return this.animation.speed;
-  }
-
-  set speed(newSpeed) {
-    this.animation.speed = newSpeed;
-  }
-
-  get state() {
-    return this.animation.state;
-  }
-
-  get startTime() {
-    return this.animation.startTime;
-  }
-
   onKeyframesResolved(keyframes2, finalKeyframe, options, sync) {
     this.keyframeResolver = void 0;
-    const {name, type, velocity, delay, isHandoff, onUpdate} = options;
+    const { name, type, velocity, delay, isHandoff, onUpdate } = options;
     this.resolvedAt = time.now();
     let canAnimateValue = true;
     if (!canAnimate(keyframes2, name, type, velocity)) {
@@ -2597,12 +2372,48 @@ var AsyncMotionValueAnimation = class extends WithPromise {
     }
     this._animation = animation;
   }
-
+  get finished() {
+    if (!this._animation) {
+      return this._finished;
+    } else {
+      return this.animation.finished;
+    }
+  }
   then(onResolve, _onReject) {
     return this.finished.finally(onResolve).then(() => {
     });
   }
-
+  get animation() {
+    if (!this._animation) {
+      this.keyframeResolver?.resume();
+      flushKeyframeResolvers();
+    }
+    return this._animation;
+  }
+  get duration() {
+    return this.animation.duration;
+  }
+  get iterationDuration() {
+    return this.animation.iterationDuration;
+  }
+  get time() {
+    return this.animation.time;
+  }
+  set time(newTime) {
+    this.animation.time = newTime;
+  }
+  get speed() {
+    return this.animation.speed;
+  }
+  get state() {
+    return this.animation.state;
+  }
+  set speed(newSpeed) {
+    this.animation.speed = newSpeed;
+  }
+  get startTime() {
+    return this.animation.startTime;
+  }
   attachTimeline(timeline) {
     if (this._animation) {
       this.stopTimeline = this.animation.attachTimeline(timeline);
@@ -2611,19 +2422,15 @@ var AsyncMotionValueAnimation = class extends WithPromise {
     }
     return () => this.stop();
   }
-
   play() {
     this.animation.play();
   }
-
   pause() {
     this.animation.pause();
   }
-
   complete() {
     this.animation.complete();
   }
-
   cancel() {
     if (this._animation) {
       this.animation.cancel();
@@ -2638,56 +2445,20 @@ var GroupAnimation = class {
     this.stop = () => this.runAll("stop");
     this.animations = animations.filter(Boolean);
   }
-
   get finished() {
     return Promise.all(this.animations.map((animation) => animation.finished));
   }
-
-  get time() {
-    return this.getAll("time");
-  }
-
-  set time(time2) {
-    this.setAll("time", time2);
-  }
-
-  get speed() {
-    return this.getAll("speed");
-  }
-
-  set speed(speed) {
-    this.setAll("speed", speed);
-  }
-
-  get state() {
-    return this.getAll("state");
-  }
-
-  get startTime() {
-    return this.getAll("startTime");
-  }
-
-  get duration() {
-    return getMax(this.animations, "duration");
-  }
-
-  get iterationDuration() {
-    return getMax(this.animations, "iterationDuration");
-  }
-
   /**
    * TODO: Filter out cancelled or stopped animations before returning
    */
   getAll(propName) {
     return this.animations[0][propName];
   }
-
   setAll(propName, newValue) {
     for (let i = 0; i < this.animations.length; i++) {
       this.animations[i][propName] = newValue;
     }
   }
-
   attachTimeline(timeline) {
     const subscriptions = this.animations.map((animation) => animation.attachTimeline(timeline));
     return () => {
@@ -2697,28 +2468,46 @@ var GroupAnimation = class {
       });
     };
   }
-
+  get time() {
+    return this.getAll("time");
+  }
+  set time(time2) {
+    this.setAll("time", time2);
+  }
+  get speed() {
+    return this.getAll("speed");
+  }
+  set speed(speed) {
+    this.setAll("speed", speed);
+  }
+  get state() {
+    return this.getAll("state");
+  }
+  get startTime() {
+    return this.getAll("startTime");
+  }
+  get duration() {
+    return getMax(this.animations, "duration");
+  }
+  get iterationDuration() {
+    return getMax(this.animations, "iterationDuration");
+  }
   runAll(methodName) {
     this.animations.forEach((controls) => controls[methodName]());
   }
-
   play() {
     this.runAll("play");
   }
-
   pause() {
     this.runAll("pause");
   }
-
   cancel() {
     this.runAll("cancel");
   }
-
   complete() {
     this.runAll("complete");
   }
 };
-
 function getMax(animations, propName) {
   let max = 0;
   for (let i = 0; i < animations.length; i++) {
@@ -2776,7 +2565,6 @@ var MotionValue = class {
     this.setCurrent(init);
     this.owner = options.owner;
   }
-
   setCurrent(current) {
     this.current = current;
     this.updatedAt = time.now();
@@ -2784,12 +2572,10 @@ var MotionValue = class {
       this.canTrackVelocity = isFloat(this.current);
     }
   }
-
   setPrevFrameValue(prevFrameValue = this.current) {
     this.prevFrameValue = prevFrameValue;
     this.prevUpdatedAt = this.updatedAt;
   }
-
   /**
    * Adds a function that will be notified when the `MotionValue` is updated.
    *
@@ -2836,7 +2622,6 @@ var MotionValue = class {
     }
     return this.on("change", subscription);
   }
-
   on(eventName, callback) {
     if (!this.events[eventName]) {
       this.events[eventName] = new SubscriptionManager();
@@ -2854,13 +2639,11 @@ var MotionValue = class {
     }
     return unsubscribe;
   }
-
   clearListeners() {
     for (const eventManagers in this.events) {
       this.events[eventManagers].clear();
     }
   }
-
   /**
    * Attaches a passive effect to the `MotionValue`.
    */
@@ -2868,7 +2651,6 @@ var MotionValue = class {
     this.passiveEffect = passiveEffect;
     this.stopPassiveEffect = stopPassiveEffect;
   }
-
   /**
    * Sets the state of the `MotionValue`.
    *
@@ -2891,14 +2673,12 @@ var MotionValue = class {
       this.passiveEffect(v, this.updateAndNotify);
     }
   }
-
   setWithVelocity(prev, current, delta) {
     this.set(current);
     this.prev = void 0;
     this.prevFrameValue = prev;
     this.prevUpdatedAt = this.updatedAt - delta;
   }
-
   /**
    * Set the state of the `MotionValue`, stopping any active animations,
    * effects, and resets velocity to `0`.
@@ -2911,24 +2691,20 @@ var MotionValue = class {
     if (this.stopPassiveEffect)
       this.stopPassiveEffect();
   }
-
   dirty() {
     this.events.change?.notify(this.current);
   }
-
   addDependent(dependent) {
     if (!this.dependents) {
       this.dependents = /* @__PURE__ */ new Set();
     }
     this.dependents.add(dependent);
   }
-
   removeDependent(dependent) {
     if (this.dependents) {
       this.dependents.delete(dependent);
     }
   }
-
   /**
    * Returns the latest state of `MotionValue`
    *
@@ -2942,14 +2718,12 @@ var MotionValue = class {
     }
     return this.current;
   }
-
   /**
    * @public
    */
   getPrevious() {
     return this.prev;
   }
-
   /**
    * Returns the latest velocity of `MotionValue`
    *
@@ -2965,7 +2739,6 @@ var MotionValue = class {
     const delta = Math.min(this.updatedAt - this.prevUpdatedAt, MAX_VELOCITY_DELTA);
     return velocityPerSecond(parseFloat(this.current) - parseFloat(this.prevFrameValue), delta);
   }
-
   /**
    * Registers a new animation to control this `MotionValue`. Only one
    * animation can drive a `MotionValue` at one time.
@@ -2991,7 +2764,6 @@ var MotionValue = class {
       this.clearAnimation();
     });
   }
-
   /**
    * Stop the currently active animation.
    *
@@ -3006,7 +2778,6 @@ var MotionValue = class {
     }
     this.clearAnimation();
   }
-
   /**
    * Returns `true` if this value is currently animating.
    *
@@ -3015,11 +2786,9 @@ var MotionValue = class {
   isAnimating() {
     return !!this.animation;
   }
-
   clearAnimation() {
     delete this.animation;
   }
-
   /**
    * Destroy and clean up subscribers to this `MotionValue`.
    *
@@ -3039,7 +2808,6 @@ var MotionValue = class {
     }
   }
 };
-
 function motionValue(init, options) {
   return new MotionValue(init, options);
 }
@@ -3047,8 +2815,8 @@ function motionValue(init, options) {
 // node_modules/motion-dom/dist/es/animation/utils/resolve-transition.mjs
 function resolveTransition(transition, parentTransition) {
   if (transition?.inherit && parentTransition) {
-    const {inherit: _, ...rest} = transition;
-    return {...parentTransition, ...rest};
+    const { inherit: _, ...rest } = transition;
+    return { ...parentTransition, ...rest };
   }
   return transition;
 }
@@ -3084,7 +2852,7 @@ var ease = {
   ease: [0.25, 0.1, 0.35, 1],
   duration: 0.3
 };
-var getDefaultTransition = (valueKey, {keyframes: keyframes2}) => {
+var getDefaultTransition = (valueKey, { keyframes: keyframes2 }) => {
   if (keyframes2.length > 2) {
     return keyframesTransition;
   } else if (transformProps.has(valueKey)) {
@@ -3106,7 +2874,6 @@ var orchestrationKeys = /* @__PURE__ */ new Set([
   "from",
   "elapsed"
 ]);
-
 function isTransitionDefined(transition) {
   for (const key in transition) {
     if (!orchestrationKeys.has(key))
@@ -3119,7 +2886,7 @@ function isTransitionDefined(transition) {
 var animateMotionValue = (name, value, target, transition = {}, element, isHandoff) => (onComplete) => {
   const valueTransition = getValueTransition(transition, name) || {};
   const delay = valueTransition.delay || transition.delay || 0;
-  let {elapsed = 0} = transition;
+  let { elapsed = 0 } = transition;
   elapsed = elapsed - secondsToMilliseconds(delay);
   const options = {
     keyframes: Array.isArray(target) ? target : [null, target],
@@ -3178,7 +2945,6 @@ var splitCSSVariableRegex = (
   // eslint-disable-next-line redos-detector/no-unsafe-regex -- false positive, as it can match a lot of words
   /^var\(--(?:([\w-]+)|([\w-]+), ?([a-zA-Z\d ()%#.,-]+))\)/u
 );
-
 function parseCSSVariable(current) {
   const match = splitCSSVariableRegex.exec(current);
   if (!match)
@@ -3186,9 +2952,7 @@ function parseCSSVariable(current) {
   const [, token1, token2, fallback] = match;
   return [`--${token1 ?? token2}`, fallback];
 }
-
 var maxDepth = 4;
-
 function getVariableValue(current, element, depth = 1) {
   invariant(depth <= maxDepth, `Max CSS variable fallback depth detected in property "${current}". This may indicate a circular fallback dependency.`, "max-css-var-depth");
   const [token, fallback] = parseCSSVariable(current);
@@ -3211,7 +2975,6 @@ function getValueState(visualElement) {
   });
   return state;
 }
-
 function resolveVariantFromProps(props, definition, custom, visualElement) {
   if (typeof definition === "function") {
     const [current, velocity] = getValueState(visualElement);
@@ -3257,15 +3020,13 @@ function setMotionValue(visualElement, key, value) {
     visualElement.addValue(key, motionValue(value));
   }
 }
-
 function resolveFinalValueInKeyframes(v) {
   return isKeyframesTarget(v) ? v[v.length - 1] || 0 : v;
 }
-
 function setTarget(visualElement, definition) {
   const resolved = resolveVariant(visualElement, definition);
-  let {transitionEnd = {}, transition = {}, ...target} = resolved || {};
-  target = {...target, ...transitionEnd};
+  let { transitionEnd = {}, transition = {}, ...target } = resolved || {};
+  target = { ...target, ...transitionEnd };
   for (const key in target) {
     const value = resolveFinalValueInKeyframes(target[key]);
     setMotionValue(visualElement, key, value);
@@ -3307,14 +3068,13 @@ function getOptimisedAppearId(visualElement) {
 }
 
 // node_modules/motion-dom/dist/es/animation/interfaces/visual-element-target.mjs
-function shouldBlockAnimation({protectedKeys, needsAnimating}, key) {
+function shouldBlockAnimation({ protectedKeys, needsAnimating }, key) {
   const shouldBlock = protectedKeys.hasOwnProperty(key) && needsAnimating[key] !== true;
   needsAnimating[key] = false;
   return shouldBlock;
 }
-
-function animateTarget(visualElement, targetAndTransition, {delay = 0, transitionOverride, type} = {}) {
-  let {transition, transitionEnd, ...target} = targetAndTransition;
+function animateTarget(visualElement, targetAndTransition, { delay = 0, transitionOverride, type } = {}) {
+  let { transition, transitionEnd, ...target } = targetAndTransition;
   const defaultTransition = visualElement.getDefaultTransition();
   transition = transition ? resolveTransition(transition, defaultTransition) : defaultTransition;
   const reduceMotion = transition?.reduceMotion;
@@ -3357,7 +3117,7 @@ function animateTarget(visualElement, targetAndTransition, {delay = 0, transitio
     }
     addValueToWillChange(visualElement, key);
     const shouldReduceMotion = reduceMotion ?? visualElement.shouldReduceMotion;
-    value.start(animateMotionValue(key, value, valueTarget, shouldReduceMotion && positionalKeys.has(key) ? {type: false} : valueTransition, visualElement, isHandoff));
+    value.start(animateMotionValue(key, value, valueTarget, shouldReduceMotion && positionalKeys.has(key) ? { type: false } : valueTransition, visualElement, isHandoff));
     const animation = value.animation;
     if (animation) {
       animations.push(animation);
@@ -3402,7 +3162,6 @@ function isNone(value) {
 
 // node_modules/motion-dom/dist/es/value/types/complex/filter.mjs
 var maxDefaults = /* @__PURE__ */ new Set(["brightness", "contrast", "saturate", "opacity"]);
-
 function applyDefaultFilter(v) {
   const [name, value] = v.slice(0, -1).split("(");
   if (name === "drop-shadow")
@@ -3416,7 +3175,6 @@ function applyDefaultFilter(v) {
     defaultValue *= 100;
   return name + "(" + defaultValue + unit + ")";
 }
-
 var functionRegex = /\b([a-z-]*)\(.*?\)/gu;
 var filter = {
   ...complex,
@@ -3432,10 +3190,7 @@ var mask = {
   getAnimatableNone: (v) => {
     const parsed = complex.parse(v);
     const transformer = complex.createTransformer(v);
-    return transformer(parsed.map((v2) => typeof v2 === "number" ? 0 : typeof v2 === "object" ? {
-      ...v2,
-      alpha: 1
-    } : v2));
+    return transformer(parsed.map((v2) => typeof v2 === "number" ? 0 : typeof v2 === "object" ? { ...v2, alpha: 1 } : v2));
   }
 };
 
@@ -3568,7 +3323,6 @@ var getDefaultValueType = (key) => defaultValueTypes[key];
 
 // node_modules/motion-dom/dist/es/value/types/utils/animatable-none.mjs
 var customTypes = /* @__PURE__ */ new Set([filter, mask]);
-
 function getAnimatableNone2(key, value) {
   let defaultValueType = getDefaultValueType(key);
   if (!customTypes.has(defaultValueType))
@@ -3578,7 +3332,6 @@ function getAnimatableNone2(key, value) {
 
 // node_modules/motion-dom/dist/es/animation/keyframes/utils/make-none-animatable.mjs
 var invalidTemplates = /* @__PURE__ */ new Set(["auto", "none", "0"]);
-
 function makeNoneKeyframesAnimatable(unresolvedKeyframes, noneKeyframeIndexes, name) {
   let i = 0;
   let animatableTemplate = void 0;
@@ -3601,9 +3354,8 @@ var DOMKeyframesResolver = class extends KeyframeResolver {
   constructor(unresolvedKeyframes, onComplete, name, motionValue2, element) {
     super(unresolvedKeyframes, onComplete, name, motionValue2, element, true);
   }
-
   readKeyframes() {
-    const {unresolvedKeyframes, element, name} = this;
+    const { unresolvedKeyframes, element, name } = this;
     if (!element || !element.current)
       return;
     super.readKeyframes();
@@ -3648,9 +3400,8 @@ var DOMKeyframesResolver = class extends KeyframeResolver {
       this.needsMeasurement = true;
     }
   }
-
   resolveNoneKeyframes() {
-    const {unresolvedKeyframes, name} = this;
+    const { unresolvedKeyframes, name } = this;
     const noneKeyframeIndexes = [];
     for (let i = 0; i < unresolvedKeyframes.length; i++) {
       if (unresolvedKeyframes[i] === null || isNone(unresolvedKeyframes[i])) {
@@ -3661,9 +3412,8 @@ var DOMKeyframesResolver = class extends KeyframeResolver {
       makeNoneKeyframesAnimatable(unresolvedKeyframes, noneKeyframeIndexes, name);
     }
   }
-
   measureInitialState() {
-    const {element, unresolvedKeyframes, name} = this;
+    const { element, unresolvedKeyframes, name } = this;
     if (!element || !element.current)
       return;
     if (name === "height") {
@@ -3676,9 +3426,8 @@ var DOMKeyframesResolver = class extends KeyframeResolver {
       element.getValue(name, measureKeyframe).jump(measureKeyframe, false);
     }
   }
-
   measureEndState() {
-    const {element, name, unresolvedKeyframes} = this;
+    const { element, name, unresolvedKeyframes } = this;
     if (!element || !element.current)
       return;
     const value = element.getValue(name);
@@ -3722,7 +3471,7 @@ var getValueAsType = (value, type) => {
 };
 
 // node_modules/motion-dom/dist/es/frameloop/microtask.mjs
-var {schedule: microtask, cancel: cancelMicrotask} = /* @__PURE__ */ createRenderBatcher(queueMicrotask, false);
+var { schedule: microtask, cancel: cancelMicrotask } = /* @__PURE__ */ createRenderBatcher(queueMicrotask, false);
 
 // node_modules/motion-dom/dist/es/utils/is-svg-element.mjs
 function isSVGElement(element) {
@@ -3739,7 +3488,7 @@ var valueTypes = [...dimensionValueTypes, color, complex];
 var findValueType = (v) => valueTypes.find(testValueType(v));
 
 // node_modules/motion-dom/dist/es/projection/geometry/models.mjs
-var createAxis = () => ({min: 0, max: 0});
+var createAxis = () => ({ min: 0, max: 0 });
 var createBox = () => ({
   x: createAxis(),
   y: createAxis()
@@ -3774,7 +3523,6 @@ var variantProps = ["initial", ...variantPriorityOrder];
 function isControllingVariants(props) {
   return isAnimationControls(props.animate) || variantProps.some((name) => isVariantLabel(props[name]));
 }
-
 function isVariantNode(props) {
   return Boolean(isControllingVariants(props) || props.variants);
 }
@@ -3787,7 +3535,7 @@ function updateMotionValuesFromProps(element, next, prev) {
     if (isMotionValue(nextValue)) {
       element.addValue(key, nextValue);
     } else if (isMotionValue(prevValue)) {
-      element.addValue(key, motionValue(nextValue, {owner: element}));
+      element.addValue(key, motionValue(nextValue, { owner: element }));
     } else if (prevValue !== nextValue) {
       if (element.hasValue(key)) {
         const existingValue = element.getValue(key);
@@ -3798,7 +3546,7 @@ function updateMotionValuesFromProps(element, next, prev) {
         }
       } else {
         const latestValue = element.getStaticValue(key);
-        element.addValue(key, motionValue(latestValue !== void 0 ? latestValue : nextValue, {owner: element}));
+        element.addValue(key, motionValue(latestValue !== void 0 ? latestValue : nextValue, { owner: element }));
       }
     }
   }
@@ -3810,12 +3558,11 @@ function updateMotionValuesFromProps(element, next, prev) {
 }
 
 // node_modules/motion-dom/dist/es/render/utils/reduced-motion/state.mjs
-var prefersReducedMotion = {current: null};
-var hasReducedMotionListener = {current: false};
+var prefersReducedMotion = { current: null };
+var hasReducedMotionListener = { current: false };
 
 // node_modules/motion-dom/dist/es/render/utils/reduced-motion/index.mjs
 var isBrowser = typeof window !== "undefined";
-
 function initPrefersReducedMotion() {
   hasReducedMotionListener.current = true;
   if (!isBrowser)
@@ -3842,15 +3589,17 @@ var propEventHandlers = [
 ];
 var featureDefinitions = {};
 var VisualElement = class {
-  constructor({
-                parent,
-                props,
-                presenceContext,
-                reducedMotionConfig,
-                skipAnimations,
-                blockInitialAnimation,
-                visualState
-              }, options = {}) {
+  /**
+   * This method takes React props and returns found MotionValues. For example, HTML
+   * MotionValues will be found within the style prop, whereas for Three.js within attribute arrays.
+   *
+   * This isn't an abstract method as it needs calling in the constructor, but it is
+   * intended to be one.
+   */
+  scrapeMotionValuesFromProps(_props, _prevProps, _visualElement) {
+    return {};
+  }
+  constructor({ parent, props, presenceContext, reducedMotionConfig, skipAnimations, blockInitialAnimation, visualState }, options = {}) {
     this.current = null;
     this.children = /* @__PURE__ */ new Set();
     this.isVariantNode = false;
@@ -3880,10 +3629,10 @@ var VisualElement = class {
         frame.render(this.render, false, true);
       }
     };
-    const {latestValues, renderState} = visualState;
+    const { latestValues, renderState } = visualState;
     this.latestValues = latestValues;
-    this.baseTarget = {...latestValues};
-    this.initialValues = props.initial ? {...latestValues} : {};
+    this.baseTarget = { ...latestValues };
+    this.initialValues = props.initial ? { ...latestValues } : {};
     this.renderState = renderState;
     this.parent = parent;
     this.props = props;
@@ -3899,7 +3648,7 @@ var VisualElement = class {
       this.variantChildren = /* @__PURE__ */ new Set();
     }
     this.manuallyAnimateOnMount = Boolean(parent && parent.current);
-    const {willChange, ...initialMotionValues} = this.scrapeMotionValuesFromProps(props, {}, this);
+    const { willChange, ...initialMotionValues } = this.scrapeMotionValuesFromProps(props, {}, this);
     for (const key in initialMotionValues) {
       const value = initialMotionValues[key];
       if (latestValues[key] !== void 0 && isMotionValue(value)) {
@@ -3907,18 +3656,6 @@ var VisualElement = class {
       }
     }
   }
-
-  /**
-   * This method takes React props and returns found MotionValues. For example, HTML
-   * MotionValues will be found within the style prop, whereas for Three.js within attribute arrays.
-   *
-   * This isn't an abstract method as it needs calling in the constructor, but it is
-   * intended to be one.
-   */
-  scrapeMotionValuesFromProps(_props, _prevProps, _visualElement) {
-    return {};
-  }
-
   mount(instance) {
     if (this.hasBeenMounted) {
       for (const key in this.initialValues) {
@@ -3953,7 +3690,6 @@ var VisualElement = class {
     this.update(this.props, this.presenceContext);
     this.hasBeenMounted = true;
   }
-
   unmount() {
     this.projection && this.projection.unmount();
     cancelFrame(this.notifyUpdate);
@@ -3974,24 +3710,21 @@ var VisualElement = class {
     }
     this.current = null;
   }
-
   addChild(child) {
     this.children.add(child);
     this.enteringChildren ?? (this.enteringChildren = /* @__PURE__ */ new Set());
     this.enteringChildren.add(child);
   }
-
   removeChild(child) {
     this.children.delete(child);
     this.enteringChildren && this.enteringChildren.delete(child);
   }
-
   bindToMotionValue(key, value) {
     if (this.valueSubscriptions.has(key)) {
       this.valueSubscriptions.get(key)();
     }
     if (value.accelerate && acceleratedValues.has(key) && this.current instanceof HTMLElement) {
-      const {factory, keyframes: keyframes2, times, ease: ease2, duration} = value.accelerate;
+      const { factory, keyframes: keyframes2, times, ease: ease2, duration } = value.accelerate;
       const animation = new NativeAnimation({
         element: this.current,
         name: key,
@@ -4029,21 +3762,19 @@ var VisualElement = class {
         removeSyncCheck();
     });
   }
-
   sortNodePosition(other) {
     if (!this.current || !this.sortInstanceNodePosition || this.type !== other.type) {
       return 0;
     }
     return this.sortInstanceNodePosition(this.current, other.current);
   }
-
   updateFeatures() {
     let key = "animation";
     for (key in featureDefinitions) {
       const featureDefinition = featureDefinitions[key];
       if (!featureDefinition)
         continue;
-      const {isEnabled, Feature: FeatureConstructor} = featureDefinition;
+      const { isEnabled, Feature: FeatureConstructor } = featureDefinition;
       if (!this.features[key] && FeatureConstructor && isEnabled(this.props)) {
         this.features[key] = new FeatureConstructor(this);
       }
@@ -4058,11 +3789,9 @@ var VisualElement = class {
       }
     }
   }
-
   triggerBuild() {
     this.build(this.renderState, this.latestValues, this.props);
   }
-
   /**
    * Measure the current viewport box with or without transforms.
    * Only measures axis-aligned boxes, rotate and skew must be manually
@@ -4071,15 +3800,12 @@ var VisualElement = class {
   measureViewportBox() {
     return this.current ? this.measureInstanceViewportBox(this.current, this.props) : createBox();
   }
-
   getStaticValue(key) {
     return this.latestValues[key];
   }
-
   setStaticValue(key, value) {
     this.latestValues[key] = value;
   }
-
   /**
    * Update the provided props. Ensure any newly-added motion values are
    * added to our map, old ones removed, and listeners updated.
@@ -4109,33 +3835,27 @@ var VisualElement = class {
       this.handleChildMotionValue();
     }
   }
-
   getProps() {
     return this.props;
   }
-
   /**
    * Returns the variant definition with a given name.
    */
   getVariant(name) {
     return this.props.variants ? this.props.variants[name] : void 0;
   }
-
   /**
    * Returns the defined default transition on this component.
    */
   getDefaultTransition() {
     return this.props.transition;
   }
-
   getTransformPagePoint() {
     return this.props.transformPagePoint;
   }
-
   getClosestVariantNode() {
     return this.isVariantNode ? this : this.parent ? this.parent.getClosestVariantNode() : void 0;
   }
-
   /**
    * Add a child visual element to our set of children.
    */
@@ -4146,7 +3866,6 @@ var VisualElement = class {
       return () => closestVariantNode.variantChildren.delete(child);
     }
   }
-
   /**
    * Add a motion value and bind it to this visual element.
    */
@@ -4160,7 +3879,6 @@ var VisualElement = class {
       this.latestValues[key] = value.get();
     }
   }
-
   /**
    * Remove a motion value and unbind any active subscriptions.
    */
@@ -4174,26 +3892,23 @@ var VisualElement = class {
     delete this.latestValues[key];
     this.removeValueFromRenderState(key, this.renderState);
   }
-
   /**
    * Check whether we have a motion value for this key
    */
   hasValue(key) {
     return this.values.has(key);
   }
-
   getValue(key, defaultValue) {
     if (this.props.values && this.props.values[key]) {
       return this.props.values[key];
     }
     let value = this.values.get(key);
     if (value === void 0 && defaultValue !== void 0) {
-      value = motionValue(defaultValue === null ? void 0 : defaultValue, {owner: this});
+      value = motionValue(defaultValue === null ? void 0 : defaultValue, { owner: this });
       this.addValue(key, value);
     }
     return value;
   }
-
   /**
    * If we're trying to animate to a previously unencountered value,
    * we need to check for it in our state and as a last resort read it
@@ -4211,7 +3926,6 @@ var VisualElement = class {
     }
     return isMotionValue(value) ? value.get() : value;
   }
-
   /**
    * Set the base target to later animate back to. This is currently
    * only hydrated on creation and when we first read a value.
@@ -4219,13 +3933,12 @@ var VisualElement = class {
   setBaseTarget(key, value) {
     this.baseTarget[key] = value;
   }
-
   /**
    * Find the base target for a value thats been removed from all animation
    * props.
    */
   getBaseTarget(key) {
-    const {initial} = this.props;
+    const { initial } = this.props;
     let valueFromInitial;
     if (typeof initial === "string" || typeof initial === "object") {
       const variant = resolveVariantFromProps(this.props, initial, this.presenceContext?.custom);
@@ -4241,20 +3954,17 @@ var VisualElement = class {
       return target;
     return this.initialValues[key] !== void 0 && valueFromInitial === void 0 ? void 0 : this.baseTarget[key];
   }
-
   on(eventName, callback) {
     if (!this.events[eventName]) {
       this.events[eventName] = new SubscriptionManager();
     }
     return this.events[eventName].add(callback);
   }
-
   notify(eventName, ...args) {
     if (this.events[eventName]) {
       this.events[eventName].notify(...args);
     }
   }
-
   scheduleRenderMicrotask() {
     microtask.render(this.render);
   }
@@ -4266,27 +3976,23 @@ var DOMVisualElement = class extends VisualElement {
     super(...arguments);
     this.KeyframeResolver = DOMKeyframesResolver;
   }
-
   sortInstanceNodePosition(a, b) {
     return a.compareDocumentPosition(b) & 2 ? 1 : -1;
   }
-
   getBaseTargetFromProps(props, key) {
     const style = props.style;
     return style ? style[key] : void 0;
   }
-
-  removeValueFromRenderState(key, {vars, style}) {
+  removeValueFromRenderState(key, { vars, style }) {
     delete vars[key];
     delete style[key];
   }
-
   handleChildMotionValue() {
     if (this.childSubscription) {
       this.childSubscription();
       delete this.childSubscription;
     }
-    const {children} = this.props;
+    const { children } = this.props;
     if (isMotionValue(children)) {
       this.childSubscription = children.on("change", (latest) => {
         if (this.current) {
@@ -4298,18 +4004,17 @@ var DOMVisualElement = class extends VisualElement {
 };
 
 // node_modules/motion-dom/dist/es/projection/geometry/conversion.mjs
-function convertBoundingBoxToBox({top, left, right, bottom}) {
+function convertBoundingBoxToBox({ top, left, right, bottom }) {
   return {
-    x: {min: left, max: right},
-    y: {min: top, max: bottom}
+    x: { min: left, max: right },
+    y: { min: top, max: bottom }
   };
 }
-
 function transformBoxPoints(point, transformPoint) {
   if (!transformPoint)
     return point;
-  const topLeft = transformPoint({x: point.left, y: point.top});
-  const bottomRight = transformPoint({x: point.right, y: point.bottom});
+  const topLeft = transformPoint({ x: point.left, y: point.top });
+  const bottomRight = transformPoint({ x: point.right, y: point.bottom });
   return {
     top: topLeft.y,
     left: topLeft.x,
@@ -4331,7 +4036,6 @@ var translateAlias = {
   transformPerspective: "perspective"
 };
 var numTransforms = transformPropOrder.length;
-
 function buildTransform(latestValues, transform, transformTemplate) {
   let transformString = "";
   let transformIsDefault = true;
@@ -4375,17 +4079,17 @@ function buildTransform(latestValues, transform, transformTemplate) {
 
 // node_modules/motion-dom/dist/es/render/html/utils/build-styles.mjs
 function buildHTMLStyles(state, latestValues, transformTemplate) {
-  const {style, vars, transformOrigin} = state;
+  const { style, vars, transformOrigin } = state;
   let hasTransform = false;
   let hasTransformOrigin = false;
   for (const key in latestValues) {
     const value = latestValues[key];
     if (transformProps.has(key)) {
       hasTransform = true;
-
+      continue;
     } else if (isCSSVariableName(key)) {
       vars[key] = value;
-
+      continue;
     } else {
       const valueAsType = getValueAsType(value, numberValueTypes[key]);
       if (key.startsWith("origin")) {
@@ -4404,13 +4108,13 @@ function buildHTMLStyles(state, latestValues, transformTemplate) {
     }
   }
   if (hasTransformOrigin) {
-    const {originX = "50%", originY = "50%", originZ = 0} = transformOrigin;
+    const { originX = "50%", originY = "50%", originZ = 0 } = transformOrigin;
     style.transformOrigin = `${originX} ${originY} ${originZ}`;
   }
 }
 
 // node_modules/motion-dom/dist/es/render/html/utils/render.mjs
-function renderHTML(element, {style, vars}, styleProp, projection) {
+function renderHTML(element, { style, vars }, styleProp, projection) {
   const elementStyle = element.style;
   let key;
   for (key in style) {
@@ -4428,7 +4132,6 @@ function pixelsToPercent(pixels, axis) {
     return 0;
   return pixels / (axis.max - axis.min) * 100;
 }
-
 var correctBorderRadius = {
   correct: (latest, node) => {
     if (!node.target)
@@ -4448,7 +4151,7 @@ var correctBorderRadius = {
 
 // node_modules/motion-dom/dist/es/projection/styles/scale-box-shadow.mjs
 var correctBoxShadow = {
-  correct: (latest, {treeScale, projectionDelta}) => {
+  correct: (latest, { treeScale, projectionDelta }) => {
     const original = latest;
     const shadow = complex.parse(latest);
     if (shadow.length > 5)
@@ -4487,7 +4190,7 @@ var scaleCorrectors = {
 };
 
 // node_modules/motion-dom/dist/es/render/utils/is-forced-motion-value.mjs
-function isForcedMotionValue(key, {layout, layoutId}) {
+function isForcedMotionValue(key, { layout, layoutId }) {
   return transformProps.has(key) || key.startsWith("origin") || (layout || layoutId !== void 0) && (!!scaleCorrectors[key] || key === "opacity");
 }
 
@@ -4510,14 +4213,12 @@ function scrapeMotionValuesFromProps(props, prevProps, visualElement) {
 function getComputedStyle2(element) {
   return window.getComputedStyle(element);
 }
-
 var HTMLVisualElement = class extends DOMVisualElement {
   constructor() {
     super(...arguments);
     this.type = "html";
     this.renderInstance = renderHTML;
   }
-
   readValueFromInstance(instance, key) {
     if (transformProps.has(key)) {
       return this.projection?.isProjecting ? defaultTransformValue(key) : readTransformValue(instance, key);
@@ -4527,15 +4228,12 @@ var HTMLVisualElement = class extends DOMVisualElement {
       return typeof value === "string" ? value.trim() : value;
     }
   }
-
-  measureInstanceViewportBox(instance, {transformPagePoint}) {
+  measureInstanceViewportBox(instance, { transformPagePoint }) {
     return measureViewportBox(instance, transformPagePoint);
   }
-
   build(renderState, latestValues, props) {
     buildHTMLStyles(renderState, latestValues, props.transformTemplate);
   }
-
   scrapeMotionValuesFromProps(props, prevProps, visualElement) {
     return scrapeMotionValuesFromProps(props, prevProps, visualElement);
   }
@@ -4545,13 +4243,11 @@ var HTMLVisualElement = class extends DOMVisualElement {
 function isObjectKey(key, object) {
   return key in object;
 }
-
 var ObjectVisualElement = class extends VisualElement {
   constructor() {
     super(...arguments);
     this.type = "object";
   }
-
   readValueFromInstance(instance, key) {
     if (isObjectKey(key, instance)) {
       const value = instance[key];
@@ -4561,27 +4257,21 @@ var ObjectVisualElement = class extends VisualElement {
     }
     return void 0;
   }
-
   getBaseTargetFromProps() {
     return void 0;
   }
-
   removeValueFromRenderState(key, renderState) {
     delete renderState.output[key];
   }
-
   measureInstanceViewportBox() {
     return createBox();
   }
-
   build(renderState, latestValues) {
     Object.assign(renderState.output, latestValues);
   }
-
-  renderInstance(instance, {output}) {
+  renderInstance(instance, { output }) {
     Object.assign(instance, output);
   }
-
   sortInstanceNodePosition() {
     return 0;
   }
@@ -4596,7 +4286,6 @@ var camelKeys = {
   offset: "strokeDashoffset",
   array: "strokeDasharray"
 };
-
 function buildSVGPath(attrs, length, spacing = 1, offset = 0, useDashCase = true) {
   attrs.pathLength = 1;
   const keys = useDashCase ? dashKeys : camelKeys;
@@ -4611,7 +4300,6 @@ var cssMotionPathProperties = [
   "offsetRotate",
   "offsetAnchor"
 ];
-
 function buildSVGAttrs(state, {
   attrX,
   attrY,
@@ -4631,7 +4319,7 @@ function buildSVGAttrs(state, {
   }
   state.attrs = state.style;
   state.style = {};
-  const {attrs, style} = state;
+  const { attrs, style } = state;
   if (attrs.transform) {
     style.transform = attrs.transform;
     delete attrs.transform;
@@ -4719,11 +4407,9 @@ var SVGVisualElement = class extends DOMVisualElement {
     this.isSVGTag = false;
     this.measureInstanceViewportBox = createBox;
   }
-
   getBaseTargetFromProps(props, key) {
     return props[key];
   }
-
   readValueFromInstance(instance, key) {
     if (transformProps.has(key)) {
       const defaultType = getDefaultValueType(key);
@@ -4732,19 +4418,15 @@ var SVGVisualElement = class extends DOMVisualElement {
     key = !camelCaseAttributes.has(key) ? camelToDash(key) : key;
     return instance.getAttribute(key);
   }
-
   scrapeMotionValuesFromProps(props, prevProps, visualElement) {
     return scrapeMotionValuesFromProps2(props, prevProps, visualElement);
   }
-
   build(renderState, latestValues, props) {
     buildSVGAttrs(renderState, latestValues, this.isSVGTag, props.transformTemplate, props.style);
   }
-
   renderInstance(instance, renderState, styleProp, projection) {
     renderSVG(instance, renderState, styleProp, projection);
   }
-
   mount(instance) {
     this.isSVGTag = isSVGTag(instance.tagName);
     super.mount(instance);
@@ -4809,7 +4491,6 @@ function eraseKeyframes(sequence, startTime, endTime) {
     }
   }
 }
-
 function addKeyframes(sequence, keyframes2, easing, offset, startTime, endTime) {
   eraseKeyframes(sequence, startTime, endTime);
   for (let i = 0; i < keyframes2.length; i++) {
@@ -4845,11 +4526,7 @@ function compareByTime(a, b) {
 // node_modules/framer-motion/dist/es/animation/sequence/create.mjs
 var defaultSegmentEasing = "easeInOut";
 var MAX_REPEAT = 20;
-
-function createAnimationsFromSequence(sequence, {
-  defaultTransition = {},
-  ...sequenceTransition
-} = {}, scope, generators) {
+function createAnimationsFromSequence(sequence, { defaultTransition = {}, ...sequenceTransition } = {}, scope, generators) {
   const defaultDuration = defaultTransition.duration || 0.3;
   const animationDefinitions = /* @__PURE__ */ new Map();
   const sequences = /* @__PURE__ */ new Map();
@@ -4874,16 +4551,8 @@ function createAnimationsFromSequence(sequence, {
     let maxDuration = 0;
     const resolveValueSequence = (valueKeyframes, valueTransition, valueSequence, elementIndex = 0, numSubjects = 0) => {
       const valueKeyframesAsList = keyframesAsList(valueKeyframes);
-      const {
-        delay = 0,
-        times = defaultOffset(valueKeyframesAsList),
-        type = defaultTransition.type || "keyframes",
-        repeat,
-        repeatType,
-        repeatDelay = 0,
-        ...remainingTransition
-      } = valueTransition;
-      let {ease: ease2 = defaultTransition.ease || "easeOut", duration} = valueTransition;
+      const { delay = 0, times = defaultOffset(valueKeyframesAsList), type = defaultTransition.type || "keyframes", repeat, repeatType, repeatDelay = 0, ...remainingTransition } = valueTransition;
+      let { ease: ease2 = defaultTransition.ease || "easeOut", duration } = valueTransition;
       const calculatedDelay = typeof delay === "function" ? delay(elementIndex, numSubjects) : delay;
       const numKeyframes = valueKeyframesAsList.length;
       const createGenerator = isGenerator(type) ? type : generators?.[type || "keyframes"];
@@ -4981,7 +4650,7 @@ function createAnimationsFromSequence(sequence, {
       const valueOffset = [];
       const valueEasing = [];
       for (let i = 0; i < valueSequence.length; i++) {
-        const {at, value, easing} = valueSequence[i];
+        const { at, value, easing } = valueSequence[i];
         keyframes2.push(value);
         valueOffset.push(progress(0, totalDuration, at));
         valueEasing.push(easing || "easeOut");
@@ -5003,7 +4672,7 @@ function createAnimationsFromSequence(sequence, {
       }
       const definition = animationDefinitions.get(element);
       definition.keyframes[key] = keyframes2;
-      const {type: _type, ...remainingDefaultTransition} = defaultTransition;
+      const { type: _type, ...remainingDefaultTransition } = defaultTransition;
       definition.transition[key] = {
         ...remainingDefaultTransition,
         duration: totalDuration,
@@ -5015,29 +4684,24 @@ function createAnimationsFromSequence(sequence, {
   });
   return animationDefinitions;
 }
-
 function getSubjectSequence(subject, sequences) {
   !sequences.has(subject) && sequences.set(subject, {});
   return sequences.get(subject);
 }
-
 function getValueSequence(name, sequences) {
   if (!sequences[name])
     sequences[name] = [];
   return sequences[name];
 }
-
 function keyframesAsList(keyframes2) {
   return Array.isArray(keyframes2) ? keyframes2 : [keyframes2];
 }
-
 function getValueTransition2(transition, key) {
   return transition && transition[key] ? {
     ...transition,
     ...transition[key]
-  } : {...transition};
+  } : { ...transition };
 }
-
 var isNumber = (keyframe) => typeof keyframe === "number";
 var isNumberKeyframesArray = (keyframes2) => keyframes2.every(isNumber);
 
@@ -5061,7 +4725,6 @@ function createDOMVisualElement(element) {
   node.mount(element);
   visualElementStore.set(element, node);
 }
-
 function createObjectVisualElement(subject) {
   const options = {
     presenceContext: null,
@@ -5082,7 +4745,6 @@ function createObjectVisualElement(subject) {
 function isSingleValue(subject, keyframes2) {
   return isMotionValue(subject) || typeof subject === "number" || typeof subject === "string" && !isDOMKeyframes(keyframes2);
 }
-
 function animateSubject(subject, keyframes2, options, scope) {
   const animations = [];
   if (isSingleValue(subject, keyframes2)) {
@@ -5101,11 +4763,11 @@ function animateSubject(subject, keyframes2, options, scope) {
         createVisualElement(thisSubject);
       }
       const visualElement = visualElementStore.get(thisSubject);
-      const transition = {...options};
+      const transition = { ...options };
       if ("delay" in transition && typeof transition.delay === "function") {
         transition.delay = transition.delay(i, numSubjects);
       }
-      animations.push(...animateTarget(visualElement, {...keyframes2, transition}, {}));
+      animations.push(...animateTarget(visualElement, { ...keyframes2, transition }, {}));
     }
   }
   return animations;
@@ -5129,8 +4791,8 @@ function animateSequence(sequence, options, scope) {
     }
     return segment;
   });
-  const animationDefinitions = createAnimationsFromSequence(processedSequence, options, scope, {spring});
-  animationDefinitions.forEach(({keyframes: keyframes2, transition}, subject) => {
+  const animationDefinitions = createAnimationsFromSequence(processedSequence, options, scope, { spring });
+  animationDefinitions.forEach(({ keyframes: keyframes2, transition }, subject) => {
     animations.push(...animateSubject(subject, keyframes2, transition));
   });
   return animations;
@@ -5140,10 +4802,8 @@ function animateSequence(sequence, options, scope) {
 function isSequence(value) {
   return Array.isArray(value) && value.some(Array.isArray);
 }
-
 function createScopedAnimate(options = {}) {
-  const {scope, reduceMotion, skipAnimations} = options;
-
+  const { scope, reduceMotion, skipAnimations } = options;
   function scopedAnimate(subjectOrSequence, optionsOrKeyframes, options2) {
     let animations = [];
     let animationOnComplete;
@@ -5153,17 +4813,17 @@ function createScopedAnimate(options = {}) {
     if (skipAnimations !== void 0)
       inherited.skipAnimations = skipAnimations;
     if (isSequence(subjectOrSequence)) {
-      const {onComplete, ...sequenceOptions} = optionsOrKeyframes || {};
+      const { onComplete, ...sequenceOptions } = optionsOrKeyframes || {};
       if (typeof onComplete === "function") {
         animationOnComplete = onComplete;
       }
-      animations = animateSequence(subjectOrSequence, {...inherited, ...sequenceOptions}, scope);
+      animations = animateSequence(subjectOrSequence, { ...inherited, ...sequenceOptions }, scope);
     } else {
-      const {onComplete, ...rest} = options2 || {};
+      const { onComplete, ...rest } = options2 || {};
       if (typeof onComplete === "function") {
         animationOnComplete = onComplete;
       }
-      animations = animateSubject(subjectOrSequence, optionsOrKeyframes, {...inherited, ...rest}, scope);
+      animations = animateSubject(subjectOrSequence, optionsOrKeyframes, { ...inherited, ...rest }, scope);
     }
     const animation = new GroupAnimationWithThen(animations);
     if (animationOnComplete) {
@@ -5177,10 +4837,8 @@ function createScopedAnimate(options = {}) {
     }
     return animation;
   }
-
   return scopedAnimate;
 }
-
 var animate = createScopedAnimate();
 
 // js/motion.ts
@@ -5189,7 +4847,7 @@ var motionInterop = {
     if (!element) return;
     element.__motion = options;
     if (options.initial) {
-      animate(element, options.initial, {duration: 0});
+      animate(element, options.initial, { duration: 0 });
     }
     if (options.animate) {
       animate(element, options.animate, options.transition || {});
@@ -5217,7 +4875,7 @@ var motionInterop = {
     }
     oldEl.remove();
     if (newOpts?.initial) {
-      animate(newEl, newOpts.initial, {duration: 0});
+      animate(newEl, newOpts.initial, { duration: 0 });
     }
     if (newOpts?.animate) {
       animate(newEl, newOpts.animate, newOpts.transition || {});

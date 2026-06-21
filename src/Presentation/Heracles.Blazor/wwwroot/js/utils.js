@@ -15,7 +15,6 @@ function cleanHtml(id) {
   toRemove.forEach((c) => c.remove());
   return clone.innerHTML;
 }
-
 function getRect(el) {
   if (!el) return [0, 0];
   const r = el.getBoundingClientRect();
@@ -23,10 +22,8 @@ function getRect(el) {
   const width = Number.isFinite(r.width) ? r.width : 0;
   return [x, width];
 }
-
 var threshold = 25;
 var listeners = /* @__PURE__ */ new Map();
-
 function createHandler(id) {
   return function handleScroll() {
     const listener = listeners.get(id);
@@ -39,9 +36,7 @@ function createHandler(id) {
     listener.lastScrollY = currentY;
   };
 }
-
 var handlers = /* @__PURE__ */ new Map();
-
 function registerScrollDirection(id, dotNetObj) {
   if (listeners.has(id)) return;
   const listener = {
@@ -55,7 +50,6 @@ function registerScrollDirection(id, dotNetObj) {
   handlers.set(id, handler);
   window.addEventListener("scroll", handler);
 }
-
 function unregisterScrollDirection(id) {
   const handler = handlers.get(id);
   if (handler) {
@@ -64,7 +58,6 @@ function unregisterScrollDirection(id) {
   }
   listeners.delete(id);
 }
-
 function openPopup(url, width = 450, height = 450, windowName = "Popup") {
   const w = width;
   const h = height;
@@ -77,7 +70,6 @@ function openPopup(url, width = 450, height = 450, windowName = "Popup") {
   const features = `width=${w},height=${h},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,scrollbars=no,resizable=no`;
   window.open(url, windowName, features);
 }
-
 function getElementContent(element) {
   if (!element) return "";
   const html = element.innerHTML.trim();
@@ -85,11 +77,9 @@ function getElementContent(element) {
   const containsTags = /<\/?[a-z][\s\S]*>/i.test(html);
   return containsTags ? html : text;
 }
-
 async function copyToClipboard(text) {
   await navigator.clipboard.writeText(text);
 }
-
 var __keep = true;
 export {
   __keep,

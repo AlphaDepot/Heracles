@@ -1,7 +1,7 @@
 ﻿@using Heracles.Blazor.Layout
 @using Heracles.Blazor.Pages.Errors
 <CascadingAuthenticationState>
-	<Router AppAssembly="typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
+	<Router AppAssembly="typeof(BlazorApp).Assembly" NotFoundPage="typeof(NotFound)">
 		<Found Context="routeData">
 			<AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(BaseLayout)">
 				<Authorizing>

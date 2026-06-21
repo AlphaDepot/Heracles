@@ -1,5 +1,5 @@
 ﻿namespace Heracles.Blazor;
 
-public class App
+public class BlazorApp
 {
 }

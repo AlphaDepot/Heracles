@@ -1,6 +1,5 @@
 // js/resizing-panels.ts
 var observers = {};
-
 function getPanelSizes(root, first, second) {
   if (!root || !first || !second) {
     return {
@@ -24,7 +23,6 @@ function getPanelSizes(root, first, second) {
     secondPanelHeight: secondRect.height
   };
 }
-
 function observeResize(id, dotNetRef, root, first, second) {
   if (!root || !first || !second) {
     console.warn("Missing panel references for resize observer");
@@ -53,14 +51,12 @@ function observeResize(id, dotNetRef, root, first, second) {
   observer.observe(second);
   observers[id] = observer;
 }
-
 function disposeObserver(id) {
   if (observers[id]) {
     observers[id].disconnect();
     delete observers[id];
   }
 }
-
 export {
   disposeObserver,
   getPanelSizes,

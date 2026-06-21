@@ -3,174 +3,147 @@ using Microsoft.JSInterop;
 namespace Heracles.Blazor.Theme;
 
 /// <summary>
-///     Service responsible for managing theme modes (Light, Dark, System)
-///     and persisting the user's preference using a custom JS module.
+/// Provides dark/light/system theme management for the application.
+///
+/// This service:
+/// - Loads the saved theme mode from localStorage
+/// - Applies the theme via a JavaScript module
+/// - Detects system preference when in System mode
+/// - Persists theme mode changes
+/// - Notifies subscribers when the theme changes
+///
+/// Only dark/light/system modes are supported — no color palettes or radius.
+///
+/// <para>
+/// This class implements <see cref="IThemeManager"/> to provide the public
+/// theme management API, and <see cref="IAsyncDisposable"/> to ensure the
+/// underlying JavaScript module is properly disposed.
+/// </para>
 /// </summary>
-public class ThemeManager(IJSRuntime jsRuntime) : IThemeManager, IAsyncDisposable
+public class ThemeManager(IJSRuntime js) : IThemeManager, IAsyncDisposable
 {
-	/// <summary>
-	///     The key used to store the theme mode in browser localStorage.
-	/// </summary>
-	private const string ThemeKey = "HeraclesThemeMode";
+    /// <summary>
+    /// Path to the JavaScript module that implements theme logic.
+    /// </summary>
+    private const string ModulePath = "/_content/Heracles.Blazor/js/theme.js";
 
-	/// <summary>
-	///     Lazily loads the JavaScript module that provides:
-	///     - getSystemPreference()
-	///     - setItem()
-	///     - getItem()
-	///     - removeItem()
-	///     This avoids loading the JS file until it is actually needed.
-	/// </summary>
-	private readonly Lazy<Task<IJSObjectReference>> _moduleTask =
-		new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-			"import", "/_content/Heracles.Blazor/js/theme.js").AsTask());
+    /// <summary>
+    /// Lazily loads the JS module on first use.
+    /// </summary>
+    private readonly Lazy<Task<IJSObjectReference>> _module =
+        new(() => js.InvokeAsync<IJSObjectReference>("import", ModulePath).AsTask());
 
-	/// <summary>
-	///     The current theme mode. Defaults to System.
-	/// </summary>
-	public ThemeMode CurrentThemeMode { get; private set; } = ThemeMode.System;
+    /// <inheritdoc />
+    public ThemeMode CurrentThemeMode { get; private set; } = ThemeMode.System;
 
-	/// <summary>
-	///     Event triggered whenever the theme mode changes.
-	/// </summary>
-	public Action? OnChange { get; set; }
+    /// <inheritdoc />
+    public bool IsDarkMode { get; private set; }
 
-	/// <summary>
-	///     Indicates whether the theme service has completed initialization.
-	/// </summary>
-	public bool IsInitialized { get; set; }
+    /// <inheritdoc />
+    public bool IsInitialized { get; private set; }
 
-	/// <summary>
-	///     Indicates whether the active theme is dark mode.
-	/// </summary>
-	public bool IsDarkMode { get; set; }
+    /// <inheritdoc />
+    public event Action? OnChange;
 
+    /// <inheritdoc />
+    public async Task InitializeAsync()
+    {
+        var module = await _module.Value;
 
-	/// <summary>
-	///     Initializes the theme by loading the saved preference
-	///     or falling back to the system preference.
-	/// </summary>
-	public async Task InitializeThemeMode()
-	{
-		CurrentThemeMode = await GetMode();
-		IsDarkMode = CurrentThemeMode == ThemeMode.Dark;
-		IsInitialized = true;
-		NotifyStateChanged();
-	}
+        // Load saved theme mode from JS/localStorage
+        var saved = await module.InvokeAsync<ThemeState?>("loadTheme");
 
-	/// <summary>
-	///     Cycles through Light → Dark → System → Light.
-	/// </summary>
-	public async Task DarkModeToggle()
-	{
-		UpdateThemeMode();
-		await ApplyThemeMode();
-		NotifyStateChanged();
-	}
+        // Default to System if nothing is saved
+        CurrentThemeMode = saved?.Mode ?? ThemeMode.System;
 
+        // Apply theme immediately
+        await ApplyThemeModeAsync();
 
-	/// <summary>
-	///     Disposes the JS module when the service is disposed.
-	/// </summary>
-	public async ValueTask DisposeAsync()
-	{
-		if (_moduleTask.IsValueCreated)
-		{
-			var module = await _moduleTask.Value;
-			await module.DisposeAsync();
-		}
-	}
+        IsInitialized = true;
+        OnChange?.Invoke();
+    }
 
-	/// <summary>
-	///     Moves to the next theme mode in the sequence.
-	/// </summary>
-	private void UpdateThemeMode()
-	{
-		CurrentThemeMode = CurrentThemeMode switch
-		{
-			ThemeMode.Light => ThemeMode.Dark,
-			ThemeMode.Dark => ThemeMode.System,
-			ThemeMode.System => ThemeMode.Light,
-			_ => ThemeMode.System
-		};
-	}
+    /// <inheritdoc />
+    public async Task ToggleAsync()
+    {
+        CurrentThemeMode = CurrentThemeMode switch
+        {
+            ThemeMode.Light => ThemeMode.Dark,
+            ThemeMode.Dark => ThemeMode.System,
+            _ => ThemeMode.Light
+        };
 
-	/// <summary>
-	///     Applies the selected theme mode and persists it.
-	/// </summary>
-	private async Task ApplyThemeMode()
-	{
-		if (CurrentThemeMode == ThemeMode.System)
-		{
-			var systemPreference = await GetSystemPreference();
-			IsDarkMode = systemPreference == ThemeMode.Dark;
-		}
-		else
-		{
-			IsDarkMode = CurrentThemeMode == ThemeMode.Dark;
-		}
+        await ApplyThemeModeAsync();
+        await SaveAsync();
+        OnChange?.Invoke();
+    }
 
-		await SetMode(CurrentThemeMode);
-	}
+    /// <inheritdoc />
+    public async Task SetModeAsync(ThemeMode mode)
+    {
+        CurrentThemeMode = mode;
 
-	/// <summary>
-	///     Saves the theme mode to localStorage using the JS module.
-	/// </summary>
-	private async Task SetMode(ThemeMode mode)
-	{
-		var module = await _moduleTask.Value;
+        await ApplyThemeModeAsync();
+        await SaveAsync();
+        OnChange?.Invoke();
+    }
 
-		var value = mode switch
-		{
-			ThemeMode.Light => "light",
-			ThemeMode.Dark => "dark",
-			ThemeMode.System => "system",
-			_ => "system"
-		};
+    /// <summary>
+    /// Applies the current theme mode by invoking JS:
+    /// - "light"  → force light mode
+    /// - "dark"   → force dark mode
+    /// - "system" → detect OS preference
+    /// </summary>
+    private async Task ApplyThemeModeAsync()
+    {
+        var module = await _module.Value;
 
-		// Save preference
-		await module.InvokeVoidAsync("setItem", ThemeKey, value);
-	}
+        // Determine active dark/light state
+        if (CurrentThemeMode == ThemeMode.System)
+        {
+            IsDarkMode = await module.InvokeAsync<bool>("getSystemPreference");
+        }
+        else
+        {
+            IsDarkMode = CurrentThemeMode == ThemeMode.Dark;
+        }
 
-	/// <summary>
-	///     Retrieves the saved theme mode from localStorage.
-	///     If none is saved, falls back to the system preference.
-	/// </summary>
-	private async Task<ThemeMode> GetMode()
-	{
-		var module = await _moduleTask.Value;
+        // JS expects a lowercase string ("light", "dark", "system")
+        var jsMode = CurrentThemeMode.ToString().ToLowerInvariant();
 
-		var mode = await module.InvokeAsync<string>("getItem", ThemeKey);
+        await module.InvokeVoidAsync("applyTheme", jsMode);
+    }
 
-		if (string.IsNullOrWhiteSpace(mode))
-		{
-			return await GetSystemPreference();
-		}
+    /// <summary>
+    /// Persists the current theme mode to localStorage via JS.
+    /// </summary>
+    private async Task SaveAsync()
+    {
+        var module = await _module.Value;
 
-		return mode switch
-		{
-			"light" => ThemeMode.Light,
-			"dark" => ThemeMode.Dark,
-			"system" => await GetSystemPreference(),
-			_ => ThemeMode.System
-		};
-	}
+        var jsMode = CurrentThemeMode.ToString().ToLowerInvariant();
 
-	/// <summary>
-	///     Uses the JS module to detect whether the OS is currently in dark mode.
-	/// </summary>
-	private async Task<ThemeMode> GetSystemPreference()
-	{
-		var module = await _moduleTask.Value;
-		var isDark = await module.InvokeAsync<bool>("getSystemPreference");
-		return isDark ? ThemeMode.Dark : ThemeMode.Light;
-	}
+        await module.InvokeVoidAsync("saveTheme", jsMode);
+    }
 
-	/// <summary>
-	///     Notifies subscribers that the theme state has changed.
-	/// </summary>
-	private void NotifyStateChanged()
-	{
-		OnChange?.Invoke();
-	}
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        if (_module.IsValueCreated)
+        {
+            var module = await _module.Value;
+            await module.DisposeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Represents the saved theme state returned from JS/localStorage.
+    /// </summary>
+    private sealed class ThemeState
+    {
+        /// <summary>
+        /// The saved theme mode ("light", "dark", or "system").
+        /// </summary>
+        public ThemeMode Mode { get; set; }
+    }
 }

@@ -6,7 +6,7 @@
 @source "../../Components/**/*";
 
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
 	--background: rgb(255, 255, 255);

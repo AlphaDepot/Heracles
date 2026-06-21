@@ -1,5 +1,6 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using Heracles.Blazor.Theme
+@inherits LayoutComponentBase
+@inject IThemeManager ThemeManager
 <div class="page">
 	<main class="p-4">
 		<div class="top-row px-4">
@@ -12,3 +13,13 @@
 	</main>
 </div>
 
+@code {
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			ThemeManager.OnChange += () => InvokeAsync(StateHasChanged);
+			await ThemeManager.InitializeAsync();
+		}
+	}
+}

@@ -1,22 +1,38 @@
 // js/theme.ts
-function getSystemPreference() {
-  if (window.matchMedia) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+var STORAGE_KEY = "heracles-theme";
+function applyTheme(mode) {
+  if (mode === "system") {
+    applyDarkMode(getSystemPreference());
+  } else {
+    applyDarkMode(mode === "dark");
   }
-  return false;
 }
-function setItem(key, value) {
-  localStorage.setItem(key, value);
+function applyDarkMode(isDark) {
+  const root = document.documentElement;
+  root.classList.toggle("dark", isDark);
 }
-function getItem(key) {
-  return localStorage.getItem(key);
+function getSystemPreference() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
-function removeItem(key) {
-  localStorage.removeItem(key);
+function loadTheme() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function saveTheme(mode) {
+  try {
+    const state = { mode };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+  }
 }
 export {
-  getItem,
+  applyDarkMode,
+  applyTheme,
   getSystemPreference,
-  removeItem,
-  setItem
+  loadTheme,
+  saveTheme
 };

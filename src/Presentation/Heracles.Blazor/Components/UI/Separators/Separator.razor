@@ -1,6 +1,7 @@
 @namespace Heracles.Blazor.Components.UI.Separators
 
-<Separator
-    Orientation="@MappedOrientation"
-    Decorative="@Decorative"
-    class="@CssClass" />
+<div
+	role="@(Decorative ? "none" : "separator")"
+	aria-orientation="@(Decorative ? null : Orientation.ToString().ToLower())"
+	class="@CssClass">
+</div>

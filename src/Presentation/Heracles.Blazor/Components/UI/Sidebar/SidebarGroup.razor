@@ -1,0 +1,19 @@
+@namespace Heracles.Blazor.Components.UI.Sidebar
+
+@if (Sidebar?.Collapsed != true)
+{
+    <div class="@ComputedClass" @attributes="AdditionalAttributes">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [CascadingParameter] public Sidebar? Sidebar { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "px-2 text-xs font-medium text-muted-foreground",
+        Class);
+}

@@ -29,6 +29,14 @@
     <UpToDateCheckInput Remove="Components\UI\Sliders\SliderRange.razor" />
     <UpToDateCheckInput Remove="Components\UI\Sliders\SliderThumb.razor" />
     <UpToDateCheckInput Remove="Components\UI\Sliders\SliderTrack.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheet.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetClose.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetContent.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetDescription.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetFooter.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetHeader.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetTitle.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sheet\BbSheetTrigger.razor" />
   </ItemGroup>
 
 

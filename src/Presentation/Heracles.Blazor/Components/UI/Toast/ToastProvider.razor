@@ -1,0 +1,264 @@
+@namespace Heracles.Blazor.Components.UI.Toast
+@implements IAsyncDisposable
+@inject ToastService ToastService
+
+@*
+    Toast Provider - renders the toast container and manages toast lifecycle.
+    Place this component once at the root of your application (e.g., in MainLayout).
+*@
+
+@* Main toast stack (toasts without per-toast position overrides) *@
+<div class="@GetContainerCssClass(EffectivePosition)">
+    @foreach (var toast in GetToastsForPosition(null))
+    {
+        <Toast @key="toast.Id"
+                 Data="@toast"
+                 Class="@toast.Class"
+                 ShowCountdown="@(toast.ShowCountdown ?? ShowCountdown)"
+                 OnDismiss="@(() => HandleDismiss(toast.Id))"
+                 OnPause="@(() => HandlePause(toast.Id))"
+                 OnResume="@(() => HandleResume(toast.Id))" />
+    }
+</div>
+
+@* Per-toast position containers *@
+@foreach (var position in GetCustomPositions())
+{
+    <div class="@GetContainerCssClass(position)">
+        @foreach (var toast in GetToastsForPosition(position))
+        {
+            <Toast @key="toast.Id"
+                     Data="@toast"
+                     Class="@toast.Class"
+                     ShowCountdown="@(toast.ShowCountdown ?? ShowCountdown)"
+                     OnDismiss="@(() => HandleDismiss(toast.Id))"
+                     OnPause="@(() => HandlePause(toast.Id))"
+                     OnResume="@(() => HandleResume(toast.Id))" />
+        }
+    </div>
+}
+
+@code {
+    private readonly Dictionary<string, ToastTimerState> timerStates = new();
+    private bool disposed;
+
+    /// <summary>
+    /// The position of the toast container on the screen.
+    /// </summary>
+    [Parameter]
+    public ToastPosition Position { get; set; } = ToastPosition.BottomRight;
+
+    /// <summary>
+    /// Maximum number of toasts to display at once.
+    /// Older toasts are removed when limit is reached.
+    /// </summary>
+    [Parameter]
+    public int MaxToasts { get; set; } = 5;
+
+    /// <summary>
+    /// Whether to pause auto-dismiss when the mouse hovers over a toast.
+    /// </summary>
+    [Parameter]
+    public bool PauseOnHover { get; set; } = true;
+
+    /// <summary>
+    /// Whether to show a visual countdown progress bar on toasts.
+    /// Individual toasts can override this via ToastData.ShowCountdown.
+    /// </summary>
+    [Parameter]
+    public bool ShowCountdown { get; set; } = false;
+
+    /// <summary>
+    /// Additional CSS classes to apply to the container.
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnChange += HandleToastsChanged;
+    }
+
+    private void HandleToastsChanged()
+    {
+        // Start timers for new toasts
+        foreach (var toast in ToastService.Toasts)
+        {
+            if (!timerStates.ContainsKey(toast.Id) && toast.Duration > 0)
+            {
+                var state = new ToastTimerState { RemainingMs = toast.Duration };
+                timerStates[toast.Id] = state;
+                _ = RunDismissTimerAsync(toast.Id, state);
+            }
+        }
+
+        // Clean up stale entries (toasts removed externally)
+        var activeIds = new HashSet<string>(ToastService.Toasts.Select(t => t.Id));
+        var staleIds = timerStates.Keys.Where(id => !activeIds.Contains(id)).ToList();
+        foreach (var id in staleIds)
+        {
+            if (timerStates.TryGetValue(id, out var state))
+            {
+                state.Dismissed = true;
+                state.Cts?.Cancel();
+                state.ResumeSignal?.TrySetResult();
+            }
+            timerStates.Remove(id);
+        }
+
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RunDismissTimerAsync(string id, ToastTimerState state)
+    {
+        while (state.RemainingMs > 0 && !state.Dismissed && !disposed)
+        {
+            state.Cts?.Dispose();
+            state.Cts = new CancellationTokenSource();
+            var segmentStart = DateTime.UtcNow;
+
+            try
+            {
+                await Task.Delay(state.RemainingMs, state.Cts.Token);
+                state.RemainingMs = 0;
+            }
+            catch (OperationCanceledException)
+            {
+                var elapsed = (int)(DateTime.UtcNow - segmentStart).TotalMilliseconds;
+                state.RemainingMs = Math.Max(0, state.RemainingMs - elapsed);
+
+                if (state.Dismissed || disposed)
+                {
+                    return;
+                }
+
+                var tcs = new TaskCompletionSource();
+                state.ResumeSignal = tcs;
+
+                if (!state.IsPaused)
+                {
+                    state.ResumeSignal = null;
+                    continue;
+                }
+
+                await tcs.Task;
+                state.ResumeSignal = null;
+
+                if (state.Dismissed || disposed)
+                {
+                    return;
+                }
+            }
+        }
+
+        if (!state.Dismissed && !disposed)
+        {
+            state.Dismissed = true;
+            await InvokeAsync(() => ToastService.Dismiss(id));
+        }
+    }
+
+    private void HandleDismiss(string id)
+    {
+        if (timerStates.TryGetValue(id, out var state))
+        {
+            state.Dismissed = true;
+            state.Cts?.Cancel();
+            state.ResumeSignal?.TrySetResult();
+        }
+        ToastService.Dismiss(id);
+    }
+
+    private void HandlePause(string id)
+    {
+        if (!PauseOnHover)
+        {
+            return;
+        }
+
+        if (timerStates.TryGetValue(id, out var state))
+        {
+            state.IsPaused = true;
+            state.Cts?.Cancel();
+        }
+    }
+
+    private void HandleResume(string id)
+    {
+        if (!PauseOnHover)
+        {
+            return;
+        }
+
+        if (timerStates.TryGetValue(id, out var state))
+        {
+            state.IsPaused = false;
+            state.ResumeSignal?.TrySetResult();
+        }
+    }
+
+    private ToastPosition EffectivePosition => ToastService.Position ?? Position;
+
+    private IEnumerable<ToastPosition> GetCustomPositions()
+    {
+        return ToastService.Toasts
+            .Where(t => t.Position.HasValue)
+            .Select(t => t.Position!.Value)
+            .Distinct();
+    }
+
+    private IEnumerable<ToastData> GetToastsForPosition(ToastPosition? position)
+    {
+        if (position.HasValue)
+        {
+            return ToastService.Toasts.Where(t => t.Position == position);
+        }
+
+        return ToastService.Toasts.Where(t => !t.Position.HasValue);
+    }
+
+    private string GetContainerCssClass(ToastPosition position) => Tw.Merge(
+        // pointer-events-none lets clicks pass through the fixed-position container
+        // (which always renders, even with zero toasts) so it doesn't block the UI
+        // behind it. Each Toast re-enables pointer-events-auto on its own root.
+        "pointer-events-none fixed z-[100] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:flex-col md:max-w-[420px]",
+        position switch
+        {
+            ToastPosition.TopRight => "top-0 right-0",
+            ToastPosition.TopLeft => "top-0 left-0",
+            ToastPosition.TopCenter => "top-0 left-1/2 -translate-x-1/2",
+            ToastPosition.BottomRight => "bottom-0 right-0",
+            ToastPosition.BottomLeft => "bottom-0 left-0",
+            ToastPosition.BottomCenter => "bottom-0 left-1/2 -translate-x-1/2",
+            _ => "bottom-0 right-0"
+        },
+        Class
+    );
+
+    public ValueTask DisposeAsync()
+    {
+        disposed = true;
+        ToastService.OnChange -= HandleToastsChanged;
+
+        foreach (var state in timerStates.Values)
+        {
+            state.Dismissed = true;
+            state.Cts?.Cancel();
+            state.Cts?.Dispose();
+            state.ResumeSignal?.TrySetResult();
+        }
+        timerStates.Clear();
+
+        GC.SuppressFinalize(this);
+        return ValueTask.CompletedTask;
+    }
+
+    private class ToastTimerState
+    {
+        public CancellationTokenSource? Cts { get; set; }
+        public TaskCompletionSource? ResumeSignal { get; set; }
+        public int RemainingMs { get; set; }
+        public bool IsPaused { get; set; }
+        public bool Dismissed { get; set; }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using Heracles.Blazor.Services;
+﻿using Heracles.Blazor.Components.UI.Toast;
+using Heracles.Blazor.Services;
 using Heracles.Blazor.Theme;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ public static class ServiceRegistration
 	public static IServiceCollection AddHeracles(this IServiceCollection services)
 	{
 		services.AddScoped<JavascriptUtils>();
+		services.AddScoped<ToastService>();
 		services.AddScoped<IThemeManager, ThemeManager>();
 		return services;
 	}

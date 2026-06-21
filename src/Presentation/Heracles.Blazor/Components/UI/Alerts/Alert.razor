@@ -1,8 +1,58 @@
-﻿<h3>Alert</h3>
+﻿<div class="@CssClass" role="alert">
+    <div class="flex items-start gap-3">
+        <div class="flex-1">
+            @ChildContent
+        </div>
+
+        @if (Dismissible)
+        {
+	        <Icon Kind="Lucide.Outline.X" Size="Size.Small" @onclick="() => IsVisible = false"/>
+        }
+    </div>
+</div>
 
 @code {
+    [Parameter] public Severity Severity { get; set; } = Severity.Info;
+    [Parameter] public bool Outline { get; set; }
+    [Parameter] public bool Dismissible { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Class { get; set; } = string.Empty;
 
-	//:TODO: Build Alert
-	[Parameter] public Severity Severity { get; set; }
-	[Parameter] public string Class { get; set; } = string.Empty;
+    private bool IsVisible { get; set; } = true;
+
+    private string CssClass =>
+        IsVisible
+            ? Tw.Merge(BaseClasses, SeverityClasses, OutlineClasses, Class)
+            : "hidden";
+
+    private string BaseClasses =>
+        "w-full rounded-lg border p-4 text-sm transition-all";
+
+    private string OutlineClasses =>
+        Outline ? "bg-background border-foreground/20" : "";
+
+    private string SeverityClasses => Severity switch
+    {
+        Severity.Error =>
+            Outline
+                ? "text-destructive border-destructive"
+                : "bg-destructive/15 text-destructive border-destructive/30",
+
+        Severity.Warning =>
+            Outline
+                ? "text-warning border-warning"
+                : "bg-warning/15 text-warning border-warning/30",
+
+        Severity.Success =>
+            Outline
+                ? "text-success border-success"
+                : "bg-success/15 text-success border-success/30",
+
+        Severity.Info =>
+            Outline
+                ? "text-info border-info"
+                : "bg-info/15 text-info border-info/30",
+
+        _ => ""
+    };
 }

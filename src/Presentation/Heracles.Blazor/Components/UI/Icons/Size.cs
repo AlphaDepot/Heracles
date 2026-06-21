@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace Heracles.Blazor.Components.Enums;
+namespace Heracles.Blazor.Components.UI.Icons;
 
-public enum Size
+public enum IconSize
 {
 	[Description("small")] Small,
 

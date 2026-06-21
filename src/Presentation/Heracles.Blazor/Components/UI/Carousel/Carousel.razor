@@ -6,7 +6,7 @@
      aria-roledescription="carousel">
 
 	<CascadingValue Name="CarouselId" Value="_id">
-		<CascadingValue Name="Orientation" Value="Orientation">
+		<CascadingValue Name="Orientation" Value="CarouselOrientation">
 			@ChildContent
 		</CascadingValue>
 	</CascadingValue>
@@ -14,7 +14,7 @@
 </div>
 
 @code {
-	[Parameter] public Orientation Orientation { get; set; } = Orientation.Horizontal;
+	[Parameter] public CarouselOrientation CarouselOrientation { get; set; } = CarouselOrientation.Horizontal;
 	[Parameter] public object? Options { get; set; }
 	[Parameter] public List<object> Plugins { get; set; } = [];
 	[Parameter] public RenderFragment? ChildContent { get; set; }
@@ -39,10 +39,10 @@
 
 		CarouselService.Register(
 			_id,
-			Orientation,
+			CarouselOrientation,
 			Options ?? new
 			{
-				axis = Orientation == Orientation.Horizontal ? "x" : "y",
+				axis = CarouselOrientation == CarouselOrientation.Horizontal ? "x" : "y",
 				loop = Loop
 			},
 			Plugins.ToArray()

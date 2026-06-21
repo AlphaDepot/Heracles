@@ -13,7 +13,7 @@
     @if (ShouldShowIcon)
     {
         <div class="shrink-0">
-            <Icon Name="@IconName" Class="@IconCssClass" />
+            <Icon Kind="@IconName" Class="@IconCssClass" />
         </div>
     }
 
@@ -51,7 +51,7 @@
     {
         <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-current/20">
             <div class="h-full bg-current/40"
-                 style="animation: bb-alert-countdown @(Data.Duration)ms linear forwards; animation-play-state: @(_isPaused ? "paused" : "running");"></div>
+                 style="animation: alert-countdown @(Data.Duration)ms linear forwards; animation-play-state: @(_isPaused ? "paused" : "running");"></div>
         </div>
     }
 </div>
@@ -126,12 +126,12 @@
 
     private bool ShouldShowIcon => Data.ShowIcon && Data.Variant != ToastVariant.Default;
 
-    private string IconName => Data.Variant switch
+    private IconValue IconName => Data.Variant switch
     {
-        ToastVariant.Success => "circle-check",
-        ToastVariant.Info => "info",
-        ToastVariant.Warning => "triangle-alert",
-        ToastVariant.Destructive => "circle-x",
+        ToastVariant.Success => Lucide.Outline.CircleCheck,
+        ToastVariant.Info => Lucide.Outline.Info,
+        ToastVariant.Warning => Lucide.Outline.TriangleAlert,
+        ToastVariant.Destructive => Lucide.Outline.CircleX,
         _ => ""
     };
 

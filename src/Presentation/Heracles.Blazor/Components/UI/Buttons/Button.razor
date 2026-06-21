@@ -1,111 +1,111 @@
-﻿<button
-	@attributes="AdditionalAttributes"
-	class="@CssClass"
-	data-slot="button"
-	data-variant="@Variant"
-	data-size="@Size"
-	@onclick="OnClick">
-	@ChildContent
-</button>
+@namespace Heracles.Blazor.Components.UI.Buttons
 
-@code
+@if (HasHref)
 {
-	[Parameter] public Variant Variant { get; set; } = Variant.Default;
-	[Parameter] public Size Size { get; set; } = Size.Medium;
-	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
-
-	[Parameter] public string Class { get; set; } = string.Empty;
-	[Parameter] public RenderFragment? ChildContent { get; set; }
-	[Parameter] public Color Color { get; set; } = Color.Primary;
-
-	[Parameter(CaptureUnmatchedValues = true)]
-	public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-	private string CssClass => Tw.Merge(BaseClasses, VariantClasses, SizeClasses, Class);
-
-
-	private string BaseClasses =>
-		"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive";
-
-	private string VariantClasses => Variant switch
-	{
-		Variant.Destructive =>
-			"bg-destructive text-white hover:bg-destructive/90 " +
-			"focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-
-		Variant.Outlined =>
-			"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground " +
-			"dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-
-		Variant.Secondary =>
-			"bg-secondary text-secondary-foreground hover:bg-secondary/80",
-
-		Variant.Ghost =>
-			"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-
-		Variant.Link =>
-			"text-primary underline-offset-4 hover:underline",
-
-		_ or Variant.Default =>
-			"bg-primary text-primary-foreground hover:bg-primary/90"
-	};
-
-
-	private string SizeClasses => Size switch
-	{
-		Size.Small =>
-			"h-5 rounded-md px-3 has-[>svg]:px-2.5",
-
-		Size.Medium =>
-			"h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-
-		Size.Large =>
-			"h-10 rounded-md px-6 has-[>svg]:px-4",
-
-		_ => // fallback = Medium
-			"h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
-	};
-
-	private string ColorClasses => Color switch
-	{
-		Color.Primary =>
-			"bg-primary text-primary-foreground hover:bg-primary/90",
-
-		Color.Secondary =>
-			"bg-secondary text-secondary-foreground hover:bg-secondary/80",
-
-		Color.Destructive =>
-			"bg-destructive text-destructive-foreground hover:bg-destructive/90",
-
-		Color.Success =>
-			"bg-success text-success-foreground hover:bg-success/90",
-
-		Color.Warning =>
-			"bg-warning text-warning-foreground hover:bg-warning/90",
-
-		Color.Info =>
-			"bg-info text-info-foreground hover:bg-info/90",
-
-		Color.Muted =>
-			"bg-muted text-muted-foreground",
-
-		Color.Accent =>
-			"bg-accent text-accent-foreground hover:bg-accent/80",
-
-		Color.Outline =>
-			"border border-outline text-foreground",
-
-		Color.Background =>
-			"bg-background text-foreground",
-
-		Color.Foreground =>
-			"text-foreground",
-
-		Color.Ring =>
-			"ring-2 ring-ring",
-
-		_ => ""
-	};
-
-
+    <a href="@(IsDisabled ? null : Href)"
+       target="@Target"
+       rel="@Rel"
+       class="@CssClass"
+       tabindex="@(IsDisabled ? -1 : 0)"
+       aria-label="@AriaLabel"
+       aria-disabled="@(IsDisabled ? "true" : null)"
+       @onclick="HandleClick"
+       @onkeydown="HandleKeyDown"
+       @onmouseenter="HandleMouseEnter"
+       @onmouseleave="HandleMouseLeave"
+       @onfocus="HandleFocus"
+       @onblur="HandleBlur"
+       @attributes="AdditionalAttributes">
+        @if (Loading)
+        {
+            @if (LoadingTemplate != null)
+            {
+                <span class="me-2">@LoadingTemplate</span>
+            }
+            else
+            {
+                <svg class="me-2 h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            }
+            @if (!string.IsNullOrEmpty(LoadingText))
+            {
+                @LoadingText
+            }
+            else
+            {
+                @ChildContent
+            }
+        }
+        else
+        {
+            @if (Icon != null && IconPosition == IconPosition.Start)
+            {
+                <span class="me-2">@Icon</span>
+            }
+            @ChildContent
+            @if (Icon != null && IconPosition == IconPosition.End)
+            {
+                <span class="ms-2">@Icon</span>
+            }
+        }
+    </a>
+}
+else
+{
+    <button
+        type="@HtmlType"
+        class="@CssClass"
+        id="@(TriggerContext?.TriggerId)"
+        @ref="_buttonRef"
+        disabled="@IsDisabled"
+        tabindex="@(IsDisabled ? -1 : 0)"
+        aria-label="@AriaLabel"
+        aria-disabled="@IsDisabled.ToString().ToLower()"
+        aria-haspopup="@(TriggerContext?.AriaHasPopup)"
+        aria-expanded="@(TriggerContext != null ? TriggerContext.IsOpen.ToString().ToLower() : null)"
+        aria-controls="@(TriggerContext?.AriaControls)"
+        @onclick="HandleClick"
+        @onkeydown="HandleKeyDown"
+        @onmouseenter="HandleMouseEnter"
+        @onmouseleave="HandleMouseLeave"
+        @onfocus="HandleFocus"
+        @onblur="HandleBlur"
+        @attributes="AdditionalAttributes">
+        @if (Loading)
+        {
+            @if (LoadingTemplate != null)
+            {
+                <span class="me-2">@LoadingTemplate</span>
+            }
+            else
+            {
+                <svg class="me-2 h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            }
+            @if (!string.IsNullOrEmpty(LoadingText))
+            {
+                @LoadingText
+            }
+            else
+            {
+                @ChildContent
+            }
+        }
+        else
+        {
+            @if (Icon != null && IconPosition == IconPosition.Start)
+            {
+                <span class="me-2">@Icon</span>
+            }
+            @ChildContent
+            @if (Icon != null && IconPosition == IconPosition.End)
+            {
+                <span class="ms-2">@Icon</span>
+            }
+        }
+    </button>
 }

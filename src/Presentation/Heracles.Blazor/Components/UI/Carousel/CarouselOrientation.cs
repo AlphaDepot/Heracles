@@ -1,6 +1,6 @@
 ﻿namespace Heracles.Blazor.Components.Enums;
 
-public enum Orientation
+public enum CarouselOrientation
 {
 	Horizontal,
 	Vertical

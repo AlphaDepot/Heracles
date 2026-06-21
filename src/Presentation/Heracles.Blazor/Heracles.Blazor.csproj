@@ -18,11 +18,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\UI\Input\"/>
     <Folder Include="wwwroot\css\"/>
     <Folder Include="wwwroot\img\"/>
     <Folder Include="wwwroot\js\"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\UI\Sliders\Slider.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sliders\SliderBase.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sliders\SliderRange.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sliders\SliderThumb.razor" />
+    <UpToDateCheckInput Remove="Components\UI\Sliders\SliderTrack.razor" />
+  </ItemGroup>
+
 
 
   <Target Name="Tailwind" BeforeTargets="Build">

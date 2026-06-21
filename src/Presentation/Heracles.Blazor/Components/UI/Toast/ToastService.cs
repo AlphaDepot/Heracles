@@ -6,6 +6,7 @@ namespace Heracles.Blazor.Components.UI.Toast;
 /// </summary>
 public class ToastService
 {
+	private  const int Duration = 5000;
     private readonly List<ToastData> toasts = new();
     private readonly object sync = new();
 
@@ -74,7 +75,7 @@ public class ToastService
     /// <param name="title">Optional title.</param>
     /// <param name="variant">The visual variant.</param>
     /// <param name="duration">Duration in milliseconds (default 5000).</param>
-    public void Show(string description, string? title = null, ToastVariant variant = ToastVariant.Default, int duration = 5000)
+    public void Show(string description, string? title = null, ToastVariant variant = ToastVariant.Default, int duration = Duration)
     {
         Show(new ToastData
         {
@@ -90,32 +91,36 @@ public class ToastService
     /// </summary>
     /// <param name="description">The message to display.</param>
     /// <param name="title">Optional title.</param>
-    public void Success(string description, string? title = null) =>
-        Show(description, title, ToastVariant.Success);
+    /// <param name="duration">The duration in milliseconds for the toast to be displayed.</param>
+    public void Success(string description, string? title = null, int duration = Duration) =>
+        Show(description, title, ToastVariant.Success, duration);
 
     /// <summary>
     /// Shows an info toast with blue accent and info icon.
     /// </summary>
     /// <param name="description">The message to display.</param>
     /// <param name="title">Optional title.</param>
-    public void Info(string description, string? title = null) =>
-        Show(description, title, ToastVariant.Info);
+    /// <param name="duration">The duration in milliseconds for the toast to be displayed.</param>
+    public void Info(string description, string? title = null, int duration = Duration) =>
+        Show(description, title, ToastVariant.Info, duration);
 
     /// <summary>
     /// Shows a warning toast with amber accent and triangle-alert icon.
     /// </summary>
     /// <param name="description">The message to display.</param>
     /// <param name="title">Optional title.</param>
-    public void Warning(string description, string? title = null) =>
-        Show(description, title, ToastVariant.Warning);
+    /// <param name="duration">The duration in milliseconds for the toast to be displayed.</param>
+    public void Warning(string description, string? title = null, int duration = Duration) =>
+        Show(description, title, ToastVariant.Warning, duration);
 
     /// <summary>
     /// Shows an error toast (destructive variant).
     /// </summary>
     /// <param name="description">The message to display.</param>
     /// <param name="title">Optional title.</param>
-    public void Error(string description, string? title = null) =>
-        Show(description, title, ToastVariant.Destructive);
+    /// <param name="duration">The duration in milliseconds for the toast to be displayed.</param>
+    public void Error(string description, string? title = null, int duration = Duration) =>
+        Show(description, title, ToastVariant.Destructive, duration);
 
     /// <summary>
     /// Dismisses a specific toast by ID.

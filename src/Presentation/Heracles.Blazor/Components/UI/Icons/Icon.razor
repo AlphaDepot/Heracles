@@ -13,22 +13,26 @@
 
 @code {
 	[Parameter] public IconValue Kind { get; set; }
-	[Parameter] public Size Size { get; set; } = Size.Medium;
+	[Parameter] public IconSize Size { get; set; } = IconSize.Medium;
 	[Parameter] public int StrokeWidth { get; set; } = 2;
 	[Parameter] public string? Class { get; set; }
 
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string Css =>
-		$"rounded-full {sizeCss} {Class}".Trim();
+	private string Css => Tw.Merge(
+		"rounded-full",
+		sizeCss,
+		Class
+	);
+	
 
 
 	private string sizeCss => Size switch
 	{
-		Size.Small => "h-5 w-5",
-		Size.Medium => "h-8 w-8",
-		Size.Large => "h-10 w-10",
+		IconSize.Small => "h-5 w-5",
+		IconSize.Medium => "h-8 w-8",
+		IconSize.Large => "h-10 w-10",
 		_ => "h-8 w-8"
 	};
 

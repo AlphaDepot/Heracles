@@ -4,7 +4,7 @@
         @onclick="Next"
         class="@NextClass">
 
-	<Icon Kind="@Lucide.Outline.ArrowRight" Size="Size.Small"/>
+	<Icon Kind="@Lucide.Outline.ArrowRight" Size="IconSize.Small"/>
 	<span class="sr-only">Next slide</span>
 </button>
 
@@ -16,7 +16,7 @@
 	[Parameter] public bool Inline { get; set; }
 
 	[CascadingParameter(Name = "Orientation")]
-	public Orientation Orientation { get; set; } = Orientation.Horizontal;
+	public CarouselOrientation CarouselOrientation { get; set; } = CarouselOrientation.Horizontal;
 
 	[Parameter] public string Class { get; set; } = string.Empty;
 	private bool _canGoNext;
@@ -25,7 +25,7 @@
 		? Tw.Merge("h-8 w-8 rounded-full flex items-center justify-center", Class)
 		: Tw.Merge(
 			"absolute h-8 w-8 rounded-full",
-			Orientation == Orientation.Horizontal
+			CarouselOrientation == CarouselOrientation.Horizontal
 				? "absolute -right-12 top-1/2 -translate-y-1/2"
 				: "absolute -bottom-12 left-1/2 -translate-x-1/2 rotate-90",
 			Class

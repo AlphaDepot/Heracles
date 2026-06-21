@@ -34,11 +34,11 @@ public class CarouselService
 		return _module;
 	}
 
-	public void Register(string id, Orientation orientation, object options, object[] plugins)
+	public void Register(string id, CarouselOrientation carouselOrientation, object options, object[] plugins)
 	{
 		_carousels[id] = new CarouselState
 		{
-			Orientation = orientation,
+			CarouselOrientation = carouselOrientation,
 			Options = options,
 			Plugins = plugins
 		};
@@ -143,7 +143,7 @@ public class CarouselService
 		public bool CanGoNext;
 		public bool CanGoPrev;
 		public object Options = null!;
-		public Orientation Orientation = Orientation.Horizontal;
+		public CarouselOrientation CarouselOrientation = CarouselOrientation.Horizontal;
 		public object[] Plugins = [];
 		public int SelectedIndex;
 		public int[] SnapList = [];

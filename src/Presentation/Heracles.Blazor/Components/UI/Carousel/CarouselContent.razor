@@ -12,14 +12,14 @@
 	public string CarouselId { get; set; } = null!;
 
 	[CascadingParameter(Name = "Orientation")]
-	public Orientation Orientation { get; set; } = Orientation.Horizontal;
+	public CarouselOrientation CarouselOrientation { get; set; } = CarouselOrientation.Horizontal;
 
 	[Parameter] public RenderFragment? ChildContent { get; set; }
 
 	private ElementReference _viewportRef;
 
 	private string ContentClass =>
-		Orientation == Orientation.Horizontal
+		CarouselOrientation == CarouselOrientation.Horizontal
 			? "flex -ml-4"
 			: "flex flex-col -mt-4";
 

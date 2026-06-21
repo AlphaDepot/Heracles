@@ -1,6 +1,10 @@
 ﻿@page "/admin/ui-showcase"
+
 @using Heracles.Blazor.Components.UI.Tabs
 @using Heracles.Blazor.Components.UI.Toast
+@using Heracles.Blazor.Components.UI.Inputs
+@using Heracles.Blazor.Components.UI.NavigationMenu
+
 @inject ToastService ToastService
 <h3>Ui ShowCase</h3>
 
@@ -10,31 +14,97 @@
 			<TabsTrigger Value="ThemeToggle" >Theme Toggle</TabsTrigger>
 			<TabsTrigger Value="Toasts">Toasts</TabsTrigger>
 			<TabsTrigger Value="Icons">Icons</TabsTrigger>
+			<TabsTrigger Value="Inputs">Inputs</TabsTrigger>
+			<TabsTrigger Value="NavigationMenus">Navigation Menus</TabsTrigger>
+		
 		</TabsList>
 		<TabsContent Value="ThemeToggle">
 			<ThemeToggler />
 		</TabsContent>
 		<TabsContent Value="Toasts">
 			<div>
-				<Button @onclick="NormalToast" Variant="Variant.Outlined">Normal Toast</Button>
-				<Button @onclick="ErrorToast" Variant="Variant.Destructive">Error Toast</Button>
+				<Button @onclick="NormalToast" Variant="ButtonVariant.Default">Normal Toast</Button>
+				<Button @onclick="InfoToast" Variant="ButtonVariant.Outline">Info Toast</Button>
+				<Button @onclick="SuccessToast" Variant="ButtonVariant.Ghost">Success Toast</Button>
+				<Button @onclick="WarningToast" Variant="ButtonVariant.Link">Warning Toast</Button>
+				<Button @onclick="ErrorToast" Variant="ButtonVariant.Destructive">Error Toast</Button>
 			</div>
 		</TabsContent>
 		<TabsContent Value="Icons">
 			<div class="flex flex-col gap-2">
 				<Icon Kind="Lucide.Outline.ArrowLeft" />
-				<Icon Kind="Lucide.Outline.Flame" Size="Size.Small" />
-				<Icon Kind="Lucide.Outline.Info" Size="Size.Large" />
+				<Icon Kind="Lucide.Outline.Flame" Size="IconSize.Small" />
+				<Icon Kind="Lucide.Outline.Info" Size="IconSize.Large" />
 			</div>
 		</TabsContent>
+		<TabsContent Value="Inputs">
+			<div class="flex flex-col gap-2">
+				<Input Placeholder="Placeholder" />
+				<Input Type="@InputType.Text" Placeholder="Text" />
+				<Input Type="@InputType.Email" Placeholder="Email" />
+				<Input Type="@InputType.Password" Placeholder="Password" />
+				<Input Type="@InputType.Number" Placeholder="Number" />
+				<Input Type="@InputType.Search" Placeholder="Search..." />
+				<Input Placeholder="Disabled input" Disabled="true" />
+			</div>
+		</TabsContent>
+		<TabsContent Value="NavigationMenus">
+			<div class="flex flex-col gap-2">
+				<NavigationMenu>
+					<NavigationMenuList>
+						<NavigationMenuItem Value="getting-started">
+							<NavigationMenuTrigger>Getting Started</NavigationMenuTrigger>
+							<NavigationMenuContent>
+								<div class="grid gap-3 p-4 w-[400px]">
+									<div class="p-3 rounded-lg hover:bg-accent">
+										<a href="/docs/introduction" class="block font-medium mb-1">Introduction</a>
+										<p class="text-sm text-muted-foreground">
+											Re-usable components built using Blazor and Tailwind CSS.
+										</p>
+									</div>
+									<div class="p-3 rounded-lg hover:bg-accent">
+										<a href="/docs/installation" class="block font-medium mb-1">Installation</a>
+										<p class="text-sm text-muted-foreground">
+											How to install dependencies and structure your app.
+										</p>
+									</div>
+								</div>
+							</NavigationMenuContent>
+						</NavigationMenuItem>
+						<NavigationMenuItem>
+							<NavigationMenuLink Href="/docs">Documentation</NavigationMenuLink>
+						</NavigationMenuItem>
+					</NavigationMenuList>
+				</NavigationMenu>
+				
+				
+				
+			</div>
+		</TabsContent>
+	
 	</Tabs>
 </div>
 
 @code {
-
+	
 	private void NormalToast()
 	{
 		ToastService.Show("Friday, February 10, 2023 at 5:57 PM", "Scheduled: Catch up");
+	}
+	
+	private void InfoToast()
+	{
+		ToastService.Info("Friday, February 10, 2023 at 5:57 PM", "Scheduled: Catch up");
+	}
+	
+	private void SuccessToast()
+	{
+		ToastService.Success("Friday, February 10, 2023 at 5:57 PM", "Scheduled: Catch up");
+	}
+	
+	private void WarningToast()
+	{
+		ToastService.Warning("Friday, February 10, 2023 at 5:57 PM", "Scheduled: Catch up", 600000);
 	}
 	
 	private void ErrorToast()

@@ -9,9 +9,9 @@
 	[Parameter] public string Class { get; set; } = string.Empty;
 
 	[CascadingParameter(Name = "Orientation")]
-	public Orientation Orientation { get; set; } = Orientation.Horizontal;
+	public CarouselOrientation CarouselOrientation { get; set; } = CarouselOrientation.Horizontal;
 
-	private string GroupClass => Tw.Merge("min-w-0 shrink-0 grow-0 basis-full", Orientation == Orientation.Horizontal ? "pl-4" : "pt-4", Class);
+	private string GroupClass => Tw.Merge("min-w-0 shrink-0 grow-0 basis-full", CarouselOrientation == CarouselOrientation.Horizontal ? "pl-4" : "pt-4", Class);
 
 }
 

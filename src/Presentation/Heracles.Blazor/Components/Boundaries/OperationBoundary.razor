@@ -172,10 +172,10 @@
 					</p>
 
 					<div class="flex gap-1">
-						<Button Variant="Variant.Outlined" OnClick="@RetryAsync">
+						<Button Variant="ButtonVariant.Outline" OnClick="@RetryAsync">
 							Retry
 						</Button>
-						<Button Variant="Variant.Default" OnClick="@NavigateTo">
+						<Button Variant="ButtonVariant.Default" OnClick="@NavigateTo">
 							Go Home
 						</Button>
 					</div>
@@ -192,15 +192,15 @@
         
 
 		*@
-		<Alert Severity="Severity.Error" Class="my-2">
+		<Alert AlertSeverity="AlertSeverity.Error" Class="my-2">
 			<h6>@ErrorMessage</h6>
 			<p class="mt-2 text-xs text-destructive">
 				@((MarkupString)_error.Message.Replace("\n", "<br/>"))
 			</p>
 
 			<div class="flex gap-1 mt-2">
-				<Button Variant="Variant.Outlined" OnClick="@RetryAsync">Retry</Button>
-				<Button Variant="Variant.Ghost" OnClick="@Reset">Dismiss</Button>
+				<Button Variant="ButtonVariant.Outline" OnClick="@RetryAsync">Retry</Button>
+				<Button Variant="ButtonVariant.Ghost" OnClick="@Reset">Dismiss</Button>
 			</div>
 		</Alert>
 	}

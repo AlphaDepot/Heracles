@@ -6,13 +6,13 @@
 
         @if (Dismissible)
         {
-	        <Icon Kind="Lucide.Outline.X" Size="Size.Small" @onclick="() => IsVisible = false"/>
+	        <Icon Kind="Lucide.Outline.X" Size="IconSize.Small" @onclick="() => IsVisible = false"/>
         }
     </div>
 </div>
 
 @code {
-    [Parameter] public Severity Severity { get; set; } = Severity.Info;
+    [Parameter] public AlertSeverity AlertSeverity { get; set; } = AlertSeverity.Info;
     [Parameter] public bool Outline { get; set; }
     [Parameter] public bool Dismissible { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -31,24 +31,24 @@
     private string OutlineClasses =>
         Outline ? "bg-background border-foreground/20" : "";
 
-    private string SeverityClasses => Severity switch
+    private string SeverityClasses => AlertSeverity switch
     {
-        Severity.Error =>
+        AlertSeverity.Error =>
             Outline
                 ? "text-destructive border-destructive"
                 : "bg-destructive/15 text-destructive border-destructive/30",
 
-        Severity.Warning =>
+        AlertSeverity.Warning =>
             Outline
                 ? "text-warning border-warning"
                 : "bg-warning/15 text-warning border-warning/30",
 
-        Severity.Success =>
+        AlertSeverity.Success =>
             Outline
                 ? "text-success border-success"
                 : "bg-success/15 text-success border-success/30",
 
-        Severity.Info =>
+        AlertSeverity.Info =>
             Outline
                 ? "text-info border-info"
                 : "bg-info/15 text-info border-info/30",
